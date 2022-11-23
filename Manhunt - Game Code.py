@@ -4,7 +4,9 @@ import pygame
 pygame.init()
 
 #Creating a screen
-screen = pygame.display.set_mode((1440,810))
+screenHeight = 640
+screenWidth = 960
+screen = pygame.display.set_mode((screenWidth, screenHeight))
 
 #Setting a title
 pygame.display.set_caption("Manhunt")
@@ -13,15 +15,22 @@ pygame.display.set_caption("Manhunt")
 gameIcon = pygame.image.load('Manhunt.png')
 pygame.display.set_icon(gameIcon)
 
+#Displaying text
+manhuntNameFont = pygame.font.Font(None, 60)
+manhuntName = manhuntNameFont.render('Manhunt', True, (0,0,0))
+
 #Loop for game screen
 running = True
 while running:
+    #event handler
     for event in pygame.event.get():
         #Checks through all of the events that are happening in the window
-        #If the event is the user pressing the quit button(pygame.QUIT) then the window is closed
+        #If user presses cross button window closed
         if event.type == pygame.QUIT:
             running = False
     
     #Changing background colour
     screen.fill((75,75,75))
+    screen.blit(manhuntName,(375, 80))
+    screen.blit(gameIcon, (445, 130) )
     pygame.display.update()
