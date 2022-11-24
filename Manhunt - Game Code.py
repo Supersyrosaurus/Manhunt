@@ -16,11 +16,24 @@ gameIcon = pygame.image.load('Manhunt.png')
 pygame.display.set_icon(gameIcon)
 
 #Loading the start button
-startImg = pygame.image.load('rectangleStart.png')
+'''startImg = pygame.image.load('rectangleStart.png')'''
 
 #Displaying text
-manhuntNameFont = pygame.font.Font("VINERITC.TTF", 200)
-manhuntName = manhuntNameFont.render('Manhunt', True, (0,0,0))
+'''manhuntNameFont = pygame.font.Font(None, 160)
+manhuntName = manhuntNameFont.render('Manhunt', True, (0,0,0))'''
+
+#Procedure to display image
+def displayImg(imgName, x, y):
+    img = pygame.image.load(imgName)
+    screen.blit(img, (x, y))
+
+#Procedure to display text
+def displayText(textName, x, y, size, colour = (0,0,0), font = None):
+    textFont = pygame.font.Font(font, size)
+    text = textFont.render(textName, True,  colour)
+    screen.blit(text, (x, y))
+
+
 
 #Loop for game screen
 running = True
@@ -34,7 +47,7 @@ while running:
     
     #Changing background colour
     screen.fill((75,75,75))
-    screen.blit(manhuntName,(225, 80))
-    screen.blit(gameIcon, (445, 130) )
-    screen.blit(startImg, (350, 160))
+    displayText('Manhunt', 230, 80, 160)
+    displayImg('Manhunt.png', 32, 32)
+    displayImg('rectangleStart.png', 350, 160)
     pygame.display.update()
