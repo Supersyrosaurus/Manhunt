@@ -15,21 +15,17 @@ pygame.display.set_caption("Manhunt")
 gameIcon = pygame.image.load('Manhunt.png')
 pygame.display.set_icon(gameIcon)
 
-#Loading the start button
-'''startImg = pygame.image.load('rectangleStart.png')'''
-
-#Displaying text
-'''manhuntNameFont = pygame.font.Font(None, 160)
-manhuntName = manhuntNameFont.render('Manhunt', True, (0,0,0))'''
-
 #Procedure to display image
 def displayImg(imgName, x, y):
+    #Loads the image
     img = pygame.image.load(imgName)
     screen.blit(img, (x, y))
 
 #Procedure to display text
 def displayText(textName, x, y, size, colour = (0,0,0), font = None):
+    #Sets font(I/A) and size of the text
     textFont = pygame.font.Font(font, size)
+    #Renders the text with anti aliasing(Boolean) and colour (Tuple) 
     text = textFont.render(textName, True,  colour)
     screen.blit(text, (x, y))
 
