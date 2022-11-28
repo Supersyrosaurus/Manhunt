@@ -21,18 +21,36 @@ print(str(gameIcon.get_height()))
 
 class Button():
     def __init__(self, img, x, y, scale):
+        #Loads the image 
         self.img = pygame.image.load(img).convert_alpha()
+        #Gets the width and height of the img in pixels 
         width = self.img.get_width()
         height = self.img.get_height()
+        print(width)
+        print(height)
+        #Transforms the image using a scale
         self.transformedImg = pygame.transform.scale(self.img, (int(width * scale), int(height * scale)))
+        #Gets the rectangular area of the image
         self.rect = self.transformedImg.get_rect()
-        self.topLeft = (x, y)
+        #Is the top left of the image
+        self.rect.topleft = (x, y)
+
+
+    def clickCheck(self):
+        pos = pygame.mouse.get_pos()
+        #print(pos)
+        #Is mouse cursor colliding with the rectangle of image
+        if self.rect.collidepoint(pos):
+            if pygame.mouse.get_pressed()[0] == 1:
+                print('LESS GOO')
+
 
     def draw(self):
-
-        screen.blit(self.transformedImg, self.topLeft)
+        #draws image on the screen
+        screen.blit(self.transformedImg, (self.rect.x, self.rect.y))
+        self.clickCheck()
     
-    '''def clickCheck(self, )'''
+
 
 #Procedure to display image
 def displayImg(imgName, x, y):
@@ -48,7 +66,7 @@ def displayText(textName, x, y, size, colour = (0,0,0), font = None):
     text = textFont.render(textName, True,  colour)
     screen.blit(text, (x, y))
 
-startButton = Button('rectangleStart.png', 250, 150, 0.2)
+startButton = Button('rectangleStart.png', 250, 150, 0.8)
 
 #Loop for game screen
 running = True
