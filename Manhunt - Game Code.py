@@ -34,21 +34,33 @@ class Button():
         self.rect = self.transformedImg.get_rect()
         #Is the top left of the image
         self.rect.topleft = (x, y)
-
-
-    def clickCheck(self):
-        pos = pygame.mouse.get_pos()
-        #print(pos)
-        #Is mouse cursor colliding with the rectangle of image
-        if self.rect.collidepoint(pos):
-            if pygame.mouse.get_pressed()[0] == 1:
-                print('LESS GOO')
+        self.clicked = False
 
 
     def draw(self):
         #draws image on the screen
         screen.blit(self.transformedImg, (self.rect.x, self.rect.y))
-        self.clickCheck()
+
+    def clickCheck(self):
+        self.draw()
+        hasClicked = False
+        pos = pygame.mouse.get_pos()
+        #print(pos)
+        #Is mouse cursor colliding with the rectangle of image
+        if self.rect.collidepoint(pos):
+            if pygame.mouse.get_pressed()[0] == 1 and self.clicked == False:
+                print('LESS GOO')
+                self.clicked = True
+                hasClicked = True
+        
+        if pygame.mouse.get_pressed()[0] == 0:
+            self.clicked = False
+        
+        return hasClicked
+                
+
+
+    
     
 
 
@@ -82,5 +94,6 @@ while running:
     screen.fill((75,75,75))
     displayText('Manhunt', 230, 80, 160)
     displayImg('Manhunt.png', 32, 32)
-    startButton.draw()
+    if startButton.clickCheck() == True:
+        print('Start')
     pygame.display.update()
