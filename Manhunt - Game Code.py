@@ -8,6 +8,7 @@ screenHeight = 640
 screenWidth = 960
 screen = pygame.display.set_mode((screenWidth, screenHeight))
 
+
 #Setting a title
 pygame.display.set_caption("Manhunt")
 
@@ -15,6 +16,39 @@ pygame.display.set_caption("Manhunt")
 gameIcon = pygame.image.load('Manhunt.png')
 pygame.display.set_icon(gameIcon)
 
+
+import pygame
+
+pygame.init()
+
+
+#Screen class
+class Screen():
+    def __init__(self, ):
+        self.texts = []
+        self.images = []
+        self.buttons = []
+        self.screen = pygame.display.set_mode((960, 640))
+
+    #Procedure to display image
+    def displayImg(self, imgName, x, y):
+        #Loads the image
+        img = pygame.image.load(imgName)
+        self.screen.blit(img, (x, y))
+
+    #Procedure to display text
+    def displayText(self, textName, x, y, size, colour = (0,0,0), font = None):
+        #Sets font(I/A) and size of the text
+        textFont = pygame.font.Font(font, size)
+        #Renders the text with anti aliasing(Boolean) and colour (Tuple) 
+        text = textFont.render(textName, True,  colour)
+        self.screen.blit(text, (x, y))
+
+    def closeScreen(self):
+        
+
+
+#Button class
 class Button():
     def __init__(self, img, x, y, scale):
         #Loads the image 
@@ -56,25 +90,6 @@ class Button():
         #Returns whether the mouse has been clicked or not
         return hasClicked
                 
-
-
-    
-    
-
-
-#Procedure to display image
-def displayImg(imgName, x, y):
-    #Loads the image
-    img = pygame.image.load(imgName)
-    screen.blit(img, (x, y))
-
-#Procedure to display text
-def displayText(textName, x, y, size, colour = (0,0,0), font = None):
-    #Sets font(I/A) and size of the text
-    textFont = pygame.font.Font(font, size)
-    #Renders the text with anti aliasing(Boolean) and colour (Tuple) 
-    text = textFont.render(textName, True,  colour)
-    screen.blit(text, (x, y))
 
 startButton = Button('rectangleStart.png', 250, 150, 0.8)
 
