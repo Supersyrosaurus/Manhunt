@@ -15,10 +15,6 @@ pygame.display.set_caption("Manhunt")
 gameIcon = pygame.image.load('Manhunt.png')
 pygame.display.set_icon(gameIcon)
 
-print(str(gameIcon.get_rect()))
-print(str(gameIcon.get_width()))
-print(str(gameIcon.get_height()))
-
 class Button():
     def __init__(self, img, x, y, scale):
         #Loads the image 
@@ -48,14 +44,16 @@ class Button():
         #print(pos)
         #Is mouse cursor colliding with the rectangle of image
         if self.rect.collidepoint(pos):
+            #Checks if the mouse has been pressed and has already been pressed before
             if pygame.mouse.get_pressed()[0] == 1 and self.clicked == False:
-                print('LESS GOO')
+                #Set to true so that button is only registered once with one mouse click
                 self.clicked = True
                 hasClicked = True
-        
+        #If the user is not pressing the mouse button it is reset so that the user
+        #can use it again
         if pygame.mouse.get_pressed()[0] == 0:
             self.clicked = False
-        
+        #Returns whether the mouse has been clicked or not
         return hasClicked
                 
 
@@ -96,4 +94,5 @@ while running:
     displayImg('Manhunt.png', 32, 32)
     if startButton.clickCheck() == True:
         print('Start')
+
     pygame.display.update()
