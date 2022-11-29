@@ -17,11 +17,6 @@ gameIcon = pygame.image.load('Manhunt.png')
 pygame.display.set_icon(gameIcon)
 
 
-import pygame
-
-pygame.init()
-
-
 #Screen class
 class Screen():
     def __init__(self):
@@ -37,11 +32,7 @@ class Screen():
         self.screen.blit(img, (x, y))
 
     #Procedure to display text
-    def displayText(self, textName, x, y, size, colour = (0,0,0), font = None):
-        #Sets font(I/A) and size of the text
-        textFont = pygame.font.Font(font, size)
-        #Renders the text with anti aliasing(Boolean) and colour (Tuple) 
-        text = textFont.render(textName, True,  colour)
+    def displayText(self, text, x, y):
         self.screen.blit(text, (x, y))
 
     def closeScreen(self):
@@ -105,7 +96,29 @@ class Button():
         return hasClicked
                 
 
+def renderText(textName, size, colour = (0,0,0), font = None):
+    #Sets font(I/A) and size of the text
+    textFont = pygame.font.Font(font, size)
+    #Renders the text with anti aliasing(Boolean) and colour (Tuple) 
+    text = textFont.render(textName, True,  colour)
+    return text
+
+
+#Screens form screen class
+mainMenu = Screen()
+
+#Variables
 startButton = Button('rectangleStart.png', 250, 150, 0.8)
+
+#Lists
+mainMenu_text = [renderText('Manhunt', 160)]
+mainMenu_textX = []
+mainMenu_textY = []
+mainMenu_images = []
+
+mainMenu_buttons = [startButton]
+
+doesWork = renderText('Manhunt', 160)
 
 #Loop for game screen
 running = True
@@ -119,8 +132,8 @@ while running:
     
     #Changing background colour
     screen.fill((75,75,75))
-    displayText('Manhunt', 230, 80, 160)
-    displayImg('Manhunt.png', 32, 32)
+    mainMenu.displayText(doesWork, 230, 80)
+
     if startButton.clickCheck() == True:
         print('Start')
 
