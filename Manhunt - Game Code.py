@@ -20,25 +20,37 @@ pygame.display.set_icon(gameIcon)
 #Screen class
 class Screen():
     def __init__(self):
+        #All lists are 2 dimensional, storing what needs to be displayed
+        #and also the coordinates of where they should be displayed
         self.texts = []
         self.images = []
         self.buttons = []
+        #All screens will be the same size
         self.screen = pygame.display.set_mode((960, 640))
 
+
     #Procedure to display image
-    def displayImg(self, imgName, x, y):
-        #Loads the image
-        img = pygame.image.load(imgName)
-        self.screen.blit(img, (x, y))
+    def displayImg(self):
+        imageIndex = 0
+        coordIndex = 0
+        #Runs while both of the counters above haven't gone above the length each list within the list
+        while imageIndex != len(self.images[0]) and coordIndex != len(self.images[1]):
+            #Loads the image
+            img = pygame.image.load(self.images[0][imageIndex])
+            self.screen.blit(img, self.images[1][coordIndex])
+            imageIndex += 1
+            coordIndex += 1
+
 
     #Procedure to display text
     def displayText(self):
         textIndex = 0
         coordIndex = 0
+        #Runs while both of the counters above haven't gone above the length each list within the list
         while textIndex != len(self.texts[0])and coordIndex != len(self.texts[1]):
             self.screen.blit(self.texts[0][textIndex], self.texts[1][coordIndex])
-            textIndex = textIndex + 1
-            coordIndex = coordIndex + 1
+            textIndex += 1
+            coordIndex += 1
 
     def closeScreen(self):
         pass
@@ -57,7 +69,8 @@ class Screen():
         self.texts.append(texts)
         self.texts.append(Coords)
 
-        
+    def setColour(self, colour):
+        self.screen.fill(colour)
 
 
 #Button class
@@ -117,18 +130,16 @@ mainMenu = Screen()
 #Variables
 startButton = Button('rectangleStart.png', 250, 150, 0.8)
 
-#Lists
+
 mainMenu_text = [renderText('Manhunt', 160)]
-mainMenu_textCoords = [(230, 80)]
-mainMenu_images = []
-mainMenu_imagesX = []
-mainMenu_imagesY = []
-
-
+mainMenu_textCoords = [(230, 80), (230, 240)]
+mainMenu_images = ['Manhunt.png', 'start.png' ]
+mainMenu_imagesCoords = [(32, 32), (400, 400)]
 mainMenu.addText(mainMenu_text, mainMenu_textCoords)
+mainMenu.addImages(mainMenu_images, mainMenu_imagesCoords)
 mainMenu_buttons = [startButton]
 
-doesWork = renderText('Manhunt', 160)
+
 
 #Loop for game screen
 running = True
@@ -141,11 +152,9 @@ while running:
             running = False
     
     #Changing background colour
-    screen.fill((75,75,75))
+    mainMenu.setColour((150, 150, 150))
     mainMenu.displayText()
-    '''mainMenu.displayText(doesWork, 230, 80)'''
-    '''    displayText('Manhunt', 230, 80, 160)
-    displayImg('Manhunt.png', 32, 32)'''
+    mainMenu.displayImg()
     if startButton.clickCheck() == True:
         print('Start')
 
