@@ -32,8 +32,13 @@ class Screen():
         self.screen.blit(img, (x, y))
 
     #Procedure to display text
-    def displayText(self, text, x, y):
-        self.screen.blit(text, (x, y))
+    def displayText(self):
+        textIndex = 0
+        coordIndex = 0
+        while textIndex != len(self.texts[0])and coordIndex != len(self.texts[1]):
+            self.screen.blit(self.texts[0][textIndex], self.texts[1][coordIndex])
+            textIndex = textIndex + 1
+            coordIndex = coordIndex + 1
 
     def closeScreen(self):
         pass
@@ -41,14 +46,16 @@ class Screen():
     def displayScreen(self):
         pass
 
-    def addImages(self, images):
+    def addImages(self, images, Coords):
         self.images.append(images)
+        self.images.append(Coords)
 
     def addButtons(self, buttons):
         self.buttons.append(buttons)
 
-    def addText(self, texts):
+    def addText(self, texts, Coords):
         self.texts.append(texts)
+        self.texts.append(Coords)
 
         
 
@@ -112,10 +119,13 @@ startButton = Button('rectangleStart.png', 250, 150, 0.8)
 
 #Lists
 mainMenu_text = [renderText('Manhunt', 160)]
-mainMenu_textX = []
-mainMenu_textY = []
+mainMenu_textCoords = [(230, 80)]
 mainMenu_images = []
+mainMenu_imagesX = []
+mainMenu_imagesY = []
 
+
+mainMenu.addText(mainMenu_text, mainMenu_textCoords)
 mainMenu_buttons = [startButton]
 
 doesWork = renderText('Manhunt', 160)
@@ -132,8 +142,10 @@ while running:
     
     #Changing background colour
     screen.fill((75,75,75))
-    mainMenu.displayText(doesWork, 230, 80)
-
+    mainMenu.displayText()
+    '''mainMenu.displayText(doesWork, 230, 80)'''
+    '''    displayText('Manhunt', 230, 80, 160)
+    displayImg('Manhunt.png', 32, 32)'''
     if startButton.clickCheck() == True:
         print('Start')
 
