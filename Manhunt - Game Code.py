@@ -24,7 +24,7 @@ pygame.init()
 
 #Screen class
 class Screen():
-    def __init__(self, ):
+    def __init__(self):
         self.texts = []
         self.images = []
         self.buttons = []
@@ -45,6 +45,20 @@ class Screen():
         self.screen.blit(text, (x, y))
 
     def closeScreen(self):
+        pass
+
+    def displayScreen(self):
+        pass
+
+    def addImages(self, images):
+        self.images.append(images)
+
+    def addButtons(self, buttons):
+        self.buttons.append(buttons)
+
+    def addText(self, texts):
+        self.texts.append(texts)
+
         
 
 
