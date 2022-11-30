@@ -52,6 +52,15 @@ class Screen():
             textIndex += 1
             coordIndex += 1
 
+    def createButton(self, id, image, x, y, scale):
+        button = Button(id, image, x, y, scale)
+        self.buttons.append(button)
+
+    def searchButton(self, id):
+        for button in self.buttons:
+            if button.id == id:
+                return button
+
     def closeScreen(self):
         pass
 
@@ -61,9 +70,7 @@ class Screen():
     def addImages(self, images, Coords):
         self.images.append(images)
         self.images.append(Coords)
-
-    def addButtons(self, buttons):
-        self.buttons.append(buttons)
+        
 
     def addText(self, texts, Coords):
         self.texts.append(texts)
@@ -75,7 +82,8 @@ class Screen():
 
 #Button class
 class Button():
-    def __init__(self, img, x, y, scale):
+    def __init__(self, id, img, x, y, scale):
+        self.id = id
         #Loads the image 
         self.img = pygame.image.load(img).convert_alpha()
         #Gets the width and height of the img in pixels 
@@ -90,7 +98,6 @@ class Button():
         #Is the top left of the image
         self.rect.topleft = (x, y)
         self.clicked = False
-
 
     def draw(self):
         #draws image on the screen
@@ -128,16 +135,19 @@ def renderText(textName, size, colour = (0,0,0), font = None):
 mainMenu = Screen()
 
 #Variables
-startButton = Button('rectangleStart.png', 250, 150, 0.8)
+'''startButton = Button('rectangleStart.png', 250, 150, 0.8)'''
 
 
 mainMenu_text = [renderText('Manhunt', 160)]
 mainMenu_textCoords = [(230, 80), (230, 240)]
 mainMenu_images = ['Manhunt.png', 'start.png' ]
 mainMenu_imagesCoords = [(32, 32), (400, 400)]
+'''mainMenu_buttons = [startButton]
+mainMenu.addButtons[startButton]'''
+mainMenu.createButton('start','rectangleStart.png', 250, 150, 0.8)
+mainMenu.createButton('options', 'settings.png', 5, 585, 0.1)
 mainMenu.addText(mainMenu_text, mainMenu_textCoords)
 mainMenu.addImages(mainMenu_images, mainMenu_imagesCoords)
-mainMenu_buttons = [startButton]
 
 
 
@@ -155,7 +165,9 @@ while running:
     mainMenu.setColour((150, 150, 150))
     mainMenu.displayText()
     mainMenu.displayImg()
-    if startButton.clickCheck() == True:
+    if mainMenu.searchButton('start').clickCheck() == True:
         print('Start')
+    if mainMenu.searchButton('options').clickCheck() == True:
+        print('Setting')
 
     pygame.display.update()
