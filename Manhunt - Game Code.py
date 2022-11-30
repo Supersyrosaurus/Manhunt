@@ -8,7 +8,6 @@ screenHeight = 640
 screenWidth = 960
 screen = pygame.display.set_mode((screenWidth, screenHeight))
 
-
 #Setting a title
 pygame.display.set_caption("Manhunt")
 
@@ -25,6 +24,7 @@ class Screen():
         self.texts = []
         self.images = []
         self.buttons = []
+        self.alpha = 255
         #All screens will be the same size
         self.screen = pygame.display.set_mode((960, 640))
 
@@ -36,7 +36,8 @@ class Screen():
         #Runs while both of the counters above haven't gone above the length each list within the list
         while imageIndex != len(self.images[0]) and coordIndex != len(self.images[1]):
             #Loads the image
-            img = pygame.image.load(self.images[0][imageIndex])
+            img = pygame.image.load(self.images[0][imageIndex]).convert_alpha()
+            img.set_alpha(self.alpha)
             self.screen.blit(img, self.images[1][coordIndex])
             imageIndex += 1
             coordIndex += 1
@@ -53,16 +54,23 @@ class Screen():
             coordIndex += 1
 
     def createButton(self, id, image, x, y, scale):
+        #Creates an object of type button with the relevant attributes
         button = Button(id, image, x, y, scale)
+        #Adds the button to the list of buttons
         self.buttons.append(button)
 
     def searchButton(self, id):
+        #Goes through each of the buttons within the list
         for button in self.buttons:
+            #Compares the id of the current button to the 
+            #one it is searching for
             if button.id == id:
+                #returns the button object
                 return button
 
     def closeScreen(self):
-        pass
+        self.alpha = 0
+        self.displayImg()
 
     def displayScreen(self):
         pass
@@ -83,6 +91,8 @@ class Screen():
 #Button class
 class Button():
     def __init__(self, id, img, x, y, scale):
+        #Identification needed for each button so that they can 
+        #be differentiated and easier to find 
         self.id = id
         #Loads the image 
         self.img = pygame.image.load(img).convert_alpha()
@@ -127,29 +137,28 @@ def renderText(textName, size, colour = (0,0,0), font = None):
     #Sets font(I/A) and size of the text
     textFont = pygame.font.Font(font, size)
     #Renders the text with anti aliasing(Boolean) and colour (Tuple) 
-    text = textFont.render(textName, True,  colour)
+    text = textFont.render(textName, True,  colour).convert_alpha()
     return text
 
+
+black = (0, 0, 0)
+white = (255, 255, 255)
 
 #Screens form screen class
 mainMenu = Screen()
 
 #Variables
-'''startButton = Button('rectangleStart.png', 250, 150, 0.8)'''
-
-
 mainMenu_text = [renderText('Manhunt', 160)]
 mainMenu_textCoords = [(230, 80), (230, 240)]
 mainMenu_images = ['Manhunt.png', 'start.png' ]
 mainMenu_imagesCoords = [(32, 32), (400, 400)]
-'''mainMenu_buttons = [startButton]
-mainMenu.addButtons[startButton]'''
 mainMenu.createButton('start','rectangleStart.png', 250, 150, 0.8)
 mainMenu.createButton('options', 'settings.png', 5, 585, 0.1)
 mainMenu.addText(mainMenu_text, mainMenu_textCoords)
 mainMenu.addImages(mainMenu_images, mainMenu_imagesCoords)
 
 
+mainMenu.setColour((150, 150, 150))
 
 #Loop for game screen
 running = True
@@ -162,12 +171,13 @@ while running:
             running = False
     
     #Changing background colour
-    mainMenu.setColour((150, 150, 150))
     mainMenu.displayText()
     mainMenu.displayImg()
     if mainMenu.searchButton('start').clickCheck() == True:
         print('Start')
     if mainMenu.searchButton('options').clickCheck() == True:
+        mainMenu.closeScreen()
         print('Setting')
+
 
     pygame.display.update()
