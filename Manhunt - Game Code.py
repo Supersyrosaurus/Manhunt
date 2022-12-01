@@ -176,7 +176,6 @@ while running:
     if mainMenu.searchButton('start').clickCheck() == True:
         print('Start')
     if mainMenu.searchButton('options').clickCheck() == True:
-        mainMenu.closeScreen()
         print('Setting')
 
 
