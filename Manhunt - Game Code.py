@@ -65,7 +65,7 @@ def mainMenuScreen(mainMenu, settings):
         if mainMenu.searchButton('start').clickCheck(mainMenu.screen) == True:
             print('Start')
         if mainMenu.searchButton('options').clickCheck(mainMenu.screen) == True:
-            settingsScreen(settings)
+            running = settingsScreen(settings)
             print('settings')
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -78,14 +78,10 @@ def settingsScreen(settings):
         settings.displayScreen()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
+                return False
+
         pygame.display.update()
-'''        if settings.searchButton('start').clickCheck(mainMenu.screen) == True:
-            print('Start')
-        if settings.searchButton('options').clickCheck(mainMenu.screen) == True:
-            settings()
-            print('settings')
-            running = False'''
+
 
 
 mainMenuScreen(mainMenu, settings)
@@ -111,7 +107,13 @@ mainMenuScreen(mainMenu, settings)
         #If user presses cross button window closed
         if event.type == pygame.QUIT:
             running = False'''
-    
+        
+'''        if settings.searchButton('start').clickCheck(mainMenu.screen) == True:
+            print('Start')
+        if settings.searchButton('options').clickCheck(mainMenu.screen) == True:
+            settings()
+            print('settings')
+            running = False'''
 
 
 

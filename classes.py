@@ -80,9 +80,6 @@ class Screen():
                 #returns the button object
                 return button
 
-    def closeScreen(self):
-        self.screen.fill((0,0,0))
-
     def displayScreen(self):
         self.screen.fill((150,150,150))
         self.displayImg()
