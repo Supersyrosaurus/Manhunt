@@ -4,12 +4,6 @@ import classes
 #Initialising the pygame module
 pygame.init()
 
-'''#Creating a screen
-screenHeight = 640
-screenWidth = 960
-screen = pygame.display.set_mode((screenWidth, screenHeight))'''
-
-
 #Setting a title
 pygame.display.set_caption("Manhunt")
 
@@ -24,6 +18,7 @@ white = (255, 255, 255)
 #Screens form screen class
 mainMenu = classes.Screen()
 settings = classes.Screen()
+mode = classes.Screen()
 
 #Variables for mainMenu
 mainMenu_texts = ['Manhunt', 'SUI']
@@ -31,9 +26,9 @@ mainMenu_textSizes = [160, 130]
 mainMenu_textColours = [black, white]
 mainMenu_textFonts = [None, None]
 mainMenu_textCoords = [(230, 80), (230, 240)]
-mainMenu_images = ['Manhunt.png', 'start.png' ]
-mainMenu_imagesCoords = [(32, 32), (400, 400)]
-mainMenu_imagescales = [1, 1]
+mainMenu_images = ['Manhunt.png']
+mainMenu_imagesCoords = [(32, 32)]
+mainMenu_imagescales = [1]
 mainMenu.renderMTexts(mainMenu_texts, mainMenu_textSizes, mainMenu_textColours, mainMenu_textFonts, mainMenu_textCoords)
 mainMenu.createButton('start','rectangleStart.png', 250, 150, 0.8)
 mainMenu.createButton('options', 'settings.png', 5, 585, 0.1)
@@ -46,23 +41,33 @@ settings_textSizes = [160, 130]
 settings_textColours = [black, white]
 settings_textFonts = [None, None]
 settings_textCoords = [(230, 80), (230, 500)]
-settings_images = ['Manhunt.png', 'start.png' ]
-settings_imagesCoords = [(32, 32), (400, 400)]
-settings_imageScales = [1, 1]
+settings_images = [ 'start.png' ]
+settings_imagesCoords = [(250, 200)]
+settings_imageScales = [1]
 settings.renderMTexts(settings_texts, settings_textSizes, settings_textColours, settings_textFonts, settings_textCoords)
-settings.createButton('start','rectangleStart.png', 250, 150, 0.8)
-settings.createButton('options', 'settings.png', 5, 585, 0.1)
-settings.addImages(mainMenu_images, mainMenu_imagesCoords, settings_imageScales)
-settings.setColour((150, 150, 150))
+settings.createButton('return','return.png', 10, 10, 0.1)
+'''settings.createButton('options', 'settings.png', 5, 585, 0.1)'''
+settings.addImages(settings_images, settings_imagesCoords, settings_imageScales)
+settings.setColour((200, 200, 200))
 
+#Variables for mode class
+mode_texts = ['Mode']
+mode_textSizes = [160]
+mode_textColours = [black]
+mode_textFonts = [None]
+mode_textCoords = [(230, 80)]
+mode_images = []
+mode_imagesCoords = []
+mode_imageScales = []
+settings.renderMTexts(mode_texts, mode_textSizes, mode_textColours, mode_textFonts, mode_textCoords)
+mode.createButton('normal', )
 
-
-
-def mainMenuScreen(mainMenu, settings):
+def mainMenuScreen(mainMenu, settings, mode):
     running = True
     while running:
         mainMenu.displayScreen()
         if mainMenu.searchButton('start').clickCheck(mainMenu.screen) == True:
+            running = modeScreen(mode)
             print('Start')
         if mainMenu.searchButton('options').clickCheck(mainMenu.screen) == True:
             running = settingsScreen(settings)
@@ -72,10 +77,20 @@ def mainMenuScreen(mainMenu, settings):
                 running = False
         pygame.display.update()
 
+def modeScreen(mode):
+    running = True
+    while running:
+        mode.displayScreen()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return False
+
 def settingsScreen(settings):
     running = True
     while running:
         settings.displayScreen()
+        if settings.searchButton('return').clickCheck(settings.screen) == True:
+            return True
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return False

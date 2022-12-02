@@ -18,8 +18,6 @@ class Screen():
     #Procedure to display image
     def displayImg(self):
         imageIndex = 0
-
-
         #Runs while both of the counters above haven't gone above the length each list within the list
         while imageIndex != len(self.images[0]):
             #Loads the image
@@ -30,6 +28,7 @@ class Screen():
             self.screen.blit(scaleImg, self.images[1][imageIndex])
             imageIndex += 1
 
+    #Procedure to render multiple lines of text
     def renderMTexts(self, texts, sizes, colours, fonts, textCoords):
         textList = []
         counter = 0
@@ -40,11 +39,10 @@ class Screen():
             #Appends each render of texts to the textList for later
             textList.append(render)
             counter += 1
-    
             #Both the list of rendered texts and the list of coordinates are
             #appended to the texts list within the class
-            self.texts.append(textList)
-            self.texts.append(textCoords)
+        self.texts.append(textList)
+        self.texts.append(textCoords)
 
     #Function to render text
     def renderText(self, textName, size, colour, font):
@@ -58,19 +56,19 @@ class Screen():
     #Procedure to display text
     def displayText(self):
         textIndex = 0
-        coordIndex = 0
         #Runs while both of the counters above haven't gone above the length each list within the list
-        while textIndex != len(self.texts[0])and coordIndex != len(self.texts[1]):
-            self.screen.blit(self.texts[0][textIndex], self.texts[1][coordIndex])
+        while textIndex != len(self.texts[0]):
+            self.screen.blit(self.texts[0][textIndex], self.texts[1][textIndex])
             textIndex += 1
-            coordIndex += 1
 
+    #Procedure which accesses the Button class to create a button and then attributes it to this specific class
     def createButton(self, id, image, x, y, scale):
         #Creates an object of type button with the relevant attributes
         button = Button(id, image, x, y, scale)
         #Adds the button to the list of buttons
         self.buttons.append(button)
 
+    #Function which searches and returns a button based on the ID of the button
     def searchButton(self, id):
         #Goes through each of the buttons within the list
         for button in self.buttons:
@@ -80,21 +78,20 @@ class Screen():
                 #returns the button object
                 return button
 
+    #Procedure which displays a new screen 
     def displayScreen(self):
+        #Colours the screen and covers all blitted things
         self.screen.fill((150,150,150))
         self.displayImg()
         self.displayText()
 
+    #Procedure which appends all image based things into the images list
     def addImages(self, images, Coords, scale):
         self.images.append(images)
         self.images.append(Coords)
         self.images.append(scale)
         
-
-    #def addText(self, texts, Coords):
-        #self.texts.append(texts)
-        #self.texts.append(Coords)
-
+    #Procedure which sets colour of the screen
     def setColour(self, colour):
         self.screen.fill(colour)
 
