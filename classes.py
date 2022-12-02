@@ -11,7 +11,6 @@ class Screen():
         self.texts = []
         self.images = []
         self.buttons = []
-        self.transparent = False
         #All screens will be the same size
         self.screen = pygame.display.set_mode((960, 640))
 
@@ -20,17 +19,30 @@ class Screen():
     def displayImg(self):
         imageIndex = 0
         coordIndex = 0
+
         #Runs while both of the counters above haven't gone above the length each list within the list
         while imageIndex != len(self.images[0]) and coordIndex != len(self.images[1]):
             #Loads the image
             img = pygame.image.load(self.images[0][imageIndex]).convert_alpha()
-            if self.transparent == True:
-                img.set_alpha(0)
-            else:
-                img.set_alpha(255)
             self.screen.blit(img, self.images[1][coordIndex])
             imageIndex += 1
             coordIndex += 1
+
+    def renderMTexts(self, texts, sizes, colours, fonts, textCoords):
+        textList = []
+        counter = 0
+        #Goes though each string of text in the list
+        while counter != len(texts):
+            #Uses the renderText method to render the text
+            render = self.renderText(texts[counter], sizes[counter], colours[counter], fonts[counter])
+            #Appends each render of texts to the textList for later
+            textList.append(render)
+            counter += 1
+    
+            #Both the list of rendered texts and the list of coordinates are
+            #appended to the texts list within the class
+            self.texts.append(textList)
+            self.texts.append(textCoords)
 
     #Function to render text
     def renderText(self, textName, size, colour, font):
@@ -42,29 +54,9 @@ class Screen():
 
 
     #Procedure to display text
-    def displayText(self, texts, sizes, colours, fonts, textCoords):
-        textList = []
-        counter = 0
+    def displayText(self):
         textIndex = 0
         coordIndex = 0
-        #Goes though each string of text in the list
-        while counter != len(texts):
-            #Uses the renderText method to render the text
-            render = self.renderText(texts[counter], sizes[counter], colours[counter], fonts[counter])
-            #Checks the transparent attributes
-            if self.transparent == True:
-                #Makes the text transparent 
-                render.set_alpha(0)
-            else:
-                #Makes the text fully visible 
-                render.set_alpha(255)
-            #Appends each render of texts to the textList for later
-            textList.append(render)
-            counter += 1
-        #Both the list of rendered texts and the list of coordinates are
-        #appended to the texts list within the class
-        self.texts.append(textList)
-        self.texts.append(textCoords)
         #Runs while both of the counters above haven't gone above the length each list within the list
         while textIndex != len(self.texts[0])and coordIndex != len(self.texts[1]):
             self.screen.blit(self.texts[0][textIndex], self.texts[1][coordIndex])
@@ -87,11 +79,11 @@ class Screen():
                 return button
 
     def closeScreen(self):
-        self.transparent = True
-        self.displayImg()
+        self.screen.fill((0,0,0))
 
     def displayScreen(self):
-        pass
+        self.displayImg()
+        self.displayText()
 
     def addImages(self, images, Coords):
         self.images.append(images)

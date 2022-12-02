@@ -22,15 +22,19 @@ white = (255, 255, 255)
 
 #Screens form screen class
 mainMenu = classes.Screen()
+settings = classes.Screen()
 
 #Variables
-mainMenu_text = [renderText('Manhunt', 160)]
+mainMenu_texts = ['Manhunt', 'SUI']
+mainMenu_textSizes = [160, 130]
+mainMenu_textColours = [black, white]
+mainMenu_textFonts = [None, None]
 mainMenu_textCoords = [(230, 80), (230, 240)]
 mainMenu_images = ['Manhunt.png', 'start.png' ]
 mainMenu_imagesCoords = [(32, 32), (400, 400)]
+mainMenu.renderMTexts(mainMenu_texts, mainMenu_textSizes, mainMenu_textColours, mainMenu_textFonts, mainMenu_textCoords)
 mainMenu.createButton('start','rectangleStart.png', 250, 150, 0.8)
 mainMenu.createButton('options', 'settings.png', 5, 585, 0.1)
-mainMenu.addText(mainMenu_text, mainMenu_textCoords)
 mainMenu.addImages(mainMenu_images, mainMenu_imagesCoords)
 
 
@@ -39,6 +43,16 @@ mainMenu.setColour((150, 150, 150))
 #Loop for game screen
 running = True
 while running:
+
+    #Changing background colour
+    mainMenu.displayScreen()
+    if mainMenu.searchButton('start').clickCheck(mainMenu.screen) == True:
+        print('Start')
+    if mainMenu.searchButton('options').clickCheck(mainMenu.screen) == True:
+        #settings.displayScreen()
+        print('Setting')
+
+
     #event handler
     for event in pygame.event.get():
         #Checks through all of the events that are happening in the window
@@ -46,14 +60,7 @@ while running:
         if event.type == pygame.QUIT:
             running = False
     
-    #Changing background colour
-    mainMenu.displayText()
-    mainMenu.displayImg()
-    if mainMenu.searchButton('start').clickCheck() == True:
-        print('Start')
-    if mainMenu.searchButton('options').clickCheck() == True:
-        mainMenu.closeScreen()
-        print('Setting')
+
 
 
     pygame.display.update()
