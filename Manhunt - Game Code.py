@@ -4,10 +4,11 @@ import classes
 #Initialising the pygame module
 pygame.init()
 
-#Creating a screen
+'''#Creating a screen
 screenHeight = 640
 screenWidth = 960
-screen = pygame.display.set_mode((screenWidth, screenHeight))
+screen = pygame.display.set_mode((screenWidth, screenHeight))'''
+
 
 #Setting a title
 pygame.display.set_caption("Manhunt")
@@ -24,7 +25,7 @@ white = (255, 255, 255)
 mainMenu = classes.Screen()
 settings = classes.Screen()
 
-#Variables
+#Variables for mainMenu
 mainMenu_texts = ['Manhunt', 'SUI']
 mainMenu_textSizes = [160, 130]
 mainMenu_textColours = [black, white]
@@ -32,24 +33,75 @@ mainMenu_textFonts = [None, None]
 mainMenu_textCoords = [(230, 80), (230, 240)]
 mainMenu_images = ['Manhunt.png', 'start.png' ]
 mainMenu_imagesCoords = [(32, 32), (400, 400)]
+mainMenu_imagescales = [1, 1]
 mainMenu.renderMTexts(mainMenu_texts, mainMenu_textSizes, mainMenu_textColours, mainMenu_textFonts, mainMenu_textCoords)
 mainMenu.createButton('start','rectangleStart.png', 250, 150, 0.8)
 mainMenu.createButton('options', 'settings.png', 5, 585, 0.1)
-mainMenu.addImages(mainMenu_images, mainMenu_imagesCoords)
-
-
+mainMenu.addImages(mainMenu_images, mainMenu_imagesCoords, mainMenu_imagescales)
 mainMenu.setColour((150, 150, 150))
 
+#Variables for settings class
+settings_texts = ['Settings', 'SUI']
+settings_textSizes = [160, 130]
+settings_textColours = [black, white]
+settings_textFonts = [None, None]
+settings_textCoords = [(230, 80), (230, 500)]
+settings_images = ['Manhunt.png', 'start.png' ]
+settings_imagesCoords = [(32, 32), (400, 400)]
+settings_imageScales = [1, 1]
+settings.renderMTexts(settings_texts, settings_textSizes, settings_textColours, settings_textFonts, settings_textCoords)
+settings.createButton('start','rectangleStart.png', 250, 150, 0.8)
+settings.createButton('options', 'settings.png', 5, 585, 0.1)
+settings.addImages(mainMenu_images, mainMenu_imagesCoords, settings_imageScales)
+settings.setColour((150, 150, 150))
+
+
+
+
+def mainMenuScreen(mainMenu, settings):
+    running = True
+    while running:
+        mainMenu.displayScreen()
+        if mainMenu.searchButton('start').clickCheck(mainMenu.screen) == True:
+            print('Start')
+        if mainMenu.searchButton('options').clickCheck(mainMenu.screen) == True:
+            settingsScreen(settings)
+            print('settings')
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+        pygame.display.update()
+
+def settingsScreen(settings):
+    running = True
+    while running:
+        settings.displayScreen()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+        pygame.display.update()
+'''        if settings.searchButton('start').clickCheck(mainMenu.screen) == True:
+            print('Start')
+        if settings.searchButton('options').clickCheck(mainMenu.screen) == True:
+            settings()
+            print('settings')
+            running = False'''
+
+
+mainMenuScreen(mainMenu, settings)
+
+
 #Loop for game screen
-running = True
-while running:
+'''running = True'''
+'''while running:
 
     #Changing background colour
     mainMenu.displayScreen()
     if mainMenu.searchButton('start').clickCheck(mainMenu.screen) == True:
         print('Start')
     if mainMenu.searchButton('options').clickCheck(mainMenu.screen) == True:
-        #settings.displayScreen()
+        mainMenu.closeScreen()
+        settings.displayScreen()
         print('Setting')
 
 
@@ -58,9 +110,9 @@ while running:
         #Checks through all of the events that are happening in the window
         #If user presses cross button window closed
         if event.type == pygame.QUIT:
-            running = False
+            running = False'''
     
 
 
 
-    pygame.display.update()
+

@@ -18,15 +18,17 @@ class Screen():
     #Procedure to display image
     def displayImg(self):
         imageIndex = 0
-        coordIndex = 0
+
 
         #Runs while both of the counters above haven't gone above the length each list within the list
-        while imageIndex != len(self.images[0]) and coordIndex != len(self.images[1]):
+        while imageIndex != len(self.images[0]):
             #Loads the image
             img = pygame.image.load(self.images[0][imageIndex]).convert_alpha()
-            self.screen.blit(img, self.images[1][coordIndex])
+            width = img.get_width()
+            height = img.get_height()
+            scaleImg = pygame.transform.scale(img, (int(width * self.images[2][imageIndex]), int(height * self.images[2][imageIndex])))
+            self.screen.blit(scaleImg, self.images[1][imageIndex])
             imageIndex += 1
-            coordIndex += 1
 
     def renderMTexts(self, texts, sizes, colours, fonts, textCoords):
         textList = []
@@ -82,12 +84,14 @@ class Screen():
         self.screen.fill((0,0,0))
 
     def displayScreen(self):
+        self.screen.fill((150,150,150))
         self.displayImg()
         self.displayText()
 
-    def addImages(self, images, Coords):
+    def addImages(self, images, Coords, scale):
         self.images.append(images)
         self.images.append(Coords)
+        self.images.append(scale)
         
 
     #def addText(self, texts, Coords):
