@@ -5,7 +5,8 @@ pygame.init()
 
 #Screen class
 class Screen():
-    def __init__(self):
+    def __init__(self, colour):
+        self.colour = colour
         #All lists are 2 dimensional, storing what needs to be displayed
         #and also the coordinates of where they should be displayed
         self.texts = []
@@ -81,7 +82,7 @@ class Screen():
     #Procedure which displays a new screen 
     def displayScreen(self):
         #Colours the screen and covers all blitted things
-        self.screen.fill((150,150,150))
+        self.screen.fill(self.colour)
         self.displayImg()
         self.displayText()
 
