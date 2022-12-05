@@ -38,11 +38,11 @@ mainMenu.addImages(mainMenu_images, mainMenu_imagesCoords, mainMenu_imagescales)
 #mainMenu.setColour((150, 150, 150))
 
 #Variables for settings class
-settings_texts = ['Settings']
-settings_textSizes = [160]
-settings_textColours = [black]
-settings_textFonts = [None]
-settings_textCoords = [(230, 80)]
+settings_texts = ['Settings', 'W: Move Forward', 'A: Move Left', 'S: Move Backward', 'D: Move Right', 'Shift: Sprint', 'E: Interact' ]
+settings_textSizes = [160, 50, 50, 50, 50, 50, 50]
+settings_textColours = [black, black, black, black, black, black, black]
+settings_textFonts = [None, None, None, None, None, None, None]
+settings_textCoords = [(230, 80), (300,250), (300,310), (300,370), (300,430), (300,490), (300, 550)]
 settings_images = []
 settings_imagesCoords = []
 settings_imageScales = []
