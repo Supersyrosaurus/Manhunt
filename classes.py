@@ -141,3 +141,35 @@ class Button():
         #Returns whether the mouse has been clicked or not
         return hasClicked
                 
+class Object():
+    def __init__(self, x, y, height, width):
+        self.xCoord = x
+        self.yCoord = y
+        self.height = height
+        self.width = width
+        self.surf = pygame.Surface([self.width, self.height])
+
+    def getCoords(self):
+        return (self.xCoord, self.yCoord)
+
+    def display(self, screen):
+        screen.blit(self.surf)
+
+class Wall(Object):
+    def __init__(self, x, y, height, width, specialisation = None):
+        super().__init__(x, y, height, width)
+        #
+        self.addition = self.addToWall()
+        self.specialisation = specialisation
+
+    def addToWall(self):
+        if self.specialisation == None:
+            return None
+        if self.specialisation == 0:
+            pass
+        if self.specialisation == 1:
+            pass
+
+            
+
+
