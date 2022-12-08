@@ -11,6 +11,8 @@ pygame.display.set_caption("Manhunt")
 gameIcon = pygame.image.load('Manhunt.png')
 pygame.display.set_icon(gameIcon)
 
+#Setting FPS
+clock = pygame.time.Clock()
 
 black = (0, 0, 0)
 red = (155, 0, 0)
@@ -66,24 +68,26 @@ mode.createButton('normal', 'normal.png', 340, 175, 1)
 mode.createButton('nightmare', 'nightmare.png', 283, 375, 1)
 mode.addImages(mode_images, mode_imagesCoords, mode_imageScales)
 
-def mainMenuScreen(mainMenu, settings, mode):
+def mainMenuScreen(mainMenu, settings, mode, clock):
     running = True
     while running:
+        clock.tick(60)
         mainMenu.displayScreen()
         if mainMenu.searchButton('start').clickCheck(mainMenu.screen) == True:
-            running = modeScreen(mode)
+            running = modeScreen(mode, clock)
             print('Start')
         if mainMenu.searchButton('options').clickCheck(mainMenu.screen) == True:
-            running = settingsScreen(settings)
+            running = settingsScreen(settings, clock)
             print('settings')
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
         pygame.display.update()
 
-def modeScreen(mode):
+def modeScreen(mode, clock):
     running = True
     while running:
+        clock.tick(60)
         mode.displayScreen()
         if mode.searchButton('return').clickCheck(mode.screen) == True:
             return True
@@ -96,9 +100,10 @@ def modeScreen(mode):
                 return False
         pygame.display.update()
 
-def settingsScreen(settings):
+def settingsScreen(settings, clock):
     running = True
     while running:
+        clock.tick(60)
         settings.displayScreen()
         if settings.searchButton('return').clickCheck(settings.screen) == True:
             return True
@@ -110,7 +115,7 @@ def settingsScreen(settings):
 
 
 
-mainMenuScreen(mainMenu, settings, mode)
+mainMenuScreen(mainMenu, settings, mode, clock)
 
 
 #Loop for game screen
