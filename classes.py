@@ -156,20 +156,33 @@ class Object():
         screen.blit(self.surf)
 
 class Wall(Object):
-    def __init__(self, x, y, height, width, specialisation = None):
+    def __init__(self, x, y, height, width, type = None):
         super().__init__(x, y, height, width)
-        #
-        self.addition = self.addToWall()
-        self.specialisation = specialisation
+        #This sets the wall as 
+        self.wall = self.setType()
+        self.inputType = type
 
-    def addToWall(self):
-        if self.specialisation == None:
+    def setType(self):
+        if self.inputType == None:
             return None
-        if self.specialisation == 0:
+        if self.inputType == 0:
             pass
-        if self.specialisation == 1:
+        if self.inputType == 1:
             pass
 
             
+class Floor(Object):
+    def __init__(self, x, y, height, width, type):
+        super().__init__(x, y, height, width)
+        self.type = type
+        self.floor = self.setType
+    
+    def setType(self):
+        if self.type == 'carpet':
+            pass
+        if self.type == 'concrete':
+            pass
+        if self.type == 'wood':
+            pass
 
 
