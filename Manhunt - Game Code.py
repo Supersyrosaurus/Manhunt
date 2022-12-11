@@ -1,5 +1,6 @@
 import pygame
-import classes
+import screens
+import objects
 
 #Initialising the pygame module
 pygame.init()
@@ -20,9 +21,9 @@ white = (255, 255, 255)
 lightGrey = (150,150,150)
 
 #Screens form screen class
-mainMenu = classes.Screen(lightGrey)
-settings = classes.Screen(lightGrey)
-mode = classes.Screen(lightGrey)
+mainMenu = screens.Screen(lightGrey)
+settings = screens.Screen(lightGrey)
+mode = screens.Screen(lightGrey)
 
 #Variables for mainMenu
 mainMenu_texts = ['Manhunt']
