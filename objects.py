@@ -10,7 +10,7 @@ class Object():
         #Each object needs height and width for display
         self.height = height
         self.width = width
-        #Creates a surface using the height and width of the object
+        #Creates a surface using the height and width of the object which will be used to display the object
         self.surf = pygame.Surface([self.width, self.height])
 
     #Function returns the coordinates of the object
@@ -51,13 +51,13 @@ class Floor(Object):
     #Procedure sets the sound level depending on the type of the floor
     def setSound(self):
         if self.type == 'carpet':
-            self.soundLevel = None
+            self.soundLevel = 0.2
             
         if self.type == 'concrete':
-            self.soundLevel = None
+            self.soundLevel = 0.5
             
         if self.type == 'wood':
-            self.soundLevel = None
+            self.soundLevel = 0.9
             
     #Function returns the sound level of the floor
     def checkSoundLevel(self):
@@ -68,6 +68,15 @@ class Lever(Object):
     def __init__(self, x, y, height, width):
         super().__init__(x, y, height, width)
         self.activated = False
+        #This is the activation area of the Lever, it will be a factor of the height and width (above one)
+        self.area = pygame.Surface([self.activationWidth, self.activationHeight])
+        self.activationArea = self.area.get_rect()
+        self.activationHeight = height * 1
+        self.activationWidth = width * 1
+
+    #This checks if the player is within the activation area
+    def inArea(self, playerRect):
+        pass
 
     #Function checks if lever has been activated
     def checkLeverActivation(self):
@@ -84,7 +93,13 @@ class Lever(Object):
 class HidingSpace(Object):
     def __init__(self, x, y, height, width):
         super().__init__(x, y, height, width)
+        self.area = pygame.Surface([self.activationWidth, self.activationHeight])
+        self.activationHeight = height * 1
+        self.activationWidth = width * 1
 
+
+    def inArea(self, playerLocation):
+        pass
 
 class Door(Object):
     def __init__(self, x, y, height, width):
