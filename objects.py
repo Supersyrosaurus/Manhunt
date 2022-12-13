@@ -23,7 +23,7 @@ class Object():
 
 
 class Wall(Object):
-    def __init__(self, x, y, height, width, inputType = False):
+    def __init__(self, x, y, height, width, inputType = None):
         super().__init__(x, y, height, width)
         self.inputType = inputType
         #This sets the wall as 
@@ -32,16 +32,17 @@ class Wall(Object):
 
     def setType(self):
         #If type is none that means that there is nothing on the wall
-        if self.inputType == False:
-            return False
+        if self.inputType == None:
+            return None
+
         #If type is 0 then that means that there is a hidingSpace on the wall
         if self.inputType == 0:
-            self.wall = HidingSpace(320, 240, 100, 100)
-            print(str(self.wall))
+            return HidingSpace(320, 240, 100, 100)
+            
         #If type is 1 then that means that there is a lever on the wall
         if self.inputType == 1:
-            self.wall = Lever(200, 400, 200, 200)
-            print(str(self.wall))
+            return Lever(200, 400, 200, 200)
+            
     
             
 class Floor(Object):
@@ -71,11 +72,12 @@ class Lever(Object):
     def __init__(self, x, y, height, width):
         super().__init__(x, y, height, width)
         self.activated = False
+        self.activationHeight = height * 1
+        self.activationWidth = width * 1
         #This is the activation area of the Lever, it will be a factor of the height and width (above one)
         self.area = pygame.Surface([self.activationWidth, self.activationHeight])
         self.activationArea = self.area.get_rect()
-        self.activationHeight = height * 1
-        self.activationWidth = width * 1
+
 
     #This checks if the player is within the activation area
     def inArea(self, playerRect):
@@ -96,9 +98,10 @@ class Lever(Object):
 class HidingSpace(Object):
     def __init__(self, x, y, height, width):
         super().__init__(x, y, height, width)
-        self.area = pygame.Surface([self.activationWidth, self.activationHeight])
         self.activationHeight = height * 1
         self.activationWidth = width * 1
+        self.area = pygame.Surface([self.activationWidth, self.activationHeight])
+
 
 
     def inArea(self, playerLocation):
