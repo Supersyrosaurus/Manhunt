@@ -35,10 +35,12 @@ class Wall(Object):
             return None
         #If type is 0 then that means that there is a hidingSpace on the wall
         if self.inputType == 0:
-            pass
+            self.wall = HidingSpace(320, 240, 100, 100)
+            print(str(self.wall))
         #If type is 1 then that means that there is a lever on the wall
         if self.inputType == 1:
-            pass
+            self.wall = Lever(200, 400, 200, 200)
+            print(str(self.wall))
     
             
 class Floor(Object):
