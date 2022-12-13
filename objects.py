@@ -23,23 +23,27 @@ class Object():
 
 
 class Wall(Object):
-    def __init__(self, x, y, height, width, type = None):
+    def __init__(self, x, y, height, width, hasLever = False):
         super().__init__(x, y, height, width)
         #This sets the wall as 
-        self.wall = self.setType()
-        self.inputType = type
+        self.lever = self.setType()
+        self.hasLever = hasLever
 
     def setType(self):
         #If type is none that means that there is nothing on the wall
-        if self.inputType == None:
+        if self.hasLever == False:
             return None
-        #If type is 0 then that means that there is a hidingSpace on the wall
-        if self.inputType == 0:
-            pass
+
         #If type is 1 then that means that there is a lever on the wall
-        if self.inputType == 1:
-            pass
+        if self.hasLever == True:
+            lever = Lever(self.x, self.y, self.height, self.width)
+            return lever
+
+    def checkLever(self):
+        return self.hasLever
     
+    def returnLever(self):
+        return self.lever
             
 class Floor(Object):
     def __init__(self, x, y, height, width, type):
@@ -51,13 +55,13 @@ class Floor(Object):
     #Procedure sets the sound level depending on the type of the floor
     def setSound(self):
         if self.type == 'carpet':
-            self.soundLevel = 0.2
+            return 0.2
             
         if self.type == 'concrete':
-            self.soundLevel = 0.5
+            return 0.5
             
         if self.type == 'wood':
-            self.soundLevel = 0.9
+            return 0.9
             
     #Function returns the sound level of the floor
     def checkSoundLevel(self):
