@@ -23,16 +23,17 @@ class Object():
 
 
 class Wall(Object):
-    def __init__(self, x, y, height, width, type = None):
+    def __init__(self, x, y, height, width, inputType = False):
         super().__init__(x, y, height, width)
+        self.inputType = inputType
         #This sets the wall as 
         self.wall = self.setType()
-        self.inputType = type
+
 
     def setType(self):
         #If type is none that means that there is nothing on the wall
-        if self.inputType == None:
-            return None
+        if self.inputType == False:
+            return False
         #If type is 0 then that means that there is a hidingSpace on the wall
         if self.inputType == 0:
             self.wall = HidingSpace(320, 240, 100, 100)
