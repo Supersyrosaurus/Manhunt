@@ -42,6 +42,8 @@ class Wall(Object):
         #If type is 1 then that means that there is a lever on the wall
         if self.inputType == 1:
             return Lever(200, 400, 200, 200)
+
+    
             
     
             
@@ -54,14 +56,14 @@ class Floor(Object):
     
     #Procedure sets the sound level depending on the type of the floor
     def setSound(self):
-        if self.type == 'carpet':
-            self.soundLevel = 0.2
+        if self.type == 0:
+            return 0.2
             
-        if self.type == 'concrete':
-            self.soundLevel = 0.5
+        if self.type == 1:
+            return 0.5
             
-        if self.type == 'wood':
-            self.soundLevel = 0.9
+        if self.type == 2:
+            return 0.9
             
     #Function returns the sound level of the floor
     def checkSoundLevel(self):
