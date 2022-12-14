@@ -23,27 +23,29 @@ class Object():
 
 
 class Wall(Object):
-    def __init__(self, x, y, height, width, hasLever = False):
+    def __init__(self, x, y, height, width, inputType = None):
         super().__init__(x, y, height, width)
+        self.inputType = inputType
         #This sets the wall as 
-        self.lever = self.setType()
-        self.hasLever = hasLever
+        self.wall = self.setType()
+
 
     def setType(self):
         #If type is none that means that there is nothing on the wall
-        if self.hasLever == False:
+        if self.inputType == None:
             return None
 
+        #If type is 0 then that means that there is a hidingSpace on the wall
+        if self.inputType == 0:
+            return HidingSpace(320, 240, 100, 100)
+            
         #If type is 1 then that means that there is a lever on the wall
-        if self.hasLever == True:
-            lever = Lever(self.x, self.y, self.height, self.width)
-            return lever
+        if self.inputType == 1:
+            return Lever(200, 400, 200, 200)
 
-    def checkLever(self):
-        return self.hasLever
     
-    def returnLever(self):
-        return self.lever
+            
+    
             
 class Floor(Object):
     def __init__(self, x, y, height, width, type):
@@ -54,13 +56,13 @@ class Floor(Object):
     
     #Procedure sets the sound level depending on the type of the floor
     def setSound(self):
-        if self.type == 'carpet':
+        if self.type == 0:
             return 0.2
             
-        if self.type == 'concrete':
+        if self.type == 1:
             return 0.5
             
-        if self.type == 'wood':
+        if self.type == 2:
             return 0.9
             
     #Function returns the sound level of the floor
@@ -72,11 +74,12 @@ class Lever(Object):
     def __init__(self, x, y, height, width):
         super().__init__(x, y, height, width)
         self.activated = False
+        self.activationHeight = height * 1
+        self.activationWidth = width * 1
         #This is the activation area of the Lever, it will be a factor of the height and width (above one)
         self.area = pygame.Surface([self.activationWidth, self.activationHeight])
         self.activationArea = self.area.get_rect()
-        self.activationHeight = height * 1
-        self.activationWidth = width * 1
+
 
     #This checks if the player is within the activation area
     def inArea(self, playerRect):
@@ -97,9 +100,10 @@ class Lever(Object):
 class HidingSpace(Object):
     def __init__(self, x, y, height, width):
         super().__init__(x, y, height, width)
-        self.area = pygame.Surface([self.activationWidth, self.activationHeight])
         self.activationHeight = height * 1
         self.activationWidth = width * 1
+        self.area = pygame.Surface([self.activationWidth, self.activationHeight])
+
 
 
     def inArea(self, playerLocation):
