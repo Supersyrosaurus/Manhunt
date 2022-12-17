@@ -1,4 +1,6 @@
 import pygame
+import player
+import hunter
 
 pygame.init()
 
@@ -140,3 +142,10 @@ class Button():
             self.clicked = False
         #Returns whether the mouse has been clicked or not
         return hasClicked
+
+class GameScreen(Screen):
+    def __init__(self, colour):
+        super().__init__(colour)
+        self.colour = colour
+        self.player = player.player()
+        self.hunter = hunter.hunter()

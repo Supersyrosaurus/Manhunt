@@ -22,10 +22,40 @@ class Map():
         self.mapWidth = mapWidth
         self.mapHeight = mapHeight
 
+
+    def createMap(self):
+
+    def addMapHeight(self):
+        for x in range(self.mapHeight):
+            self.map.append([])
+
     def createNode(self):
+    
+    def addFloors(self):
+
+    def addWalls(self):
+
+    def outerWallsandDoor
         
         
 
 
 class Node():
-    def __init__(self):
+    def __init__(self, x, y, category, type):
+        self.x = x
+        self.y = y
+        self.object = self.addObject(category, type)
+
+    def addObject(self, category, type):
+        if category == 'walls':
+            pass
+
+        elif category == 'floors':
+            return objects.Floor(self.x, self.y)
+
+        else:
+            return objects.Door(self.x, self.y)
+
+        
+        
+
