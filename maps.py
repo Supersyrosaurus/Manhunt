@@ -23,13 +23,10 @@ class Map():
         #The real height and width of the map will need to be increased by 2
         self.mapLength = mapLength + 2
 
-    def addHeight(self):
+
+    def createEmptyMap(self):
         for y in range(self.mapLength):
             self.map.append([])
-
-    def addWidth(self):
-        for y in range(self.mapLength):
-            print(str(y))
             for x in range(self.mapLength):
                 print(str(x))
                 if y == 0 or y == self.mapLength - 1:
