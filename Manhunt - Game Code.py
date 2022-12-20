@@ -8,6 +8,16 @@ pygame.init()
 
 wallsDic = {'empty':[], 'hidingSpace':[], 'lever':[]}
 floorsDic = {'wood':[], 'concrete':[], 'carpet':[]}
+doorCoord = (1, 3)
+
+gameMap = maps.Map(wallsDic, floorsDic, doorCoord, 5)
+gameMap.addHeight()
+print(gameMap.map)
+gameMap.addWidth()
+for y in gameMap.map:
+    print(y)
+
+
 
 #Loop for game screen
 '''running = True'''

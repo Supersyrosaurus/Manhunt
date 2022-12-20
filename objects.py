@@ -5,14 +5,13 @@ pygame.init()
 class Object():
     def __init__(self, x, y):
         #Each object has coordinates on the map
-        self.xCoord = x
-        self.yCoord = y
+        self.Coords = (x, y)
         #Creates a surface using the height and width of the object which will be used to display the object
-        self.surf = pygame.Surface([self.width, self.height])
+        '''self.surf = pygame.Surface([self.width, self.height])'''
 
     #Function returns the coordinates of the object
     def getCoords(self):
-        return (self.xCoord, self.yCoord)
+        return self.Coords
 
     #Procedure displays the object on the screen
     def display(self, screen):

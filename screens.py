@@ -1,6 +1,6 @@
 import pygame
-import player
-import hunter
+'''import player
+import hunter'''
 
 pygame.init()
 
