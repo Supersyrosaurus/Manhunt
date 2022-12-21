@@ -10,9 +10,7 @@ wallsDic = {'empty':[], 'hidingSpace':[], 'lever':[]}
 floorsDic = {'wood':[], 'concrete':[], 'carpet':[]}
 doorCoord = (1, 3)
 
-gameMap = maps.Map(wallsDic, floorsDic, doorCoord, 5)
-'''gameMap.addHeight()
-print(gameMap.map)'''
+gameMap = maps.Map(wallsDic, floorsDic, doorCoord, 7)
 gameMap.createEmptyMap()
 for y in gameMap.map:
     print(y)

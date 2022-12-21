@@ -25,17 +25,25 @@ class Map():
 
 
     def createEmptyMap(self):
+        #Loops for as long as the length of the map is
         for y in range(self.mapLength):
+            #for every loop a new list is appended
             self.map.append([])
             for x in range(self.mapLength):
+                #for every loop a new element is appended to the new list
                 print(str(x))
                 if y == 0 or y == self.mapLength - 1:
+                    #This if statement checks if it is the first list or the last list
+                    #and if it is it fills it with wall objects 
                     wall = objects.Wall(x, y)
                     self.map[y].append('W')
                 elif x == 0 or x == self.mapLength - 1:
+                    #This checks if the element is the first or the last
+                    #and if it is then it appends a wall object instead 
                     wall = objects.Wall(x, y)
                     self.map[y].append('W')
                 else:
+                    #This appends an empty spot in the list
                     self.map[y].append(0)            
         
 
