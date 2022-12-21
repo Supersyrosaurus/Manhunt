@@ -46,6 +46,8 @@ class Map():
                     #This appends an empty spot in the list
                     self.map[y].append(0)            
         
+    def addWalls(self):
+        pass
 
 
 '''class Node():

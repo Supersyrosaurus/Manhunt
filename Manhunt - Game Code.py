@@ -6,11 +6,13 @@ import maps
 #Initialising the pygame module
 pygame.init()
 
-wallsDic = {'empty':[], 'hidingSpace':[], 'lever':[]}
+wallsDic = {'empty':[1,2,3], 'hidingSpace':[4,5,6], 'lever':[7,8,9]}
 floorsDic = {'wood':[], 'concrete':[], 'carpet':[]}
 doorCoord = (1, 3)
 
-gameMap = maps.Map(wallsDic, floorsDic, doorCoord, 7)
+gameMap = maps.Map(wallsDic, floorsDic, doorCoord, 5)
+'''gameMap.addHeight()
+print(gameMap.map)'''
 gameMap.createEmptyMap()
 for y in gameMap.map:
     print(y)
