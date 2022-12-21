@@ -6,14 +6,15 @@ import maps
 #Initialising the pygame module
 pygame.init()
 
-wallsDic = {'empty':[1,2,3], 'hidingSpace':[4,5,6], 'lever':[7,8,9]}
-floorsDic = {'wood':[], 'concrete':[], 'carpet':[]}
-doorCoord = (1, 3)
+wallsDic = {'empty':[(1,1), (1, 2), (1, 3)], 'hidingSpace':[(2,1),(2,2),(2,3)], 'lever':[(3,1), (3,2), (3,3)]}
+floorsDic = {'wood':[(1,4),(2,4),(3,4),(4,4),(5,4)], 'concrete':[(1,5),(2,5),(3,5),(4,5),(5,5)], 'carpet':[(4,1),(4,2),(4,3)]}
+doorCoord = (6, 3)
 
 gameMap = maps.Map(wallsDic, floorsDic, doorCoord, 5)
-'''gameMap.addHeight()
-print(gameMap.map)'''
 gameMap.createEmptyMap()
+gameMap.addWalls()
+gameMap.addFloors()
+gameMap.addDoor()
 for y in gameMap.map:
     print(y)
 
@@ -47,6 +48,11 @@ for y in gameMap.map:
             print('settings')
             running = False'''
 
-
+#Going through a dictionary
+'''print(wallsDic)
+for list in wallsDic:
+    print(wallsDic[list])
+    for element in wallsDic[list]:
+        print(element)'''
 
 

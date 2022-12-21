@@ -3,9 +3,9 @@ import pygame
 pygame.init()
 
 class Object():
-    def __init__(self, x, y):
+    def __init__(self, Coords):
         #Each object has coordinates on the map
-        self.Coords = (x, y)
+        self.Coords = Coords
         #Creates a surface using the height and width of the object which will be used to display the object
         '''self.surf = pygame.Surface([self.width, self.height])'''
 
@@ -19,11 +19,11 @@ class Object():
 
 
 class Wall(Object):
-    def __init__(self, x, y, inputType = None):
-        super().__init__(x, y)
+    def __init__(self, Coords, inputType = None):
+        super().__init__(Coords)
         self.inputType = inputType
         #This sets the wall as 
-        self.wall = self.setType()
+        self.item = self.setType()
 
 
     def setType(self):
@@ -33,19 +33,21 @@ class Wall(Object):
 
         #If type is 0 then that means that there is a hidingSpace on the wall
         if self.inputType == 'hidingSpace':
-            return HidingSpace(self.xCoord, self.yCoord)
+            return HidingSpace(self.Coords)
             
         #If type is 1 then that means that there is a lever on the wall
-        if self.inputType == 'Lever':
-            return Lever(self.xCoord, self.yCoord)
+        if self.inputType == 'lever':
+            return Lever(self.Coords)
 
+    def getItem(self):
+        return self.item
     
             
     
             
 class Floor(Object):
-    def __init__(self, x, y, type):
-        super().__init__(x, y)
+    def __init__(self, Coords, type):
+        super().__init__(Coords)
         self.type = type
         #Stores the level of sound for each floor object depending on the type of floor
         self.soundLevel = self.setSound()
@@ -62,13 +64,13 @@ class Floor(Object):
             return 0.9
             
     #Function returns the sound level of the floor
-    def checkSoundLevel(self):
+    def getSoundLevel(self):
         return self.soundLevel
 
 
 class Lever(Object):
-    def __init__(self, x, y):
-        super().__init__(x, y)
+    def __init__(self, Coords):
+        super().__init__(Coords)
         self.activated = False
 
 
@@ -89,8 +91,8 @@ class Lever(Object):
 
 
 class HidingSpace(Object):
-    def __init__(self, x, y):
-        super().__init__(x, y)
+    def __init__(self, Coords):
+        super().__init__(Coords)
 
 
 
@@ -98,8 +100,8 @@ class HidingSpace(Object):
         pass
 
 class Door(Object):
-    def __init__(self, x, y):
-        super().__init__(x, y)
+    def __init__(self, Coords):
+        super().__init__(Coords)
         self.activated = False
 
     #Function that returns whether the door has been activated

@@ -31,7 +31,6 @@ class Map():
             self.map.append([])
             for x in range(self.mapLength):
                 #for every loop a new element is appended to the new list
-                print(str(x))
                 if y == 0 or y == self.mapLength - 1:
                     #This if statement checks if it is the first list or the last list
                     #and if it is it fills it with wall objects 
@@ -47,8 +46,31 @@ class Map():
                     self.map[y].append(0)            
         
     def addWalls(self):
-        pass
+        #Goes through each of the keys in the dictionary
+        for type in self.walls:
+            print(type)
+            #Uses the key to access the list associated with each key
+            #Goes through each element in the list which is the coordinates
+            #of that wall
+            for coord in self.walls[type]:
+                #Creates a wall object
+                wall = objects.Wall(coord, type)
+                #Switches one of the empty spots (0) to that wall object
+                self.map[coord[0]][coord[1]] = 'AW'
+                print(coord[0], coord[1])
 
+    def addFloors(self):
+        for type in self.floors:
+            print(type)
+            for coord in self.floors[type]:
+                floor = objects.Floor(coord, type)
+                self.map[coord[0]][coord[1]] = 'F'
+                print(coord[0], coord[1])
+
+    def addDoor(self):
+        door = objects.Door(self.doorCoord)
+        self.map[self.doorCoord[0]][self.doorCoord[1]] = 'D'
+                
 
 '''class Node():
     def __init__(self):'''
