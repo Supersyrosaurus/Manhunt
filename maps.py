@@ -38,6 +38,8 @@ class Map():
                 else:
                     self.map[y].append(0)            
         
+    def addWalls(self):
+        pass
 
 
 '''class Node():
