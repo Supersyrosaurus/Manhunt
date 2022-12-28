@@ -6,18 +6,17 @@ import maps
 #Initialising the pygame module
 pygame.init()
 
-wallsDic = {'empty':[(1,1), (1, 2), (1, 3)], 'hidingSpace':[(2,1),(2,2),(2,3)], 'lever':[(3,1), (3,2), (3,3)]}
-floorsDic = {'wood':[(1,4),(2,4),(3,4),(4,4),(5,4)], 'concrete':[(1,5),(2,5),(3,5),(4,5),(5,5)], 'carpet':[(4,1),(4,2),(4,3)]}
-doorCoord = (6, 3)
+wallsDic = {'empty':[(1,1)], 'hidingSpace':[(2,2)], 'lever':[(3,2)]}
+floorsDic = {'wood':[(1,4),(5,4)], 'concrete':[(1,5),(2,5),], 'carpet':[(4,3)]}
+doorCoord = (3 ,6)
 
 gameMap = maps.Map(wallsDic, floorsDic, doorCoord, 5)
-gameMap.createEmptyMap()
-gameMap.addWalls()
-gameMap.addFloors()
-gameMap.addDoor()
+gameMap.createMap()
 for y in gameMap.map:
     print(y)
-
+print(gameMap.getFloors('wood'))
+print(gameMap.getObject((3,6)))
+print(gameMap.getWalls())
 
 
 #Loop for game screen
