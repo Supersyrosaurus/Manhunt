@@ -101,12 +101,18 @@ class Map():
         else:
             return self.walls[category]
 
-    def getFloors(self, type = None):
-        if type == None:
-            return self.floors
+    #Function that returns all of the floors or all of a single type of floor
+    def getFloors(self, category = None):
+        allFloors = []
+        if category == None:
+            for type in self.floors:
+                for floor in self.floors[type]:
+                    allFloors.append(floor)
+            return allFloors
         else:
-            return self.floors[type]
+            return self.floors[category]
 
+    #Function that returns an object based on the coordinates
     def getObject(self, coords):
         return self.map[coords[1]][coords[0]]
         
