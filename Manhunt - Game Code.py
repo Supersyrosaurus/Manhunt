@@ -130,10 +130,10 @@ doorCoord = (3 ,6)
 gameMap = maps.Map(wallsDic, floorsDic, doorCoord, 5)
 gameMap.createMap()
 '''for y in gameMap.map:
-    print(y)
+    print(y)'''
 print(gameMap.getFloors('wood'))
 print(gameMap.getObject((3,6)))
-print(gameMap.getWalls())'''
+print(gameMap.getWalls())
 
 
 #Loop for game screen

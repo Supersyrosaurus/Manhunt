@@ -30,7 +30,7 @@ class Map():
         self.addWalls()
         self.addFloors()
         self.addDoor()
-
+    
     #Creates an empty shell for the map with an outer border of walls and empty spaces in the middle
     def createEmptyMap(self):
         #Loops for as long as the length of the map is
@@ -43,13 +43,13 @@ class Map():
                     #This if statement checks if it is the first list or the last list
                     #and if it is it fills it with wall objects 
                     wall = objects.Wall(x, y)
-                    self.map[y].append('W')
+                    self.map[y].append(wall)
                     self.borderWalls.append((x,y))
                 elif x == 0 or x == self.mapLength - 1:
                     #This checks if the element is the first or the last
                     #and if it is then it appends a wall object instead 
                     wall = objects.Wall(x, y)
-                    self.map[y].append('W')
+                    self.map[y].append(wall)
                     self.borderWalls.append((x,y))
                 else:
                     #This appends an empty spot in the list
@@ -59,7 +59,6 @@ class Map():
     def addWalls(self):
         #Goes through each of the keys in the dictionary
         for type in self.walls:
-            print(type)
             #Uses the key to access the list associated with each key
             #Goes through each element in the list which is the coordinates
             #of that wall
@@ -67,8 +66,7 @@ class Map():
                 #Creates a wall object
                 wall = objects.Wall(coord, type)
                 #Switches one of the empty spots (0) to that wall object
-                self.map[coord[1]][coord[0]] = 'AW'
-                print(coord[1], coord[0])
+                self.map[coord[1]][coord[0]] = wall
         for wall in self.borderWalls:
             self.walls['empty'].append(wall)
 
@@ -76,19 +74,17 @@ class Map():
     def addFloors(self):
         #Goes through each type of floor in self.floor dictionary
         for type in self.floors:
-            print(type)
             #Uses the key to access coordinates of type of floor
             for coord in self.floors[type]:
                 #Creates an object of type floor, passing the coordinates and type
                 floor = objects.Floor(coord, type)
                 #Changes an empty spot on the map to that object
-                self.map[coord[1]][coord[0]] = 'F'
-                print(coord[1], coord[0])
+                self.map[coord[1]][coord[0]] = floor
 
     #Procedure that adds the door to the map
     def addDoor(self):
         door = objects.Door(self.doorCoord)
-        self.map[self.doorCoord[1]][self.doorCoord[0]] = 'D'
+        self.map[self.doorCoord[1]][self.doorCoord[0]] = door
 
     #Function that returns all of the walls or a type of wall
     def getWalls(self, category = None):
