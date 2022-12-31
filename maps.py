@@ -87,7 +87,7 @@ class Map():
         self.map[self.doorCoord[1]][self.doorCoord[0]] = door
 
     #Function that returns all of the walls or a type of wall
-    def getWalls(self, category = None):
+    def getWallCoords(self, category = None):
         allWalls = []
         if category == None:
             for type in self.walls:
@@ -98,15 +98,33 @@ class Map():
             return self.walls[category]
 
     #Function that returns all of the floors or all of a single type of floor
-    def getFloors(self, category = None):
-        allFloors = []
+    def getFloorCoords(self, category = None):
+        allFloorCoords = []
         if category == None:
             for type in self.floors:
                 for floor in self.floors[type]:
-                    allFloors.append(floor)
-            return allFloors
+                    allFloorCoords.append(floor)
+            return allFloorCoords
         else:
             return self.floors[category]
+
+    #Function that returns all of the wall objects
+    def getWalls(self, category = None):
+        allWalls = []
+        coords = self.getWallCoords(category)
+        for coord in coords:
+            wall = self.map[coord[1]][coord[0]]
+            allWalls.append(wall)
+        return allWalls
+
+    #Function that returns all of the floor objects
+    def getFloors(self, category = None):
+        allFloors = []
+        coords = self.getFloorCoords(category)
+        for coord in coords:
+            floor = self.map[coord[1]][coord[0]]
+            allFloors.append(floor)
+        return allFloors
 
     #Function that returns an object based on the coordinates
     def getObject(self, coords):
@@ -121,3 +139,14 @@ class Map():
 
 '''class Node():
     def __init__(self):'''
+
+'''    def getObject(self, type, category = None):
+        objects = []
+        if type == 'floor':
+            coords = self.getWallCoords(category)
+        else:
+            coords = self.getFloorCoords(category)
+        for coord in coords:
+            object = self.map[coord[1]][coord[0]]
+            objects.append(object)
+        return objects'''
