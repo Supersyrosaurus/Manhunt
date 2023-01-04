@@ -2,11 +2,12 @@ import pygame
 import screens
 import objects
 import maps
+import physics
 
 #Initialising the pygame module
 pygame.init()
 
-'''#Setting a title
+#Setting a title
 pygame.display.set_caption("Manhunt")
 
 #Setting the icon
@@ -25,6 +26,7 @@ lightGrey = (150,150,150)
 mainMenu = screens.Screen(lightGrey)
 settings = screens.Screen(lightGrey)
 mode = screens.Screen(lightGrey)
+game = screens.GameScreen(lightGrey)
 
 #Variables for mainMenu
 mainMenu_texts = ['Manhunt']
@@ -70,6 +72,27 @@ mode.createButton('normal', 'normal.png', 340, 175, 1)
 mode.createButton('nightmare', 'nightmare.png', 283, 375, 1)
 mode.addImages(mode_images, mode_imagesCoords, mode_imageScales)
 
+#Variables for GameScreen class
+game_texts = []
+game_textSizes = []
+game_textColours = []
+game_textFonts = []
+game_textCoords = []
+game_images = []
+game_imageCoords = []
+game_imageScales = []
+game.renderMTexts(game_texts, game_textSizes, game_textColours, game_textFonts, game_textCoords)
+game.addImages(game_images, game_imageCoords, game_imageScales)
+
+#Creating the map for the game
+walls = {'empty':[(1,1)], 'hidingSpace':[(2,2)], 'lever':[(3,2)]}
+floors = {'wood':[(1,4),(5,4)], 'concrete':[(1,5),(2,5),], 'carpet':[(4,3)]}
+doorCoord = (3 ,6)
+map = maps.Map(walls, floors, doorCoord, 5)
+map.createMap()
+mapList = map.getMap()
+print(mapList)
+
 def mainMenuScreen(mainMenu, settings, mode, clock):
     running = True
     while running:
@@ -95,8 +118,10 @@ def modeScreen(mode, clock):
             return True
         if mode.searchButton('normal').clickCheck(mode.screen) == True:
             print('normal')
+            running = gameScreen(clock)
         if mode.searchButton('nightmare').clickCheck(mode.screen) == True:
             print('NIGHTMARE')
+            running = gameScreen(clock)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return False
@@ -115,11 +140,20 @@ def settingsScreen(settings, clock):
 
         pygame.display.update()
 
+def gameScreen(clock):
+        running = True
+        while running:
+            clock.tick(60)
+            game.displayGameScreen(map.getMap(), game)
 
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    return False
+            pygame.display.update()
 
-mainMenuScreen(mainMenu, settings, mode, clock)'''
+mainMenuScreen(mainMenu, settings, mode, clock)
 
-#Wall testing stuff 
+'''#Wall testing stuff 
 #Initialising the pygame module
 pygame.init()
 
@@ -129,15 +163,15 @@ doorCoord = (3 ,6)
 
 gameMap = maps.Map(wallsDic, floorsDic, doorCoord, 5)
 gameMap.createMap()
-'''for y in gameMap.map:
-    print(y)'''
+for y in gameMap.map:
+    print(y)
 print(gameMap.getFloors('wood'))
 print(gameMap.getObject((3,6)))
-print(gameMap.getWalls())
+print(gameMap.getWalls())'''
 
 
 #Loop for game screen
-'''running = True'''
+'''hrunning = True'''
 '''while running:
 
     #Changing background colour

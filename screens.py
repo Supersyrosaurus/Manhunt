@@ -1,6 +1,6 @@
 import pygame
-'''import player
-import hunter'''
+import player
+import hunter
 
 pygame.init()
 
@@ -110,8 +110,6 @@ class Button():
         #Gets the width and height of the img in pixels 
         width = self.img.get_width()
         height = self.img.get_height()
-        print(width)
-        print(height)
         #Transforms the image using a scale
         self.transformedImg = pygame.transform.scale(self.img, (int(width * scale), int(height * scale)))
         #Gets the rectangular area of the image
@@ -147,5 +145,19 @@ class GameScreen(Screen):
     def __init__(self, colour):
         super().__init__(colour)
         self.colour = colour
-        self.player = player.player()
-        self.hunter = hunter.hunter()
+        #self.player = player.player()
+        #self.hunter = hunter.hunter()
+
+    def moveObject(self, rect):
+            pass
+
+    def displayRect(self, rect):
+        pygame.draw.rect(self.screen, (0,0,0), rect)
+
+    def displayGameScreen(self, map, screen):
+        self.displayScreen()
+        for row in map:
+            for object in row:
+                if object != 0:
+                    self.displayRect(object.getRect())
+
