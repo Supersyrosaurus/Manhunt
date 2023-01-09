@@ -7,7 +7,7 @@ class Object():
         #Each object has coordinates on the map
         self.Coords = Coords
         #Creates a rect using the height and width of the object which will be used to display the object
-        self.rect = pygame.Rect(self.Coords[0] * 64, self.Coords[1] * 64, 64, 64)
+        self.rect = pygame.Rect(self.Coords[0] * 32, self.Coords[1] * 32, 32, 32)
 
     #Function returns the coordinates of the object
     def getCoords(self):

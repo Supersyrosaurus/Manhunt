@@ -84,14 +84,14 @@ game_imageScales = []
 game.renderMTexts(game_texts, game_textSizes, game_textColours, game_textFonts, game_textCoords)
 game.addImages(game_images, game_imageCoords, game_imageScales)
 
-#Creating the map for the game
+'''#Creating the map for the game
 walls = {'empty':[(1,1)], 'hidingSpace':[(2,2)], 'lever':[(3,2)]}
 floors = {'wood':[(1,4),(5,4)], 'concrete':[(1,5),(2,5),], 'carpet':[(4,3)]}
 doorCoord = (3 ,6)
-map = maps.Map(walls, floors, doorCoord, 5)
+map = maps.Map(walls, floors, doorCoord, 20)
 map.createMap()
 mapList = map.getMap()
-print(mapList)
+print(mapList)'''
 
 def mainMenuScreen(mainMenu, settings, mode, clock):
     running = True
@@ -140,12 +140,55 @@ def settingsScreen(settings, clock):
 
         pygame.display.update()
 
+#Testing rectangles collisions
+movingRect = pygame.Rect(25, 50, 80, 80)
+otherRect =pygame.Rect(150, 300, 400, 100)
+
+def setSpeed(rect, screen):
+        global xSpeed, ySpeed, otherSpeed
+        rect.x += xSpeed
+        rect.y += ySpeed
+        
+        #Collsion with screen borders
+        if rect.right >= screen.getWidth() or rect.left <= 0:
+            xSpeed *= -1
+            print(xSpeed)
+        if rect.top <= 0 or rect.bottom >= screen.getHeight():
+            ySpeed *= -1
+            print(xSpeed)
+
+        #Moving other rect
+        otherRect.y += otherSpeed
+        if otherRect.top <= 0 or otherRect.bottom >= screen.getHeight():
+            otherSpeed *= -1 
+
+        #Collision with other rects
+        collisionTolerance = 10
+        if movingRect.colliderect(otherRect):
+            if abs(otherRect.top - movingRect.bottom) < collisionTolerance and ySpeed > 0:
+                ySpeed *= -1
+            if abs(otherRect.bottom - movingRect.top) < collisionTolerance and ySpeed < 0:
+                ySpeed *= -1
+            if abs(otherRect.right - movingRect.left) < collisionTolerance and xSpeed > 0:
+                xSpeed *= -1
+            if abs(otherRect.left - movingRect.right) < collisionTolerance and xSpeed < 0:
+                xSpeed *= -1
+            
+
+        pygame.draw.rect(screen.getScreen(), (0,0,0), rect)
+
+xSpeed = 4
+ySpeed = 2
+otherSpeed = 2
+
 def gameScreen(clock):
         running = True
         while running:
             clock.tick(60)
-            game.displayGameScreen(map.getMap(), game)
-
+            game.displayScreen()
+            setSpeed(movingRect, game)
+            pygame.draw.rect(game.getScreen(), (255, 0, 255), otherRect)
+            
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     return False
@@ -171,8 +214,8 @@ print(gameMap.getWalls())'''
 
 
 #Loop for game screen
-'''hrunning = True'''
-'''while running:
+'''running = True
+while running:
 
     #Changing background colour
     mainMenu.displayScreen()

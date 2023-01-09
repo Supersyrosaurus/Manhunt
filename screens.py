@@ -14,8 +14,10 @@ class Screen():
         self.texts = []
         self.images = []
         self.buttons = []
+        self.height = 640
+        self.width = 960
         #All screens will be the same size
-        self.screen = pygame.display.set_mode((960, 640))
+        self.screen = pygame.display.set_mode((self.width, self.height))
 
 
     #Procedure to display image
@@ -98,6 +100,14 @@ class Screen():
     def setColour(self, colour):
         self.screen.fill(colour)
 
+    def getHeight(self):
+        return self.height
+
+    def getWidth(self):
+        return self.width
+    
+    def getScreen(self):
+        return self.screen
 
 #Button class
 class Button():
@@ -152,9 +162,11 @@ class GameScreen(Screen):
             pass
 
     def displayRect(self, rect):
+        #Draws a rect on the screen
         pygame.draw.rect(self.screen, (0,0,0), rect)
 
     def displayGameScreen(self, map, screen):
+        #Displays the screen and the map
         self.displayScreen()
         for row in map:
             for object in row:

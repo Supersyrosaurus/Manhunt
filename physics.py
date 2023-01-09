@@ -5,9 +5,10 @@ class Physics():
     def __init__(self):
         pass
 
-    def changeSpeed(self,rect, xSpeed, ySpeed):
+    def changeSpeed(self,rect, xSpeed, ySpeed, screen):
         rect.x += xSpeed
         rect.y += ySpeed
+        pygame.draw.rect(screen, (0,0,0), rect)
 
 
 
@@ -17,6 +18,8 @@ class Physics():
 
 
 
-class Projectile():
-    def __init__(self):
-        pass
+class Projectile(Physics):
+    def __init__(self, coords, speed, height, width):
+        self.speed = speed
+        self.rect = pygame.Rect(coords[0], coords[1], width, height)
+        
