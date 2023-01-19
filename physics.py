@@ -13,7 +13,7 @@ class Physics():
 
 
     def checkCollision(self, objOne, objTwo):
-        pass
+        return objOne.colliderect(objTwo)
         
 
 

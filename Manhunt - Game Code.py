@@ -144,8 +144,8 @@ def settingsScreen(settings, clock):
 movingRect = pygame.Rect(25, 50, 80, 80)
 otherRect =pygame.Rect(150, 300, 400, 100)
 
-def setSpeed(rect, screen):
-        global xSpeed, ySpeed, otherSpeed
+def setSpeed(rect, screen, xSpeed, ySpeed):
+        global otherSpeed
         rect.x += xSpeed
         rect.y += ySpeed
         
@@ -164,21 +164,34 @@ def setSpeed(rect, screen):
 
         #Collision with other rects
         collisionTolerance = 10
+        #Checking if the moving rectangle has collided with another rectangle
         if movingRect.colliderect(otherRect):
+            #Each one of these checks in what way the rectangles have collided with each other
+            #As the 'movingRect' must go in the opposite direction when it hits a different object, to know which 
+            #direction to move it in, we need to check how one rectangle has collided relative to the other
+            #to do this we compare the absolute values of the difference of the opposite sides of each of the rectangles
+            #to the collisionTollerance (which is how close one rect must be to the other in pixels to be considered a collision)
+            #and we also need to check in which direction the object is moving by comparing the speed of the object in a specific direction
+            #as one of the objects may have collided with another object and they are moving in the same direction which could cause the object
+            #to move in the opposite direction even though it should still continue in the same direction 
             if abs(otherRect.top - movingRect.bottom) < collisionTolerance and ySpeed > 0:
                 ySpeed *= -1
+                print(ySpeed)
             if abs(otherRect.bottom - movingRect.top) < collisionTolerance and ySpeed < 0:
                 ySpeed *= -1
-            if abs(otherRect.right - movingRect.left) < collisionTolerance and xSpeed > 0:
+                print(ySpeed)
+            if abs(otherRect.left - movingRect.right) < collisionTolerance and xSpeed > 0:
                 xSpeed *= -1
-            if abs(otherRect.left - movingRect.right) < collisionTolerance and xSpeed < 0:
+                print(xSpeed)
+            if abs(otherRect.right - movingRect.left) < collisionTolerance and xSpeed < 0:
                 xSpeed *= -1
+                print(xSpeed)
             
-
+        #This redraws the 'movingRect' - 'otherRect' is drawn in main game loop
         pygame.draw.rect(screen.getScreen(), (0,0,0), rect)
 
-xSpeed = 4
-ySpeed = 2
+xSpeed = 3
+ySpeed = 3
 otherSpeed = 2
 
 def gameScreen(clock):
@@ -186,7 +199,7 @@ def gameScreen(clock):
         while running:
             clock.tick(60)
             game.displayScreen()
-            setSpeed(movingRect, game)
+            setSpeed(movingRect, game, xSpeed, ySpeed)
             pygame.draw.rect(game.getScreen(), (255, 0, 255), otherRect)
             
             for event in pygame.event.get():
