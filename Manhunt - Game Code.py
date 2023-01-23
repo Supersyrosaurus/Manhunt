@@ -144,8 +144,8 @@ def settingsScreen(settings, clock):
 movingRect = pygame.Rect(25, 50, 80, 80)
 otherRect =pygame.Rect(150, 300, 400, 100)
 
-def setSpeed(rect, screen, xSpeed, ySpeed):
-        global otherSpeed
+def setSpeed(rect, screen):
+        global otherSpeed, xSpeed, ySpeed
         rect.x += xSpeed
         rect.y += ySpeed
         
@@ -193,14 +193,18 @@ def setSpeed(rect, screen, xSpeed, ySpeed):
 xSpeed = 3
 ySpeed = 3
 otherSpeed = 2
+projectile1 = physics.Projectile((100,100), 3, 3, 50, 50)
+projectile2 = physics.Projectile((500,500), -5, -5, 50, 50)
 
 def gameScreen(clock):
         running = True
         while running:
             clock.tick(60)
             game.displayScreen()
-            setSpeed(movingRect, game, xSpeed, ySpeed)
+            setSpeed(movingRect, game)
             pygame.draw.rect(game.getScreen(), (255, 0, 255), otherRect)
+            '''projectile1.launchProjectile(game)
+            projectile2.launchProjectile(game)'''
             
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
