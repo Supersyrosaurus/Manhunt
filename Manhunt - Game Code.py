@@ -201,10 +201,10 @@ def gameScreen(clock):
         while running:
             clock.tick(60)
             game.displayScreen()
-            setSpeed(movingRect, game)
-            pygame.draw.rect(game.getScreen(), (255, 0, 255), otherRect)
-            '''projectile1.launchProjectile(game)
-            projectile2.launchProjectile(game)'''
+            '''setSpeed(movingRect, game)
+            pygame.draw.rect(game.getScreen(), (255, 0, 255), otherRect)'''
+            projectile1.launchProjectile(game)
+            projectile2.launchProjectile(game)
             
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
