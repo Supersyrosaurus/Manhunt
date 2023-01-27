@@ -6,17 +6,20 @@ class Object():
     def __init__(self, Coords):
         #Each object has coordinates on the map
         self.Coords = Coords
-        #Creates a surface using the height and width of the object which will be used to display the object
-        '''self.surf = pygame.Surface([self.width, self.height])'''
+        #Creates a rect using the height and width of the object which will be used to display the object
+        self.rect = pygame.Rect(self.Coords[0] * 32, self.Coords[1] * 32, 32, 32)
 
     #Function returns the coordinates of the object
     def getCoords(self):
         return self.Coords
 
-    #Procedure displays the object on the screen
-    def display(self, screen):
-        screen.blit(self.surf)
+    def getRect(self):
+        return self.rect
 
+'''    #Procedure displays the object on the screen
+    def display(self, screen, colour):
+        pygame.draw.rect(screen, colour, self.rect)
+'''
 
 class Wall(Object):
     def __init__(self, Coords, inputType = None):

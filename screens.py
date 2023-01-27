@@ -1,6 +1,6 @@
 import pygame
-'''import player
-import hunter'''
+import player
+import hunter
 
 pygame.init()
 
@@ -14,8 +14,10 @@ class Screen():
         self.texts = []
         self.images = []
         self.buttons = []
+        self.height = 640
+        self.width = 960
         #All screens will be the same size
-        self.screen = pygame.display.set_mode((960, 640))
+        self.screen = pygame.display.set_mode((self.width, self.height))
 
 
     #Procedure to display image
@@ -98,6 +100,14 @@ class Screen():
     def setColour(self, colour):
         self.screen.fill(colour)
 
+    def getHeight(self):
+        return self.height
+
+    def getWidth(self):
+        return self.width
+    
+    def getScreen(self):
+        return self.screen
 
 #Button class
 class Button():
@@ -110,8 +120,6 @@ class Button():
         #Gets the width and height of the img in pixels 
         width = self.img.get_width()
         height = self.img.get_height()
-        print(width)
-        print(height)
         #Transforms the image using a scale
         self.transformedImg = pygame.transform.scale(self.img, (int(width * scale), int(height * scale)))
         #Gets the rectangular area of the image
@@ -147,5 +155,21 @@ class GameScreen(Screen):
     def __init__(self, colour):
         super().__init__(colour)
         self.colour = colour
-        self.player = player.player()
-        self.hunter = hunter.hunter()
+        #self.player = player.player()
+        #self.hunter = hunter.hunter()
+
+    def moveObject(self, rect):
+            pass
+
+    def displayRect(self, rect):
+        #Draws a rect on the screen
+        pygame.draw.rect(self.screen, (0,0,0), rect)
+
+    def displayGameScreen(self, map, screen):
+        #Displays the screen and the map
+        self.displayScreen()
+        for row in map:
+            for object in row:
+                if object != 0:
+                    self.displayRect(object.getRect())
+

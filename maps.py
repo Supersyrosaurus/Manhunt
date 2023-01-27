@@ -24,6 +24,9 @@ class Map():
         #The real height and width of the map will need to be increased by 2
         self.mapLength = mapLength + 2
 
+    def getMap(self):
+        return self.map
+
     #Uses the different methods within the class to create a map
     def createMap(self):
         self.createEmptyMap()
@@ -42,13 +45,13 @@ class Map():
                 if y == 0 or y == self.mapLength - 1:
                     #This if statement checks if it is the first list or the last list
                     #and if it is it fills it with wall objects 
-                    wall = objects.Wall(x, y)
+                    wall = objects.Wall((x, y))
                     self.map[y].append(wall)
                     self.borderWalls.append((x,y))
                 elif x == 0 or x == self.mapLength - 1:
                     #This checks if the element is the first or the last
                     #and if it is then it appends a wall object instead 
-                    wall = objects.Wall(x, y)
+                    wall = objects.Wall((x, y))
                     self.map[y].append(wall)
                     self.borderWalls.append((x,y))
                 else:
