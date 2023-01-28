@@ -209,6 +209,14 @@ def gameScreen(clock):
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     return False
+                pressed = pygame.key.get_pressed()
+                if pressed[pygame.K_s] and pressed[pygame.K_a]:
+                    print('not moving')
+                elif pressed[pygame.K_w]:
+                    print('moving forward')
+                elif pressed[pygame.K_s]:
+                    print('moving back')
+                
             pygame.display.update()
 
 mainMenuScreen(mainMenu, settings, mode, clock)
