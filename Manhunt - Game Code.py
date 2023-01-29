@@ -3,6 +3,7 @@ import screens
 import objects
 import maps
 import physics
+import player
 
 #Initialising the pygame module
 pygame.init()
@@ -84,14 +85,7 @@ game_imageScales = []
 game.renderMTexts(game_texts, game_textSizes, game_textColours, game_textFonts, game_textCoords)
 game.addImages(game_images, game_imageCoords, game_imageScales)
 
-'''#Creating the map for the game
-walls = {'empty':[(1,1)], 'hidingSpace':[(2,2)], 'lever':[(3,2)]}
-floors = {'wood':[(1,4),(5,4)], 'concrete':[(1,5),(2,5),], 'carpet':[(4,3)]}
-doorCoord = (3 ,6)
-map = maps.Map(walls, floors, doorCoord, 20)
-map.createMap()
-mapList = map.getMap()
-print(mapList)'''
+
 
 def mainMenuScreen(mainMenu, settings, mode, clock):
     running = True
@@ -196,30 +190,60 @@ otherSpeed = 2
 projectile1 = physics.Projectile((100,100), 3, 3, 50, 50)
 projectile2 = physics.Projectile((500,500), -5, -5, 50, 50)
 
+playerOne = player.Player(0,0, 'whiteCircle.png')
+
 def gameScreen(clock):
         running = True
         while running:
             clock.tick(60)
             game.displayScreen()
-            '''setSpeed(movingRect, game)
-            pygame.draw.rect(game.getScreen(), (255, 0, 255), otherRect)'''
-            projectile1.launchProjectile(game)
-            projectile2.launchProjectile(game)
+            playerOne.displayPlayer(game.getScreen())
+            canPress = True
             
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     return False
-                pressed = pygame.key.get_pressed()
-                if pressed[pygame.K_s] and pressed[pygame.K_a]:
-                    print('not moving')
-                elif pressed[pygame.K_w]:
-                    print('moving forward')
-                elif pressed[pygame.K_s]:
-                    print('moving back')
+                if canPress == True:
+                    playerOne.checkMove(canPress)
+                    canPress = False
+
                 
             pygame.display.update()
 
 mainMenuScreen(mainMenu, settings, mode, clock)
+
+
+#####################          STUFF THAT MAY BE NEEDED LATER OR HAS BEEN USED FOR TESTING          ###################
+
+'''setSpeed(movingRect, game)
+            pygame.draw.rect(game.getScreen(), (255, 0, 255), otherRect)
+            projectile1.launchProjectile(game)
+            projectile2.launchProjectile(game)
+            canPress = True
+                pressed = pygame.key.get_pressed()
+                
+                if pressed[pygame.K_w] and canPress == True:
+                    projectile1.xCollide()
+                    print(str(projectile1.xSpeed))
+                    canPress = False
+                    
+                if pressed[pygame.K_s] and canPress == True:
+                    projectile1.yCollide()
+                    print(str(projectile1.ySpeed))
+                    canPress = False'''
+
+'''#Creating the map for the game
+walls = {'empty':[(1,1)], 'hidingSpace':[(2,2)], 'lever':[(3,2)]}
+floors = {'wood':[(1,4),(5,4)], 'concrete':[(1,5),(2,5),], 'carpet':[(4,3)]}
+doorCoord = (3 ,6)
+map = maps.Map(walls, floors, doorCoord, 20)
+map.createMap()
+mapList = map.getMap()
+print(mapList)'''
+
+
+
+
 
 '''#Wall testing stuff 
 #Initialising the pygame module
