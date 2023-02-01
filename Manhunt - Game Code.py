@@ -190,7 +190,7 @@ otherSpeed = 2
 projectile1 = physics.Projectile((100,100), 3, 3, 50, 50)
 projectile2 = physics.Projectile((500,500), -5, -5, 50, 50)
 
-playerOne = player.Player(0,0, 'whiteCircle.png')
+playerOne = player.Player(0,0, 'whiteCircle.png', 0.09, 5, 5)
 
 def gameScreen(clock):
         running = True
@@ -198,13 +198,14 @@ def gameScreen(clock):
             clock.tick(60)
             game.displayScreen()
             playerOne.displayPlayer(game.getScreen())
+            print(playerOne.getMapCoords())
             canPress = True
             
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     return False
                 if canPress == True:
-                    playerOne.checkMove(canPress)
+                    playerOne.checkKeys()
                     canPress = False
 
                 
