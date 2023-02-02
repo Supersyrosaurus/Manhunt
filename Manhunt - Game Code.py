@@ -196,18 +196,18 @@ projectile2 = physics.Projectile((500,500), -5, -5, 50, 50)
 walls = {'empty':[(1,1)], 'hidingSpace':[(2,2)], 'lever':[(3,2)]}
 floors = {'wood':[(1,4),(5,4)], 'concrete':[(1,5),(2,5),], 'carpet':[(4,3)]}
 doorCoord = (3 ,6)
-map = maps.Map(walls, floors, doorCoord, 20)
+map = maps.Map(walls, floors, doorCoord, 30)
 map.createMap()
 mapList = map.getMap()
 print(mapList)
 
-playerOne = player.Player(0,0, 'whiteCircle.png', 0.09, 5, 5)
+playerOne = player.Player(0,0, 'whiteCircle.png', 0.09, 5)
 
 def gameScreen(clock):
         running = True
         while running:
             clock.tick(60)
-            game.displayScreen()
+            game.displayGameScreen(map.getMap(), game.getScreen())
             playerOne.displayPlayer(game.getScreen())
             why = playerOne.getMapCoords()
             print(why)

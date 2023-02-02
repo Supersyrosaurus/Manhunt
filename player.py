@@ -4,19 +4,23 @@ import objects
 pygame.init()
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, x, y, img, scale, xSpeed, ySpeed):
+    def __init__(self, x, y, img, scale, speed):
         super().__init__
+        #Coordinate attributes
         self.x = x
         self.y = y
         self.screenCoords = (x, y)
         self.mapCoords = (x/32, y/32)
+        #Image attributes
         self.img = pygame.image.load(img).convert_alpha()
         width = self.img.get_width()
         height = self.img.get_height()
         self.transformedImg = pygame.transform.scale(self.img, (int(width * scale), int(height * scale)))
-        self.xSpeed = xSpeed
-        self.ySpeed = ySpeed
+        #Speed in any direction
+        self.speed = speed
+        #Hitbox of the player by creating a rectangle around the player img
         self.hitbox = self.transformedImg.get_rect()
+        self.center = self.hitbox.center
         self.hiding = False
 
     #Displays the player on whatever screen is passed to the method
@@ -27,7 +31,7 @@ class Player(pygame.sprite.Sprite):
     #the coordinates of the player
     def moveForward(self, pressed):
         if pressed[pygame.K_w]:
-            self.y -= self.ySpeed
+            self.y -= self.speed
             self.setCoords()
             #print('forward')
             
@@ -36,7 +40,7 @@ class Player(pygame.sprite.Sprite):
     #the coordinates of the player
     def moveBackward(self, pressed):
         if pressed[pygame.K_s]:
-            self.y += self.ySpeed
+            self.y += self.speed
             self.setCoords()
             #print('backward')
 
@@ -44,7 +48,7 @@ class Player(pygame.sprite.Sprite):
     #the coordinates of the player
     def moveRight(self, pressed):
         if pressed[pygame.K_d]:
-            self.x += self.xSpeed
+            self.x += self.speed
             self.setCoords()
             #print('right')
         
@@ -53,16 +57,18 @@ class Player(pygame.sprite.Sprite):
     #the coordintes of the player
     def moveLeft(self, pressed):
         if pressed[pygame.K_a]:
-            self.x -= self.xSpeed
+            self.x -= self.speed
             self.setCoords()
             #print('left')
 
     def interact(self, pressed, map):
         if pressed[pygame.K_e]:
             coords = self.getMapCoords()
-            hidingSpace = map.getObject(coords)
+            wall = map.getObject(coords)
+            hidingSpace = wall.getItem()
             print(hidingSpace)
             if isinstance(hidingSpace, objects.HidingSpace):
+
                 print('THIS IS A HIDING SPACE')
             
 
@@ -80,8 +86,12 @@ class Player(pygame.sprite.Sprite):
         #print(str(self.screenCoords))
     
     def setMapCoords(self):
-        x = round(int(self.screenCoords[0])/32)
-        y = round(int(self.screenCoords[1])/32)
+        '''x = round(int(self.screenCoords[0])/32)
+        y = round(int(self.screenCoords[1])/32)'''
+        self.hitbox = self.transformedImg.get_rect()
+        self.center = self.hitbox.center
+        x = round(int(self.center[0])/32)
+        y = round(int(self.center[1])/32)
         self.mapCoords = (x, y)
 
     #This method checks if the W, A, S, D, E, or LEFT SHIFT buttons are pressed and then carries out various actions depending 
