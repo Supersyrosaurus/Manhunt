@@ -190,6 +190,17 @@ otherSpeed = 2
 projectile1 = physics.Projectile((100,100), 3, 3, 50, 50)
 projectile2 = physics.Projectile((500,500), -5, -5, 50, 50)
 
+########## TESTING DA MAP STOOF ##########
+
+#Creating the map for the game
+walls = {'empty':[(1,1)], 'hidingSpace':[(2,2)], 'lever':[(3,2)]}
+floors = {'wood':[(1,4),(5,4)], 'concrete':[(1,5),(2,5),], 'carpet':[(4,3)]}
+doorCoord = (3 ,6)
+map = maps.Map(walls, floors, doorCoord, 20)
+map.createMap()
+mapList = map.getMap()
+print(mapList)
+
 playerOne = player.Player(0,0, 'whiteCircle.png', 0.09, 5, 5)
 
 def gameScreen(clock):
@@ -198,14 +209,15 @@ def gameScreen(clock):
             clock.tick(60)
             game.displayScreen()
             playerOne.displayPlayer(game.getScreen())
-            print(playerOne.getMapCoords())
-            canPress = True
+            why = playerOne.getMapCoords()
+            print(why)
+            canPress = True 
             
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     return False
                 if canPress == True:
-                    playerOne.checkKeys()
+                    playerOne.checkKeys(map)
                     canPress = False
 
                 
@@ -233,14 +245,7 @@ mainMenuScreen(mainMenu, settings, mode, clock)
                     print(str(projectile1.ySpeed))
                     canPress = False'''
 
-'''#Creating the map for the game
-walls = {'empty':[(1,1)], 'hidingSpace':[(2,2)], 'lever':[(3,2)]}
-floors = {'wood':[(1,4),(5,4)], 'concrete':[(1,5),(2,5),], 'carpet':[(4,3)]}
-doorCoord = (3 ,6)
-map = maps.Map(walls, floors, doorCoord, 20)
-map.createMap()
-mapList = map.getMap()
-print(mapList)'''
+
 
 
 

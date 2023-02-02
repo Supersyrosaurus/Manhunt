@@ -1,4 +1,6 @@
 import pygame
+import maps
+import objects
 pygame.init()
 
 class Player(pygame.sprite.Sprite):
@@ -55,8 +57,15 @@ class Player(pygame.sprite.Sprite):
             self.setCoords()
             #print('left')
 
-    def interact(self, pressed):
+    def interact(self, pressed, map):
         if pressed[pygame.K_e]:
+            coords = self.getMapCoords()
+            hidingSpace = map.getObject(coords)
+            print(hidingSpace)
+            if isinstance(hidingSpace, objects.HidingSpace):
+                print('THIS IS A HIDING SPACE')
+            
+
             print('interact')
 
     def sprint(self, pressed):
@@ -71,13 +80,13 @@ class Player(pygame.sprite.Sprite):
         #print(str(self.screenCoords))
     
     def setMapCoords(self):
-        x = int(self.screenCoords[0])/32
-        y = int(self.screenCoords[1])/32
+        x = round(int(self.screenCoords[0])/32)
+        y = round(int(self.screenCoords[1])/32)
         self.mapCoords = (x, y)
 
     #This method checks if the W, A, S, D, E, or LEFT SHIFT buttons are pressed and then carries out various actions depending 
     #on the button that is pressed 
-    def checkKeys(self):
+    def checkKeys(self, map):
         #Uses a pygame method to check if any key has been pressed and will be true if it is pressed and false if no buttons
         #on the keyboard are being pressed
         pressed = pygame.key.get_pressed()
@@ -88,8 +97,9 @@ class Player(pygame.sprite.Sprite):
         self.moveRight(pressed)
         self.moveLeft(pressed)
         self.sprint(pressed)
-        self.interact(pressed)
+        self.interact(pressed, map)
 
+    #Returns the map coordinates of the player
     def getMapCoords(self):
         self.setMapCoords()
         return self.mapCoords
