@@ -1,8 +1,9 @@
 import pygame
+import physics
 
 pygame.init()
 
-class Object():
+class Object(physics.Physics):
     def __init__(self, Coords):
         #Each object has coordinates on the map
         self.Coords = Coords
@@ -96,11 +97,14 @@ class Lever(Object):
 class HidingSpace(Object):
     def __init__(self, Coords):
         super().__init__(Coords)
+        self.activationArea = pygame.Rect((self.Coords[0] - 1) * 32, (self.Coords[1]) * 32, 96, 96)
 
 
 
-    def inArea(self, playerLocation):
-        pass
+    def inArea(self, playerHitbox):
+        check = self.checkCollision(playerHitbox, self.activationArea)
+        return check
+        
 
 class Door(Object):
     def __init__(self, Coords):

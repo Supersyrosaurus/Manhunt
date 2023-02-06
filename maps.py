@@ -132,7 +132,20 @@ class Map():
     #Function that returns an object based on the coordinates
     def getObject(self, coords):
         return self.map[coords[1]][coords[0]]
-        
+    
+    def getInteractables(self):
+        HWalls = self.getWalls('hidingSpace')
+        LWalls = self.getWalls('lever')
+        interactables = []
+
+        for HWall in HWalls:
+            hidingSpace = HWall.getItem()
+            interactables.append(hidingSpace)
+        for LWall in LWalls:
+            lever = LWall.getItem()
+            interactables.append(lever)
+
+        return interactables
 
 
 

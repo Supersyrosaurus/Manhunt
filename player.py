@@ -63,16 +63,18 @@ class Player(pygame.sprite.Sprite):
 
     def interact(self, pressed, map):
         if pressed[pygame.K_e]:
-            coords = self.getMapCoords()
-            wall = map.getObject(coords)
-            hidingSpace = wall.getItem()
-            print(hidingSpace)
-            if isinstance(hidingSpace, objects.HidingSpace):
-
-                print('THIS IS A HIDING SPACE')
-            
-
+            items = map.getInteractables()
+            print(items)
             print('interact')
+            for item in items:
+                print(item.inArea(self.getHitbox))
+                if item.inArea(self.getHitbox()) == True:
+                    print('doing')
+                    if isinstance(item, objects.HidingSpace):
+                        print('HIDING')
+                    if isinstance(item, objects.Lever):
+                        print('LEVERING')
+
 
     def sprint(self, pressed):
         if pressed[pygame.K_LSHIFT]:
@@ -86,12 +88,8 @@ class Player(pygame.sprite.Sprite):
         #print(str(self.screenCoords))
     
     def setMapCoords(self):
-        '''x = round(int(self.screenCoords[0])/32)
-        y = round(int(self.screenCoords[1])/32)'''
-        self.hitbox = self.transformedImg.get_rect()
-        self.center = self.hitbox.center
-        x = round(int(self.center[0])/32)
-        y = round(int(self.center[1])/32)
+        x = round(int(self.screenCoords[0])/32)
+        y = round(int(self.screenCoords[1])/32)
         self.mapCoords = (x, y)
 
     #This method checks if the W, A, S, D, E, or LEFT SHIFT buttons are pressed and then carries out various actions depending 
@@ -115,9 +113,35 @@ class Player(pygame.sprite.Sprite):
         return self.mapCoords
 
 
+    def checkInteract(self, item):
+        playerHitbox = self.getHitbox()
+        if item == None:
+            return False
+        check = item.inArea(playerHitbox)
+        return check
+        
 
 
+    def getHitbox(self):
+        print(self.hitbox)
+        return self.hitbox
 
  
 
-        
+    
+'''coords = self.getMapCoords()
+            wall = map.getObject(coords)
+            if isinstance(wall, objects.Wall):
+                item = wall.getItem()
+                print(item)
+                check = self.checkInteract(item)
+                if isinstance(item, objects.HidingSpace) and check == True:
+                    
+                    print('THIS IS A HIDING SPACE')
+
+                if isinstance(item, objects.Lever) and check == True:
+                    
+                    print('THIS IS A LEVER')
+
+            else: 
+                print('not wall :(')'''

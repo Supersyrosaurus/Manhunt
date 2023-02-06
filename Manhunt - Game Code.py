@@ -210,7 +210,7 @@ def gameScreen(clock):
             game.displayGameScreen(map.getMap(), game.getScreen())
             playerOne.displayPlayer(game.getScreen())
             why = playerOne.getMapCoords()
-            print(why)
+
             canPress = True 
             
             for event in pygame.event.get():
