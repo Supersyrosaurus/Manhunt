@@ -82,8 +82,12 @@ class Player(pygame.sprite.Sprite):
 
     def interact(self, pressed, map):
         if pressed[pygame.K_e]:
+            #Uses a function which returns a list of the walls with items and gives it an identifier
             itemWalls = map.getItemWalls()
+            #Goes through each one of these walls
             for itemWall in itemWalls:
+                #Checks if the player's activation area has collided with the wall with an item, 
+                #If the player's activation area has collided with the wall, they are close enough
                 if self.activationArea.colliderect(itemWall.getRect()):
                     print(itemWall.getItem())
 

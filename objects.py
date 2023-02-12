@@ -9,6 +9,8 @@ class Object(physics.Physics):
         self.Coords = Coords
         #Creates a rect using the height and width of the object which will be used to display the object
         self.rect = pygame.Rect(self.Coords[0] * 32, self.Coords[1] * 32, 32, 32)
+        #This is the center cooridnates of the object on the screen
+        self.center = self.rect.center
 
     #Function returns the coordinates of the object
     def getCoords(self):
@@ -17,6 +19,8 @@ class Object(physics.Physics):
     def getRect(self):
         return self.rect
 
+    def getCenter(self):
+        return self.center
 '''    #Procedure displays the object on the screen
     def display(self, screen, colour):
         pygame.draw.rect(screen, colour, self.rect)
