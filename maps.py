@@ -133,17 +133,17 @@ class Map():
     def getObject(self, coords):
         return self.map[coords[1]][coords[0]]
     
-    def getInteractables(self):
+    def getItemWalls(self):
         HWalls = self.getWalls('hidingSpace')
         LWalls = self.getWalls('lever')
         interactables = []
 
         for HWall in HWalls:
             hidingSpace = HWall.getItem()
-            interactables.append(hidingSpace)
+            interactables.append(HWall)
         for LWall in LWalls:
             lever = LWall.getItem()
-            interactables.append(lever)
+            interactables.append(LWall)
 
         return interactables
 

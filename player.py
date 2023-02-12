@@ -16,18 +16,24 @@ class Player(pygame.sprite.Sprite):
         width = self.img.get_width()
         height = self.img.get_height()
         self.transformedImg = pygame.transform.scale(self.img, (int(width * scale), int(height * scale)))
+        self.width = self.transformedImg.get_width()
+        self.height = self.transformedImg.get_height()
+        #Hitbox of the player by creating a rectangle around the player img
+        self.hitbox = self.transformedImg.get_rect()
+        #Activation area for the player to use to detect levers and hiding places around the player when the player interacts
+        self.activationArea = pygame.Rect(self.x - 32, self.y - 32, self.width * 3, self.height * 3)
         #Speed in any direction
         self.speed = speed
         #This is the sprinting multiplier which increases the speed of the player by that much
-        self.sprint = 10
-        #Hitbox of the player by creating a rectangle around the player img
-        self.hitbox = self.transformedImg.get_rect()
-        self.center = self.hitbox.center
+        self.sprint = 3
         self.hiding = False
 
     #Displays the player on whatever screen is passed to the method
     def displayPlayer(self, screen):
-        screen.blit(self.transformedImg, (self.x, self.y))
+        pygame.draw.rect(screen, (255, 255, 255), self.activationArea)
+        pygame.draw.rect(screen, (255, 0, 0), self.hitbox)
+        screen.blit(self.transformedImg, self.hitbox.topleft)
+        
 
     #Checks if the W key has been pressed and if it has then it deducts 1 from the player coordinates and update
     #the coordinates of the player
@@ -76,7 +82,14 @@ class Player(pygame.sprite.Sprite):
 
     def interact(self, pressed, map):
         if pressed[pygame.K_e]:
-            coords = self.getMapCoords()
+            itemWalls = map.getItemWalls()
+            for itemWall in itemWalls:
+                if self.activationArea.colliderect(itemWall.getRect()):
+                    print(itemWall.getItem())
+
+
+
+            '''coords = self.getMapCoords()
             wall = map.getObject(coords)
             hidingSpace = wall.getItem()
             print(hidingSpace)
@@ -84,7 +97,7 @@ class Player(pygame.sprite.Sprite):
 
                 print('THIS IS A HIDING SPACE')
 
-            print('interact')
+            print('interact')'''
 
     def sprintCheck(self, pressed):
         if pressed[pygame.K_LSHIFT]:
@@ -97,6 +110,8 @@ class Player(pygame.sprite.Sprite):
     #players location on the other map
     def setCoords(self):
         self.screenCoords = (self.x, self.y)
+        self.hitbox.center = (self.x, self.y)
+        self.setActivationCoords()
         #print(str(self.screenCoords))
     
     def getMapCoords(self):
@@ -122,6 +137,9 @@ class Player(pygame.sprite.Sprite):
         self.moveLeft(pressed, sprintCheck)
         self.interact(pressed, map)
 
+    def setActivationCoords(self):
+        self.activationArea.center = self.hitbox.center
+        #self.activationArea = pygame.Rect(self.x - 32, self.y - 32, self.width * 3, self.height * 3)
 '''    #Returns the map coordinates of the player
     def getMapCoords(self):
         self.setMapCoords()
