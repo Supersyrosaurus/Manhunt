@@ -42,7 +42,6 @@ mainMenu.renderMTexts(mainMenu_texts, mainMenu_textSizes, mainMenu_textColours, 
 mainMenu.createButton('start','Start.png', 340, 175, 1)
 mainMenu.createButton('options', 'settings.png', 5, 585, 0.1)
 mainMenu.addImages(mainMenu_images, mainMenu_imagesCoords, mainMenu_imagescales)
-#mainMenu.setColour((150, 150, 150))
 
 #Variables for settings class
 settings_texts = ['Settings', 'W: Move Forward', 'A: Move Left', 'S: Move Backward', 'D: Move Right', 'Shift: Sprint', 'E: Interact' ]

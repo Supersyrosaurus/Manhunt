@@ -9,8 +9,8 @@ class Player(pygame.sprite.Sprite):
         #Coordinate attributes
         self.x = x
         self.y = y
-        self.screenCoords = (x, y)
-        self.mapCoords = (x/32, y/32)
+        #self.screenCoords = (x, y)
+        #self.mapCoords = (x/32, y/32)
         #Image attributes
         self.img = pygame.image.load(img).convert_alpha()
         width = self.img.get_width()
@@ -18,6 +18,8 @@ class Player(pygame.sprite.Sprite):
         self.transformedImg = pygame.transform.scale(self.img, (int(width * scale), int(height * scale)))
         #Speed in any direction
         self.speed = speed
+        #This is the sprinting multiplier which increases the speed of the player by that much
+        self.sprint = 10
         #Hitbox of the player by creating a rectangle around the player img
         self.hitbox = self.transformedImg.get_rect()
         self.center = self.hitbox.center
@@ -25,60 +27,70 @@ class Player(pygame.sprite.Sprite):
 
     #Displays the player on whatever screen is passed to the method
     def displayPlayer(self, screen):
-        screen.blit(self.transformedImg, self.screenCoords)
+        screen.blit(self.transformedImg, (self.x, self.y))
 
     #Checks if the W key has been pressed and if it has then it deducts 1 from the player coordinates and update
     #the coordinates of the player
-    def moveForward(self, pressed):
+    def moveForward(self, pressed, sprintCheck):
+        if pressed[pygame.K_w] and sprintCheck:
+            self.y -= self.speed * self.sprint
         if pressed[pygame.K_w]:
             self.y -= self.speed
-            self.setCoords()
             #print('forward')
-            
+        self.setCoords()            
 
     #Checks if the S key has been pressed and if it has then it increments the players coordinates by 1 and updates
     #the coordinates of the player
-    def moveBackward(self, pressed):
-        if pressed[pygame.K_s]:
+    def moveBackward(self, pressed, sprintCheck):
+        if pressed[pygame.K_s] and sprintCheck:
+            self.y += self.speed * self.sprint
+        elif pressed[pygame.K_s]:
             self.y += self.speed
-            self.setCoords()
             #print('backward')
+
+        self.setCoords()            
 
     #Checks if the D key has been pressed and if it has then it increments the players coordinates by 1 and updates
     #the coordinates of the player
-    def moveRight(self, pressed):
-        if pressed[pygame.K_d]:
+    def moveRight(self, pressed, sprintCheck):
+        if pressed[pygame.K_d] and sprintCheck:
+            self.x += self.speed * self.sprint
+        elif pressed[pygame.K_d]:
             self.x += self.speed
-            self.setCoords()
             #print('right')
+
+        self.setCoords()
+
         
 
     #Checks if the A key has been pressed and if it has then it deducts 1 from the players coordinates and updates 
     #the coordintes of the player
-    def moveLeft(self, pressed):
-        if pressed[pygame.K_a]:
+    def moveLeft(self, pressed, sprintCheck):
+        if pressed[pygame.K_a] and sprintCheck:
+            self.x -= self.speed * self.sprint
+        elif pressed[pygame.K_a]:
             self.x -= self.speed
-            self.setCoords()
-            #print('left')
+            #print('left')    
+        self.setCoords()
+
 
     def interact(self, pressed, map):
         if pressed[pygame.K_e]:
-            items = map.getInteractables()
-            print(items)
+            coords = self.getMapCoords()
+            wall = map.getObject(coords)
+            hidingSpace = wall.getItem()
+            print(hidingSpace)
+            if isinstance(hidingSpace, objects.HidingSpace):
+
+                print('THIS IS A HIDING SPACE')
+
             print('interact')
-            for item in items:
-                print(item.inArea(self.getHitbox))
-                if item.inArea(self.getHitbox()) == True:
-                    print('doing')
-                    if isinstance(item, objects.HidingSpace):
-                        print('HIDING')
-                    if isinstance(item, objects.Lever):
-                        print('LEVERING')
 
-
-    def sprint(self, pressed):
+    def sprintCheck(self, pressed):
         if pressed[pygame.K_LSHIFT]:
-            print('sprint')
+            return True
+        else: 
+            return False
 
     #This changes the coordinates of the player whenever it is called, as the map coordinates of the player are directly linked to the 
     #screen coordinates of the player, by changing the screen coordinates (which moves the player image and rect) it also changes the
@@ -87,7 +99,9 @@ class Player(pygame.sprite.Sprite):
         self.screenCoords = (self.x, self.y)
         #print(str(self.screenCoords))
     
-    def setMapCoords(self):
+    def getMapCoords(self):
+        mapCoords = (round(self.x/32), round(self.y/32))
+        return mapCoords
         x = round(int(self.screenCoords[0])/32)
         y = round(int(self.screenCoords[1])/32)
         self.mapCoords = (x, y)
@@ -99,49 +113,24 @@ class Player(pygame.sprite.Sprite):
         #on the keyboard are being pressed
         pressed = pygame.key.get_pressed()
 
+        sprintCheck = self.sprintCheck(pressed)
+
         #Each of these methods control an aspect of the inputs from the user which in turn controls the player
-        self.moveForward(pressed)
-        self.moveBackward(pressed)
-        self.moveRight(pressed)
-        self.moveLeft(pressed)
-        self.sprint(pressed)
+        self.moveForward(pressed, sprintCheck)
+        self.moveBackward(pressed, sprintCheck)
+        self.moveRight(pressed, sprintCheck)
+        self.moveLeft(pressed, sprintCheck)
         self.interact(pressed, map)
 
-    #Returns the map coordinates of the player
+'''    #Returns the map coordinates of the player
     def getMapCoords(self):
         self.setMapCoords()
-        return self.mapCoords
+        return self.mapCoords'''
 
 
-    def checkInteract(self, item):
-        playerHitbox = self.getHitbox()
-        if item == None:
-            return False
-        check = item.inArea(playerHitbox)
-        return check
-        
 
 
-    def getHitbox(self):
-        print(self.hitbox)
-        return self.hitbox
 
  
 
-    
-'''coords = self.getMapCoords()
-            wall = map.getObject(coords)
-            if isinstance(wall, objects.Wall):
-                item = wall.getItem()
-                print(item)
-                check = self.checkInteract(item)
-                if isinstance(item, objects.HidingSpace) and check == True:
-                    
-                    print('THIS IS A HIDING SPACE')
-
-                if isinstance(item, objects.Lever) and check == True:
-                    
-                    print('THIS IS A LEVER')
-
-            else: 
-                print('not wall :(')'''
+        
