@@ -141,10 +141,13 @@ class Player(pygame.sprite.Sprite):
         self.moveLeft(pressed, sprintCheck)
         self.interact(pressed, map)
 
+    #Sets the coordinates of the activation area as the center of the hitbox of the player
     def setActivationCoords(self):
         self.activationArea.center = self.hitbox.center
-        #self.activationArea = pygame.Rect(self.x - 32, self.y - 32, self.width * 3, self.height * 3)
-'''    #Returns the map coordinates of the player
+
+        
+        
+        '''    #Returns the map coordinates of the player
     def getMapCoords(self):
         self.setMapCoords()
         return self.mapCoords'''
