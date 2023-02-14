@@ -4,13 +4,11 @@ import objects
 pygame.init()
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, x, y, img, scale, speed):
+    def __init__(self, x, y, img, scale, speed, sprintMultiplier):
         super().__init__
         #Coordinate attributes
         self.x = x
         self.y = y
-        #self.screenCoords = (x, y)
-        #self.mapCoords = (x/32, y/32)
         #Image attributes
         self.img = pygame.image.load(img).convert_alpha()
         width = self.img.get_width()
@@ -25,7 +23,7 @@ class Player(pygame.sprite.Sprite):
         #Speed in any direction
         self.speed = speed
         #This is the sprinting multiplier which increases the speed of the player by that much
-        self.sprint = 3
+        self.sprintMultiplier = sprintMultiplier
         self.hiding = False
 
     #Displays the player on whatever screen is passed to the method
@@ -39,7 +37,7 @@ class Player(pygame.sprite.Sprite):
     #the coordinates of the player
     def moveForward(self, pressed, sprintCheck):
         if pressed[pygame.K_w] and sprintCheck:
-            self.y -= self.speed * self.sprint
+            self.y -= self.speed * self.sprintMultiplier
         if pressed[pygame.K_w]:
             self.y -= self.speed
             #print('forward')
@@ -49,7 +47,7 @@ class Player(pygame.sprite.Sprite):
     #the coordinates of the player
     def moveBackward(self, pressed, sprintCheck):
         if pressed[pygame.K_s] and sprintCheck:
-            self.y += self.speed * self.sprint
+            self.y += self.speed * self.sprintMultiplier
         elif pressed[pygame.K_s]:
             self.y += self.speed
             #print('backward')
@@ -60,7 +58,7 @@ class Player(pygame.sprite.Sprite):
     #the coordinates of the player
     def moveRight(self, pressed, sprintCheck):
         if pressed[pygame.K_d] and sprintCheck:
-            self.x += self.speed * self.sprint
+            self.x += self.speed * self.sprintMultiplier
         elif pressed[pygame.K_d]:
             self.x += self.speed
             #print('right')
@@ -73,7 +71,7 @@ class Player(pygame.sprite.Sprite):
     #the coordintes of the player
     def moveLeft(self, pressed, sprintCheck):
         if pressed[pygame.K_a] and sprintCheck:
-            self.x -= self.speed * self.sprint
+            self.x -= self.speed * self.sprintMultiplier
         elif pressed[pygame.K_a]:
             self.x -= self.speed
             #print('left')    
@@ -81,14 +79,19 @@ class Player(pygame.sprite.Sprite):
 
 
     def interact(self, pressed, map):
+        closest = None
+        xWall = 0
+        yWall = 0
         if pressed[pygame.K_e]:
             #Uses a function which returns a list of the walls with items and gives it an identifier
             itemWalls = map.getItemWalls()
             #Goes through each one of these walls
             for itemWall in itemWalls:
+                
                 #Checks if the player's activation area has collided with the wall with an item, 
                 #If the player's activation area has collided with the wall, they are close enough
                 if self.activationArea.colliderect(itemWall.getRect()):
+                    
                     print(itemWall.getItem())
 
 
@@ -113,10 +116,10 @@ class Player(pygame.sprite.Sprite):
     #screen coordinates of the player, by changing the screen coordinates (which moves the player image and rect) it also changes the
     #players location on the other map
     def setCoords(self):
-        self.screenCoords = (self.x, self.y)
         self.hitbox.center = (self.x, self.y)
-        self.setActivationCoords()
-        #print(str(self.screenCoords))
+        #Sets the coordinates of the activation area as the center of the hitbox of the player
+        self.activationArea.center = self.hitbox.center
+
     
     def getMapCoords(self):
         mapCoords = (round(self.x/32), round(self.y/32))
@@ -141,11 +144,6 @@ class Player(pygame.sprite.Sprite):
         self.moveLeft(pressed, sprintCheck)
         self.interact(pressed, map)
 
-    #Sets the coordinates of the activation area as the center of the hitbox of the player
-    def setActivationCoords(self):
-        self.activationArea.center = self.hitbox.center
-
-        
         
         '''    #Returns the map coordinates of the player
     def getMapCoords(self):

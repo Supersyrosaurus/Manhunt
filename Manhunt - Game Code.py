@@ -200,7 +200,7 @@ map.createMap()
 mapList = map.getMap()
 print(mapList)
 
-playerOne = player.Player(0,0, 'whiteCircle.png', 0.09, 5)
+playerOne = player.Player(0,0, 'whiteCircle.png', 0.09, 5, 3)
 
 def gameScreen(clock):
         running = True
