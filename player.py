@@ -103,23 +103,22 @@ class Player(pygame.sprite.Sprite, physics.Physics):
             itemWalls = map.getItemWalls()
             #Goes through each one of these walls
             for itemWall in itemWalls:
-                distance = self.playerToWallDistance(itemWall.getCoords())
+                '''distance = self.playerToWallDistance(itemWall.getCoords())
                 print(str(distance))
                 if distance < closestDistance:
                     closestDistance = distance
-                    closest = itemWall         
+                    closest = itemWall    '''     
 
                 
-            #Checks if the player's activation area has collided with the wall with an item, 
-            #If the player's activation area has collided with the wall, they are close enough
-            if self.activationArea.colliderect(closest.getRect()):
-                print('Collide')
-                item = closest.getItem()
-                if isinstance(item, objects.HidingSpace):
-                    print('Hiding Space')
-                if isinstance(item, objects.Lever):
-                    print('lever')
-                
+                #Checks if the player's activation area has collided with the wall with an item, 
+                #If the player's activation area has collided with the wall, they are close enough
+                if self.activationArea.colliderect(itemWall.getRect()):
+                    item = itemWall.getItem()
+                    if isinstance(item, objects.HidingSpace):
+                        print('Hiding Space')
+                    if isinstance(item, objects.Lever):
+                        print('lever')
+                    
 
 
 
