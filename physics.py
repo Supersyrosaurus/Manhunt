@@ -1,4 +1,5 @@
 import pygame
+import math
 pygame.init()
 
 class Physics():
@@ -9,6 +10,10 @@ class Physics():
 
         return objOne.colliderect(objTwo)
         
+    def pythagoras(self, numOne, numTwo):
+        squared = (numOne ** 2) + (numTwo ** 2)
+        squareRoot = math.sqrt(squared)
+        return squareRoot
 
 
 

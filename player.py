@@ -1,9 +1,10 @@
 import pygame
 import maps
 import objects
+import physics
 pygame.init()
 
-class Player(pygame.sprite.Sprite):
+class Player(pygame.sprite.Sprite, physics.Physics):
     def __init__(self, x, y, img, scale, speed, sprintMultiplier):
         super().__init__
         #Coordinate attributes
@@ -25,6 +26,7 @@ class Player(pygame.sprite.Sprite):
         #This is the sprinting multiplier which increases the speed of the player by that much
         self.sprintMultiplier = sprintMultiplier
         self.hiding = False
+        self.sound = 0
 
     #Displays the player on whatever screen is passed to the method
     def displayPlayer(self, screen):
@@ -77,22 +79,47 @@ class Player(pygame.sprite.Sprite):
             #print('left')    
         self.setCoords()
 
+    def playerToWallDistance(self,wallCoords):
+        playerCoords = self.getCoords()
+        #Sets x and y coordinates of the player as variables
+        xP = playerCoords[0]
+        yP = playerCoords[1]
+        xW = wallCoords[0]
+        yW = wallCoords[1]
+        xdist = abs(xP - xW)
+        ydist = abs(yP - yW)
+        #Calculates distance of player and wall from origin using method from physics class
+        distance = self.pythagoras(xdist, ydist)
+        #print(playerDistance)
+        #print(wallDistance)
+        return distance
+
 
     def interact(self, pressed, map):
+        closestDistance = 1000000
         closest = None
-        xWall = 0
-        yWall = 0
         if pressed[pygame.K_e]:
             #Uses a function which returns a list of the walls with items and gives it an identifier
             itemWalls = map.getItemWalls()
             #Goes through each one of these walls
             for itemWall in itemWalls:
+                distance = self.playerToWallDistance(itemWall.getCoords())
+                print(str(distance))
+                if distance < closestDistance:
+                    closestDistance = distance
+                    closest = itemWall         
+
                 
-                #Checks if the player's activation area has collided with the wall with an item, 
-                #If the player's activation area has collided with the wall, they are close enough
-                if self.activationArea.colliderect(itemWall.getRect()):
-                    
-                    print(itemWall.getItem())
+            #Checks if the player's activation area has collided with the wall with an item, 
+            #If the player's activation area has collided with the wall, they are close enough
+            if self.activationArea.colliderect(closest.getRect()):
+                print('Collide')
+                item = closest.getItem()
+                if isinstance(item, objects.HidingSpace):
+                    print('Hiding Space')
+                if isinstance(item, objects.Lever):
+                    print('lever')
+                
 
 
 
@@ -124,9 +151,9 @@ class Player(pygame.sprite.Sprite):
     def getMapCoords(self):
         mapCoords = (round(self.x/32), round(self.y/32))
         return mapCoords
-        x = round(int(self.screenCoords[0])/32)
-        y = round(int(self.screenCoords[1])/32)
-        self.mapCoords = (x, y)
+
+    def getCoords(self):
+        return self.hitbox.center
 
     #This method checks if the W, A, S, D, E, or LEFT SHIFT buttons are pressed and then carries out various actions depending 
     #on the button that is pressed 
@@ -144,7 +171,17 @@ class Player(pygame.sprite.Sprite):
         self.moveLeft(pressed, sprintCheck)
         self.interact(pressed, map)
 
-        
+    #This sets the sound that the player is making based on the coordinates of the player on the map
+    def setSound(self, map):
+        coords = self.getMapCoords()
+        floor = map.getObject(coords)
+        self.sound = floor.getSoundLevel()
+
+    #This returns the sound level for the player
+    def getSound(self):
+        return self.sound
+    
+
         '''    #Returns the map coordinates of the player
     def getMapCoords(self):
         self.setMapCoords()
