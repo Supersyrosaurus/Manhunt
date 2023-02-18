@@ -157,13 +157,22 @@ class GameScreen(Screen):
         self.colour = colour
         #self.player = player.player()
         #self.hunter = hunter.hunter()
-        
+
+
+    def displayLeverCounter(self, player):
+        maxLevers = player.getMaxLevers()
+        activatedLevers = player.getActivatedLevers()
+        renderText = self.renderText((str(activatedLevers) + '/' + str(maxLevers)), 100, (0,0,0), None)
+        self.screen.blit(renderText, (self.getWidth/2, self.getHeight/2))
+
+
     def displayRect(self, rect):
         #Draws a rect on the screen
         pygame.draw.rect(self.screen, (0,0,0), rect)
 
     def displayGameScreen(self, map, screen):
         #Displays the screen and the map
+        '''self.displayLeverCounter()'''
         self.displayScreen()
         for row in map:
             for object in row:

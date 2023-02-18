@@ -70,8 +70,6 @@ class Player(pygame.sprite.Sprite, physics.Physics):
 
         self.setCoords()
 
-        
-
     #Checks if the A key has been pressed and if it has then it deducts 1 from the players coordinates and updates 
     #the coordintes of the player
     def moveLeft(self, pressed, sprintCheck):
@@ -97,9 +95,26 @@ class Player(pygame.sprite.Sprite, physics.Physics):
         #print(wallDistance)
         return distance
 
-            
+    def leverCheck(self, item):
+        #Checks if the item is a lever
+        if isinstance(item, objects.Lever):
+            #Checks if the lever has already been activated
+            if item.getActivated() == False:
+                check = self.activateLever()
+                item.activate()
 
-        
+                if check == False:
+                    print('ALL LEVERS HAVE BEEN ACTIVATED')    
+                print('activated lever')
+
+            else:
+                print('LEVER HAS ALREADY BEEN ACTIVATED')
+
+    def hideCheck(self, item):
+        #Checks if the item is a hidingspace
+        if isinstance(item, objects.HidingSpace):
+            self.setHiding(True)
+            print('Hiding Space')
 
     def interact(self, pressed, map):
         #closestDistance = 1000000
@@ -116,14 +131,11 @@ class Player(pygame.sprite.Sprite, physics.Physics):
                     #Checks if the player's activation area has collided with the wall with an item, 
                     #If the player's activation area has collided with the wall, they are close enough
                     if self.activationArea.colliderect(itemWall.getRect()):
+                        #item is the wall which also contains either a hiding space or lever
                         item = itemWall.getItem()
-                        if isinstance(item, objects.HidingSpace):
-                            self.setHiding(True)
-                            print('Hiding Space')
-                        if isinstance(item, objects.Lever):
-                            if self.activateLever() == False:
-                                print('ALL LEVERS HAVE BEEN ACTIVATED')    
-                            print('lever')
+                        self.hideCheck(item)
+                        self.leverCheck(item)
+                    
             else:
                 self.setHiding(False)
                 
@@ -149,7 +161,6 @@ class Player(pygame.sprite.Sprite, physics.Physics):
         self.hitbox.center = (self.x, self.y)
         #Sets the coordinates of the activation area as the center of the hitbox of the player
         self.activationArea.center = self.hitbox.center
-
     
     def getMapCoords(self):
         mapCoords = (round(self.x/32), round(self.y/32))
@@ -197,6 +208,9 @@ class Player(pygame.sprite.Sprite, physics.Physics):
     def getMapCoords(self):
         self.setMapCoords()
         return self.mapCoords'''
+
+    def getMaxLevers(self):
+        return self.maxLevers
 
     def getHiding(self):
         return self.hiding

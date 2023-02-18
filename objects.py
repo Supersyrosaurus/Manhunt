@@ -82,12 +82,12 @@ class Lever(Object):
         self.activated = False
 
 
-    #This checks if the player is within the activation area
+    '''#This checks if the player is within the activation area
     def inArea(self, playerRect):
-        pass
+        pass'''
 
     #Function checks if lever has been activated
-    def checkLeverActivation(self):
+    def getActivated(self):
         return self.activated
 
     #These 2 procedures change the self.activated attribute
