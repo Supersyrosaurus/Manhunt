@@ -157,10 +157,7 @@ class GameScreen(Screen):
         self.colour = colour
         #self.player = player.player()
         #self.hunter = hunter.hunter()
-
-    def moveObject(self, rect):
-            pass
-
+        
     def displayRect(self, rect):
         #Draws a rect on the screen
         pygame.draw.rect(self.screen, (0,0,0), rect)

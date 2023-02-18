@@ -27,6 +27,9 @@ class Player(pygame.sprite.Sprite, physics.Physics):
         self.sprintMultiplier = sprintMultiplier
         self.hiding = False
         self.sound = 0
+        #These are the attributes for the levers
+        self.maxLevers = 5
+        self.activatedLevers = 0
 
     #Displays the player on whatever screen is passed to the method
     def displayPlayer(self, screen):
@@ -94,43 +97,44 @@ class Player(pygame.sprite.Sprite, physics.Physics):
         #print(wallDistance)
         return distance
 
+            
+
+        
 
     def interact(self, pressed, map):
-        closestDistance = 1000000
-        closest = None
+        #closestDistance = 1000000
+        #closest = None
         if pressed[pygame.K_e]:
-            #Uses a function which returns a list of the walls with items and gives it an identifier
-            itemWalls = map.getItemWalls()
-            #Goes through each one of these walls
-            for itemWall in itemWalls:
-                '''distance = self.playerToWallDistance(itemWall.getCoords())
-                print(str(distance))
-                if distance < closestDistance:
-                    closestDistance = distance
-                    closest = itemWall    '''     
+            if self.hiding == False:
+                #Uses a function which returns a list of the walls with items and gives it an identifier
+                itemWalls = map.getItemWalls()
+                #Goes through each one of these walls
+                for itemWall in itemWalls:
+ 
 
-                
-                #Checks if the player's activation area has collided with the wall with an item, 
-                #If the player's activation area has collided with the wall, they are close enough
-                if self.activationArea.colliderect(itemWall.getRect()):
-                    item = itemWall.getItem()
-                    if isinstance(item, objects.HidingSpace):
-                        print('Hiding Space')
-                    if isinstance(item, objects.Lever):
-                        print('lever')
                     
+                    #Checks if the player's activation area has collided with the wall with an item, 
+                    #If the player's activation area has collided with the wall, they are close enough
+                    if self.activationArea.colliderect(itemWall.getRect()):
+                        item = itemWall.getItem()
+                        if isinstance(item, objects.HidingSpace):
+                            self.setHiding(True)
+                            print('Hiding Space')
+                        if isinstance(item, objects.Lever):
+                            if self.activateLever() == False:
+                                print('ALL LEVERS HAVE BEEN ACTIVATED')    
+                            print('lever')
+            else:
+                self.setHiding(False)
+                
+
+    '''distance = self.playerToWallDistance(itemWall.getCoords())
+    print(str(distance))
+    if distance < closestDistance:
+        closestDistance = distance
+        closest = itemWall    '''    
 
 
-
-            '''coords = self.getMapCoords()
-            wall = map.getObject(coords)
-            hidingSpace = wall.getItem()
-            print(hidingSpace)
-            if isinstance(hidingSpace, objects.HidingSpace):
-
-                print('THIS IS A HIDING SPACE')
-
-            print('interact')'''
 
     def sprintCheck(self, pressed):
         if pressed[pygame.K_LSHIFT]:
@@ -180,11 +184,28 @@ class Player(pygame.sprite.Sprite, physics.Physics):
     def getSound(self):
         return self.sound
     
+    def getActivatedLevers(self):
+        return self.activatedLevers
+    
+    def activateLever(self):
+        if self.activatedLevers != self.maxLevers:
+            self.activatedLevers += 1
+        else:
+            return False
 
         '''    #Returns the map coordinates of the player
     def getMapCoords(self):
         self.setMapCoords()
         return self.mapCoords'''
+
+    def getHiding(self):
+        return self.hiding
+    
+    def setHiding(self, hiding):
+        if hiding == True or hiding == False:    
+            self.hiding = hiding
+        else:
+            print('HIDING IS NOT BOOLEAN VALUE')
 
 
 
