@@ -4,6 +4,7 @@ import objects
 import maps
 import physics
 import player
+import colours
 
 #Initialising the pygame module
 pygame.init()
@@ -18,21 +19,18 @@ pygame.display.set_icon(gameIcon)
 #Setting FPS
 clock = pygame.time.Clock()
 
-black = (0, 0, 0)
-red = (155, 0, 0)
-white = (255, 255, 255)
-lightGrey = (150,150,150)
+
 
 #Screens form screen class
-mainMenu = screens.Screen(lightGrey)
-settings = screens.Screen(lightGrey)
-mode = screens.Screen(lightGrey)
-game = screens.GameScreen(lightGrey)
+mainMenu = screens.Screen(colours.lightGrey)
+settings = screens.Screen(colours.lightGrey)
+mode = screens.Screen(colours.lightGrey)
+game = screens.GameScreen(colours.lightGrey)
 
 #Variables for mainMenu
 mainMenu_texts = ['Manhunt']
 mainMenu_textSizes = [160]
-mainMenu_textColours = [black]
+mainMenu_textColours = [colours.black]
 mainMenu_textFonts = [None]
 mainMenu_textCoords = [(230, 80)]
 mainMenu_images = []
@@ -46,7 +44,7 @@ mainMenu.addImages(mainMenu_images, mainMenu_imagesCoords, mainMenu_imagescales)
 #Variables for settings class
 settings_texts = ['Settings', 'W: Move Forward', 'A: Move Left', 'S: Move Backward', 'D: Move Right', 'Shift: Sprint', 'E: Interact' ]
 settings_textSizes = [160, 50, 50, 50, 50, 50, 50]
-settings_textColours = [black, black, black, black, black, black, black]
+settings_textColours = [colours.black, colours.black, colours.black, colours.black, colours.black, colours.black, colours.black]
 settings_textFonts = [None, None, None, None, None, None, None]
 settings_textCoords = [(230, 80), (300,250), (300,310), (300,370), (300,430), (300,490), (300, 550)]
 settings_images = []
@@ -60,7 +58,7 @@ settings.addImages(settings_images, settings_imagesCoords, settings_imageScales)
 #Variables for mode class
 mode_texts = ['Mode']
 mode_textSizes = [160]
-mode_textColours = [black]
+mode_textColours = [colours.black]
 mode_textFonts = [None]
 mode_textCoords = [(320, 80)]
 mode_images = []
@@ -199,7 +197,7 @@ map = maps.Map(walls, floors, doorCoord, 28)
 map.createMap()
 mapList = map.getMap()
 
-playerOne = player.Player(0,0, 'whiteCircle.png', 0.09, 5, 3)
+playerOne = player.Player(500, 500, 'whiteCircle.png', 0.09, 5, 3)
 playerOne.setMaxLevers(map)
 
 def gameScreen(clock):
@@ -217,7 +215,8 @@ def gameScreen(clock):
                 if canPress == True:
                     playerOne.checkKeys(map)
                     canPress = False
-
+                playerOne.checkCollision(map)
+                'print(playerOne.forward, playerOne.backward, playerOne.left, playerOne.right)'
                 
             pygame.display.update()
 

@@ -96,6 +96,7 @@ class Map():
             for type in self.walls:
                 for wall in self.walls[type]:
                     allWalls.append(wall)
+            
             return allWalls
         else:
             return self.walls[category]

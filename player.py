@@ -2,9 +2,10 @@ import pygame
 import maps
 import objects
 import physics
+import time
 pygame.init()
 
-class Player(pygame.sprite.Sprite, physics.Physics):
+class Player(pygame.sprite.Sprite, physics.Projectile):
     def __init__(self, x, y, img, scale, speed, sprintMultiplier):
         super().__init__
         #Coordinate attributes
@@ -30,6 +31,10 @@ class Player(pygame.sprite.Sprite, physics.Physics):
         #These are the attributes for the levers
         self.maxLevers = 5
         self.activatedLevers = 0
+        self.forward = False
+        self.backward = False
+        self.left = False
+        self.right = False
 
     #Displays the player on whatever screen is passed to the method
     def displayPlayer(self, screen):
@@ -44,8 +49,12 @@ class Player(pygame.sprite.Sprite, physics.Physics):
     def moveForward(self, pressed, sprintCheck):
         if pressed[pygame.K_w] and sprintCheck:
             self.y -= self.speed * self.sprintMultiplier
-        if pressed[pygame.K_w]:
+            self.setMovement(True, 'F')
+        elif pressed[pygame.K_w]:
             self.y -= self.speed
+            self.setMovement(True, 'F')
+        else:
+            self.setMovement(False, 'F')
         self.setCoords()            
 
     #Checks if the S key has been pressed and if it has then it increments the players coordinates by 1 and updates
@@ -53,8 +62,12 @@ class Player(pygame.sprite.Sprite, physics.Physics):
     def moveBackward(self, pressed, sprintCheck):
         if pressed[pygame.K_s] and sprintCheck:
             self.y += self.speed * self.sprintMultiplier
+            self.setMovement(True, 'B')
         elif pressed[pygame.K_s]:
             self.y += self.speed
+            self.setMovement(True, 'B')
+        else:
+            self.setMovement(False, 'B')
         self.setCoords()            
 
     #Checks if the D key has been pressed and if it has then it increments the players coordinates by 1 and updates
@@ -62,8 +75,12 @@ class Player(pygame.sprite.Sprite, physics.Physics):
     def moveRight(self, pressed, sprintCheck):
         if pressed[pygame.K_d] and sprintCheck:
             self.x += self.speed * self.sprintMultiplier
+            self.setMovement(True, 'R')
         elif pressed[pygame.K_d]:
             self.x += self.speed
+            self.setMovement(True, 'R')
+        else:
+            self.setMovement(False, 'R')
         self.setCoords()
 
     #Checks if the A key has been pressed and if it has then it deducts 1 from the players coordinates and updates 
@@ -71,8 +88,12 @@ class Player(pygame.sprite.Sprite, physics.Physics):
     def moveLeft(self, pressed, sprintCheck):
         if pressed[pygame.K_a] and sprintCheck:
             self.x -= self.speed * self.sprintMultiplier
+            self.setMovement(True, 'L')
         elif pressed[pygame.K_a]:
             self.x -= self.speed  
+            self.setMovement(True, 'L')
+        else:
+            self.setMovement(False, 'L')
         self.setCoords()
 
     def playerToWallDistance(self,wallCoords):
@@ -119,8 +140,6 @@ class Player(pygame.sprite.Sprite, physics.Physics):
                 #Goes through each one of these walls
                 for itemWall in itemWalls:
  
-
-                    
                     #Checks if the player's activation area has collided with the wall with an item, 
                     #If the player's activation area has collided with the wall, they are close enough
                     if self.activationArea.colliderect(itemWall.getRect()):
@@ -214,19 +233,86 @@ class Player(pygame.sprite.Sprite, physics.Physics):
         levers = map.getWalls('lever')
         self.maxLevers = len(levers)
 
+    def setMovement(self, value, direction = None):
+        if value != True and value != False:
+            print('THIS VALUE IS INVALID, MUST BE BOOLEAN')
+        else:
+            if direction != None:
+                if direction == 'F':
+                    self.forward = value
+                elif direction == 'B': 
+                    self.backward = value
+                elif direction == 'L':
+                    self.left = value
+                elif direction == 'R':
+                    self.right = value
+            else:
+                self.forward = value
+                self.backward = value
+                self.left = value
+                self.right = value
+
     #This function checks if the player has activated all of the levers and then returns a boolean value based on that
     def checkWin(self, map):
+
         door = map.getDoor()
         if self.getActivatedLevers() == self.getMaxLevers():
             if self.hitbox.colliderect(door.getRect()):
                 print('WIN')
+
+    def checkCollision(self, map):
+        walls = map.getWalls()
+        collisionTolerance = 15
+        collisionBounce = 10
+        player = self.hitbox
+        for wall in walls:
+            rect = wall.getRect()
+            'print(str(player.colliderect(rect)))'
+            if self.hitbox.colliderect(rect):
+                print('COLLIDING')
+                if self.backward == True:
+                    print('BOTTOM')
+                    self.y -= collisionBounce
+
+                if self.forward == True:
+                    print('TOP')
+                    self.y += collisionBounce
+
+
+                if self.right == True:
+                    print('RIGHT')
+                    self.x -= collisionBounce
+
+                if self.left == True:
+                    print('LEFT')
+                    self.x += collisionBounce
+                
+
+
 
 
 ###########################     UNUSED CODE     ####################################
 
 
                 
-                '''if self.getActivatedLevers() == self.getMaxLevers():
-                    door = map.getDoor()
-                    door.activate()
-                    print('ALL LEVERS HAVE BEEN ACTIVATED')   ''' 
+'''if self.getActivatedLevers() == self.getMaxLevers():
+    door = map.getDoor()
+    door.activate()
+    print('ALL LEVERS HAVE BEEN ACTIVATED')   ''' 
+
+'''if abs(rect.top - player.bottom) < collisionTolerance and self.backward == True:
+    print('BOTTOM')
+    self.y -= collisionBounce
+
+if abs(rect.bottom - player.top) < collisionTolerance and self.forward == True:
+    print('TOP')
+    self.y += collisionBounce
+
+
+if abs(rect.left - player.right) < collisionTolerance and self.right == True:
+    print('RIGHT')
+    self.x -= collisionBounce
+
+if abs(rect.right - player.left) < collisionTolerance and self.left == True:
+    print('LEFT')
+    self.x += collisionBounce'''

@@ -17,7 +17,7 @@ class Physics():
 
 
 
-class Projectile(Physics, pygame.sprite.Sprite):
+class Projectile():
     def __init__(self, coords, xSpeed, ySpeed, height, width):
         super().__init__()
         self.xSpeed = xSpeed
