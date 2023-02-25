@@ -1,5 +1,6 @@
 import pygame
 import physics
+import colours
 
 pygame.init()
 
@@ -21,34 +22,53 @@ class Object(physics.Physics):
 
     def getCenter(self):
         return self.center
+    
+
 '''    #Procedure displays the object on the screen
     def display(self, screen, colour):
         pygame.draw.rect(screen, colour, self.rect)
 '''
 
 class Wall(Object):
-    def __init__(self, Coords, inputType = None):
+    def __init__(self, Coords, type = None):
         super().__init__(Coords)
-        self.inputType = inputType
+        self.type = type
         #This sets the wall as 
         self.item = self.setItem()
+        self.colour = self.setColour()
 
 
     def setItem(self):
         #If type is none that means that there is nothing on the wall
-        if self.inputType == 'empty':
+        if self.type == 'empty':
             return None
 
         #If type is 0 then that means that there is a hidingSpace on the wall
-        if self.inputType == 'hidingSpace':
+        if self.type == 'hidingSpace':
             return HidingSpace(self.Coords)
             
         #If type is 1 then that means that there is a lever on the wall
-        if self.inputType == 'lever':
+        if self.type == 'lever':
             return Lever(self.Coords)
 
     def getItem(self):
         return self.item
+    
+    def setColour(self):
+        #If type is none that means that there is nothing on the wall
+        if self.type == 'empty':
+            return colours.black
+
+        #If type is 0 then that means that there is a hidingSpace on the wall
+        if self.type == 'hidingSpace':
+            return colours.blue
+
+        #If type is 1 then that means that there is a lever on the wall
+        if self.type == 'lever':
+           return colours.green
+
+    def getColour(self):
+        return self.colour
     
             
     
@@ -59,6 +79,7 @@ class Floor(Object):
         self.type = type
         #Stores the level of sound for each floor object depending on the type of floor
         self.soundLevel = self.setSound()
+        self.colour = self.setColour()
     
     #Procedure sets the sound level depending on the type of the floor
     def setSound(self):
@@ -74,6 +95,25 @@ class Floor(Object):
     #Function returns the sound level of the floor
     def getSoundLevel(self):
         return self.soundLevel
+    
+    def getType(self):
+        return self.type
+    
+    def setColour(self):
+        #If type is none that means that there is nothing on the wall
+        if self.type == 'carpet':
+            return colours.navy
+
+        #If type is 0 then that means that there is a hidingSpace on the wall
+        if self.type == 'concrete':
+            return colours.lightGrey
+
+        #If type is 1 then that means that there is a lever on the wall
+        if self.type == 'wood':
+           return colours.green
+        
+    def getColour(self):
+        return self.colour
 
 
 class Lever(Object):
@@ -114,6 +154,7 @@ class Door(Object):
     def __init__(self, Coords):
         super().__init__(Coords)
         self.activated = False
+        self.colour = colours.lightBrown
 
     #Function that returns whether the door has been activated
     def checkDoorActivation(self):
@@ -125,3 +166,7 @@ class Door(Object):
 
     def getActivated(self):
         return self.activated
+    
+    def getColour(self):
+        return self.colour
+    

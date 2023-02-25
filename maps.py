@@ -9,7 +9,7 @@ class Map():
     #door is passed as just coordinates 
     #The coordinates in each of these are not the display coordinates but
     #the grid coordinates
-    def __init__(self, walls, floors, doorCoord, mapLength):
+    def __init__(self, walls, floors, doorCoord, mapHeight, mapWidth):
         #doorCoord is the coordinates of the node with the door
         #not the display coordinates
         self.doorCoord = doorCoord
@@ -22,7 +22,9 @@ class Map():
         self.map = []
         #As there needs to be an outer border of empty walls, 
         #The real height and width of the map will need to be increased by 2
-        self.mapLength = mapLength + 2
+        #self.mapLength = mapLength + 2
+        self.mapHeight = mapHeight
+        self.mapWidth = mapWidth
 
     def getMap(self):
         return self.map
@@ -37,18 +39,18 @@ class Map():
     #Creates an empty shell for the map with an outer border of walls and empty spaces in the middle
     def createEmptyMap(self):
         #Loops for as long as the length of the map is
-        for y in range(self.mapLength):
+        for y in range(self.mapHeight):
             #for every loop a new list is appended
             self.map.append([])
-            for x in range(self.mapLength):
+            for x in range(self.mapWidth):
                 #for every loop a new element is appended to the new list
-                if y == 0 or y == self.mapLength - 1:
+                if y == 0 or y == self.mapHeight - 1:
                     #This if statement checks if it is the first list or the last list
                     #and if it is it fills it with wall objects 
                     wall = objects.Wall((x, y))
                     self.map[y].append(wall)
                     self.borderWalls.append((x,y))
-                elif x == 0 or x == self.mapLength - 1:
+                elif x == 0 or x == self.mapWidth - 1:
                     #This checks if the element is the first or the last
                     #and if it is then it appends a wall object instead 
                     wall = objects.Wall((x, y))
@@ -142,10 +144,8 @@ class Map():
         interactables = []
 
         for HWall in HWalls:
-            hidingSpace = HWall.getItem()
             interactables.append(HWall)
         for LWall in LWalls:
-            lever = LWall.getItem()
             interactables.append(LWall)
 
         return interactables
