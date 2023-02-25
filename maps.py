@@ -133,7 +133,9 @@ class Map():
     def getObject(self, coords):
         return self.map[coords[1]][coords[0]]
     
+    #Function that returns all of the walls which the player can interact with (walls which have levers etc)
     def getItemWalls(self):
+    
         HWalls = self.getWalls('hidingSpace')
         LWalls = self.getWalls('lever')
         interactables = []
@@ -147,8 +149,9 @@ class Map():
 
         return interactables
 
-
-
+    #Function that returns the door object based on the coordinates of the door
+    def getDoor(self):
+        return self.map[self.doorCoord[1]][self.doorCoord[0]]
 
 
                 

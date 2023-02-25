@@ -31,10 +31,10 @@ class Wall(Object):
         super().__init__(Coords)
         self.inputType = inputType
         #This sets the wall as 
-        self.item = self.setType()
+        self.item = self.setItem()
 
 
-    def setType(self):
+    def setItem(self):
         #If type is none that means that there is nothing on the wall
         if self.inputType == 'empty':
             return None
@@ -120,6 +120,8 @@ class Door(Object):
         return self.activated
 
     #Checks if the door should be activated depending on the max number of levers and how many have been activated
-    def isActivated(self, activatedLevers, maxLevers):
-        if activatedLevers == maxLevers:
-            self.activated = True
+    def activate(self):
+        self.activated = True
+
+    def getActivated(self):
+        return self.activated

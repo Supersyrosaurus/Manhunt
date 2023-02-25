@@ -31,6 +31,8 @@ class Projectile(Physics, pygame.sprite.Sprite):
     def yCollide(self):
         self.ySpeed *= -1
 
+    
+
     def launchProjectile(self, screen):
         self.rect.x += self.xSpeed
         self.rect.y += self.ySpeed

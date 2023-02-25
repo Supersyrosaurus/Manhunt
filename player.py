@@ -33,9 +33,10 @@ class Player(pygame.sprite.Sprite, physics.Physics):
 
     #Displays the player on whatever screen is passed to the method
     def displayPlayer(self, screen):
-        pygame.draw.rect(screen, (255, 255, 255), self.activationArea)
-        pygame.draw.rect(screen, (255, 0, 0), self.hitbox)
-        screen.blit(self.transformedImg, self.hitbox.topleft)
+        if self.getHiding() == False:
+            pygame.draw.rect(screen, (255, 255, 255), self.activationArea)
+            pygame.draw.rect(screen, (255, 0, 0), self.hitbox)
+            screen.blit(self.transformedImg, self.hitbox.topleft)
         
 
     #Checks if the W key has been pressed and if it has then it deducts 1 from the player coordinates and update
@@ -45,7 +46,6 @@ class Player(pygame.sprite.Sprite, physics.Physics):
             self.y -= self.speed * self.sprintMultiplier
         if pressed[pygame.K_w]:
             self.y -= self.speed
-            #print('forward')
         self.setCoords()            
 
     #Checks if the S key has been pressed and if it has then it increments the players coordinates by 1 and updates
@@ -55,8 +55,6 @@ class Player(pygame.sprite.Sprite, physics.Physics):
             self.y += self.speed * self.sprintMultiplier
         elif pressed[pygame.K_s]:
             self.y += self.speed
-            #print('backward')
-
         self.setCoords()            
 
     #Checks if the D key has been pressed and if it has then it increments the players coordinates by 1 and updates
@@ -66,8 +64,6 @@ class Player(pygame.sprite.Sprite, physics.Physics):
             self.x += self.speed * self.sprintMultiplier
         elif pressed[pygame.K_d]:
             self.x += self.speed
-            #print('right')
-
         self.setCoords()
 
     #Checks if the A key has been pressed and if it has then it deducts 1 from the players coordinates and updates 
@@ -76,8 +72,7 @@ class Player(pygame.sprite.Sprite, physics.Physics):
         if pressed[pygame.K_a] and sprintCheck:
             self.x -= self.speed * self.sprintMultiplier
         elif pressed[pygame.K_a]:
-            self.x -= self.speed
-            #print('left')    
+            self.x -= self.speed  
         self.setCoords()
 
     def playerToWallDistance(self,wallCoords):
@@ -95,30 +90,28 @@ class Player(pygame.sprite.Sprite, physics.Physics):
         #print(wallDistance)
         return distance
 
-    def leverCheck(self, item):
+    def leverCheck(self, item, map):
         #Checks if the item is a lever
         if isinstance(item, objects.Lever):
             #Checks if the lever has already been activated
             if item.getActivated() == False:
-                check = self.activateLever()
+                self.activateLever()
+                #Activates that specific lever so it cannot be activated again
                 item.activate()
-
-                if check == False:
-                    print('ALL LEVERS HAVE BEEN ACTIVATED')    
                 print('activated lever')
 
             else:
                 print('LEVER HAS ALREADY BEEN ACTIVATED')
 
+    #This procedure checks if the object is a hiding space
     def hideCheck(self, item):
         #Checks if the item is a hidingspace
         if isinstance(item, objects.HidingSpace):
             self.setHiding(True)
             print('Hiding Space')
 
+    #This procedure carries out the interaction function for the player 
     def interact(self, pressed, map):
-        #closestDistance = 1000000
-        #closest = None
         if pressed[pygame.K_e]:
             if self.hiding == False:
                 #Uses a function which returns a list of the walls with items and gives it an identifier
@@ -134,20 +127,13 @@ class Player(pygame.sprite.Sprite, physics.Physics):
                         #item is the wall which also contains either a hiding space or lever
                         item = itemWall.getItem()
                         self.hideCheck(item)
-                        self.leverCheck(item)
+                        self.leverCheck(item, map)
                     
             else:
                 self.setHiding(False)
-                
-
-    '''distance = self.playerToWallDistance(itemWall.getCoords())
-    print(str(distance))
-    if distance < closestDistance:
-        closestDistance = distance
-        closest = itemWall    '''    
 
 
-
+    #This returns a boolean value based on if 
     def sprintCheck(self, pressed):
         if pressed[pygame.K_LSHIFT]:
             return True
@@ -162,10 +148,12 @@ class Player(pygame.sprite.Sprite, physics.Physics):
         #Sets the coordinates of the activation area as the center of the hitbox of the player
         self.activationArea.center = self.hitbox.center
     
+    #This returns the coordinates of the player divided by 32 as the size of the map is a factor of 32 compared to the size of the screen
     def getMapCoords(self):
         mapCoords = (round(self.x/32), round(self.y/32))
         return mapCoords
 
+    #This returns the center of the hitbox which is in the same place as the player
     def getCoords(self):
         return self.hitbox.center
 
@@ -175,14 +163,16 @@ class Player(pygame.sprite.Sprite, physics.Physics):
         #Uses a pygame method to check if any key has been pressed and will be true if it is pressed and false if no buttons
         #on the keyboard are being pressed
         pressed = pygame.key.get_pressed()
-
+        hiding = self.getHiding()
         sprintCheck = self.sprintCheck(pressed)
+        self.checkWin(map)
 
         #Each of these methods control an aspect of the inputs from the user which in turn controls the player
-        self.moveForward(pressed, sprintCheck)
-        self.moveBackward(pressed, sprintCheck)
-        self.moveRight(pressed, sprintCheck)
-        self.moveLeft(pressed, sprintCheck)
+        if hiding == False:
+            self.moveForward(pressed, sprintCheck)
+            self.moveBackward(pressed, sprintCheck)
+            self.moveRight(pressed, sprintCheck)
+            self.moveLeft(pressed, sprintCheck)
         self.interact(pressed, map)
 
     #This sets the sound that the player is making based on the coordinates of the player on the map
@@ -195,36 +185,48 @@ class Player(pygame.sprite.Sprite, physics.Physics):
     def getSound(self):
         return self.sound
     
+    #This returns the value for the number of activated levers
     def getActivatedLevers(self):
         return self.activatedLevers
     
+    #This function adds 1 to the number of activated levers if not all of the levers have been activated
     def activateLever(self):
-        if self.activatedLevers != self.maxLevers:
-            self.activatedLevers += 1
-        else:
-            return False
+        self.activatedLevers += 1
+        print(self.activatedLevers)
 
-        '''    #Returns the map coordinates of the player
-    def getMapCoords(self):
-        self.setMapCoords()
-        return self.mapCoords'''
-
+    #This returns the max number of levers that are in the game 
     def getMaxLevers(self):
         return self.maxLevers
 
+    #This returns a boolean value of the attribute for if the player is hiding or not
     def getHiding(self):
         return self.hiding
     
+    #This sets the value of hiding pabased on the parameter that is passed which has to be a boolean value
     def setHiding(self, hiding):
         if hiding == True or hiding == False:    
             self.hiding = hiding
         else:
             print('HIDING IS NOT BOOLEAN VALUE')
 
+    #This procedure gets a list of all of the levers from the map class and then sets the number of max levers as the length of that list
+    def setMaxLevers(self, map):
+        levers = map.getWalls('lever')
+        self.maxLevers = len(levers)
+
+    #This function checks if the player has activated all of the levers and then returns a boolean value based on that
+    def checkWin(self, map):
+        door = map.getDoor()
+        if self.getActivatedLevers() == self.getMaxLevers():
+            if self.hitbox.colliderect(door.getRect()):
+                print('WIN')
 
 
+###########################     UNUSED CODE     ####################################
 
 
- 
-
-        
+                
+                '''if self.getActivatedLevers() == self.getMaxLevers():
+                    door = map.getDoor()
+                    door.activate()
+                    print('ALL LEVERS HAVE BEEN ACTIVATED')   ''' 
