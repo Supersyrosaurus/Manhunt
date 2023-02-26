@@ -198,7 +198,9 @@ map = maps.Map(walls, floors, doorCoord, 20, 30)
 map.createMap()
 mapList = map.getMap()
 
-playerOne = player.Player(500, 500, 'whiteCircle.png', 1, 5, 3, map)
+playerX = 3
+playerY = 6
+playerOne = player.Player(playerX * 32, playerY * 32, 'whiteCircle.png', 1, 5, 3, map)
 playerOne.setMaxLevers(map)
 
 def gameScreen(clock):

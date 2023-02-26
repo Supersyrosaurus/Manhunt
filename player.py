@@ -298,7 +298,7 @@ class Player(pygame.sprite.Sprite, physics.Projectile):
                     self.x += collisionBounce
                 
 
-
+#FOR SIGHT USE COLLIDE RECT AND EVERY FLOOR TILE COLLIDED WITH MAKE COLOURED BUT ONLY MAKE WALL COLOURED WHEN COLLIDE
 
 
 ###########################     UNUSED CODE     ####################################
