@@ -5,6 +5,7 @@ import maps
 import physics
 import player
 import colours
+import mapObjects
 
 #Initialising the pygame module
 pygame.init()
@@ -190,14 +191,14 @@ projectile2 = physics.Projectile((500,500), -5, -5, 50, 50)
 ########## TESTING DA MAP STOOF ##########
 
 #Creating the map for the game
-walls = {'empty':[(1,1)], 'hidingSpace':[(2,2), (5,10)], 'lever':[(3,2), (9, 10)]}
-floors = {'wood':[(1,4),(5,4)], 'concrete':[(1,5),(2,5),], 'carpet':[(4,3)]}
-doorCoord = (15 ,10)
+walls = {'empty':mapObjects.empty, 'hidingSpace':mapObjects.hidingSpace, 'lever':mapObjects.lever}
+floors = {'wood':mapObjects.wood, 'concrete':mapObjects.concrete, 'carpet':mapObjects.carpet}
+doorCoord = mapObjects.doors
 map = maps.Map(walls, floors, doorCoord, 20, 30)
 map.createMap()
 mapList = map.getMap()
 
-playerOne = player.Player(500, 500, 'whiteCircle.png', 0.09, 5, 3)
+playerOne = player.Player(500, 500, 'whiteCircle.png', 1, 5, 3, map)
 playerOne.setMaxLevers(map)
 
 def gameScreen(clock):
@@ -206,6 +207,7 @@ def gameScreen(clock):
             clock.tick(60)
             game.displayGameScreen(map.getMap(), game.getScreen())
             playerOne.displayPlayer(game.getScreen())
+            #print(playerOne.getSound())
 
             canPress = True 
             

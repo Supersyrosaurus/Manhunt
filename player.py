@@ -6,11 +6,12 @@ import time
 pygame.init()
 
 class Player(pygame.sprite.Sprite, physics.Projectile):
-    def __init__(self, x, y, img, scale, speed, sprintMultiplier):
+    def __init__(self, x, y, img, scale, speed, sprintMultiplier, map):
         super().__init__
         #Coordinate attributes
         self.x = x
         self.y = y
+        self.mapCoords = self.setMapCoords()
         #Image attributes
         self.img = pygame.image.load(img).convert_alpha()
         width = self.img.get_width()
@@ -27,9 +28,9 @@ class Player(pygame.sprite.Sprite, physics.Projectile):
         #This is the sprinting multiplier which increases the speed of the player by that much
         self.sprintMultiplier = sprintMultiplier
         self.hiding = False
-        self.sound = 0
+        self.sound = self.setSound(map)
         #These are the attributes for the levers
-        self.maxLevers = 5
+        self.maxLevers = None
         self.activatedLevers = 0
         self.forward = False
         self.backward = False
@@ -167,10 +168,14 @@ class Player(pygame.sprite.Sprite, physics.Projectile):
         #Sets the coordinates of the activation area as the center of the hitbox of the player
         self.activationArea.center = self.hitbox.center
     
+    def setMapCoords(self):
+        x = round(self.x/32)
+        y = round(self.y/32)
+        return (x, y)
+
     #This returns the coordinates of the player divided by 32 as the size of the map is a factor of 32 compared to the size of the screen
     def getMapCoords(self):
-        mapCoords = (round(self.x/32), round(self.y/32))
-        return mapCoords
+        return self.mapCoords
 
     #This returns the center of the hitbox which is in the same place as the player
     def getCoords(self):
@@ -198,7 +203,10 @@ class Player(pygame.sprite.Sprite, physics.Projectile):
     def setSound(self, map):
         coords = self.getMapCoords()
         floor = map.getObject(coords)
-        self.sound = floor.getSoundLevel()
+        if isinstance(floor, objects.Floor):
+            return floor.getSoundLevel()
+        else:
+            print('NOT FLOOR')
 
     #This returns the sound level for the player
     def getSound(self):
@@ -254,11 +262,13 @@ class Player(pygame.sprite.Sprite, physics.Projectile):
 
     #This function checks if the player has activated all of the levers and then returns a boolean value based on that
     def checkWin(self, map):
-
-        door = map.getDoor()
+        doors = map.getDoor()
+        print(self.getActivatedLevers())
+        print(self.getMaxLevers())
         if self.getActivatedLevers() == self.getMaxLevers():
-            if self.hitbox.colliderect(door.getRect()):
-                print('WIN')
+            for door in doors:
+                if self.hitbox.colliderect(door.getRect()):
+                    print('WIN')
 
     def checkCollision(self, map):
         walls = map.getWalls()

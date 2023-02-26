@@ -9,10 +9,10 @@ class Map():
     #door is passed as just coordinates 
     #The coordinates in each of these are not the display coordinates but
     #the grid coordinates
-    def __init__(self, walls, floors, doorCoord, mapHeight, mapWidth):
+    def __init__(self, walls, floors, doorCoords, mapHeight, mapWidth):
         #doorCoord is the coordinates of the node with the door
         #not the display coordinates
-        self.doorCoord = doorCoord
+        self.doorCoords = doorCoords
         #This is passed as a dictionary which only contains the coordinates of
         #Each type of wall 
         self.walls = walls
@@ -88,8 +88,9 @@ class Map():
 
     #Procedure that adds the door to the map
     def addDoor(self):
-        door = objects.Door(self.doorCoord)
-        self.map[self.doorCoord[1]][self.doorCoord[0]] = door
+        for doorCoord in self.doorCoords:
+            door = objects.Door(doorCoord)
+            self.map[doorCoord[1]][doorCoord[0]] = door
 
     #Function that returns all of the walls or a type of wall
     def getWallCoords(self, category = None):
@@ -152,7 +153,11 @@ class Map():
 
     #Function that returns the door object based on the coordinates of the door
     def getDoor(self):
-        return self.map[self.doorCoord[1]][self.doorCoord[0]]
+        doorList = []
+        for doorCoord in self.doorCoords:
+            door = self.map[doorCoord[1]][doorCoord[0]]
+            doorList.append(door)
+        return doorList
 
 
                 
