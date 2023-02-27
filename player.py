@@ -27,6 +27,7 @@ class Player(pygame.sprite.Sprite, physics.Projectile):
         self.speed = speed
         #This is the sprinting multiplier which increases the speed of the player by that much
         self.sprintMultiplier = sprintMultiplier
+        #This is the current state of whether the player is hiding or not
         self.hiding = False
         self.sound = self.setSound(map)
         #These are the attributes for the levers
@@ -97,20 +98,6 @@ class Player(pygame.sprite.Sprite, physics.Projectile):
             self.setMovement(False, 'L')
         self.setCoords()
 
-    def playerToWallDistance(self,wallCoords):
-        playerCoords = self.getCoords()
-        #Sets x and y coordinates of the player as variables
-        xP = playerCoords[0]
-        yP = playerCoords[1]
-        xW = wallCoords[0]
-        yW = wallCoords[1]
-        xdist = abs(xP - xW)
-        ydist = abs(yP - yW)
-        #Calculates distance of player and wall from origin using method from physics class
-        distance = self.pythagoras(xdist, ydist)
-        #print(playerDistance)
-        #print(wallDistance)
-        return distance
 
     def leverCheck(self, item, map):
         #Checks if the item is a lever
@@ -153,7 +140,7 @@ class Player(pygame.sprite.Sprite, physics.Projectile):
                 self.setHiding(False)
 
 
-    #This returns a boolean value based on if 
+    #This returns a boolean value based on if the player is pressing the shift button or not
     def sprintCheck(self, pressed):
         if pressed[pygame.K_LSHIFT]:
             return True
@@ -241,10 +228,15 @@ class Player(pygame.sprite.Sprite, physics.Projectile):
         levers = map.getWalls('lever')
         self.maxLevers = len(levers)
 
+    #This function sets the movement directions as a boolean value based on the parameters passed
     def setMovement(self, value, direction = None):
+        #Validates that the value passed is a boolean value
         if value != True and value != False:
             print('THIS VALUE IS INVALID, MUST BE BOOLEAN')
+        #If data is validated then attribute can be modified based on the direction passed
         else:
+            #Each value can be changed based on the direction, however, 2 cannot be changed at the same time
+            #in this function
             if direction != None:
                 if direction == 'F':
                     self.forward = value
@@ -262,24 +254,37 @@ class Player(pygame.sprite.Sprite, physics.Projectile):
 
     #This function checks if the player has activated all of the levers and then returns a boolean value based on that
     def checkWin(self, map):
+        #function returns the door objects in a list
         doors = map.getDoor()
         print(self.getActivatedLevers())
         print(self.getMaxLevers())
+        #checks if the player has activated all of the levers
         if self.getActivatedLevers() == self.getMaxLevers():
+            #As there are multiple doors, this loop goes through each door 
             for door in doors:
+                door.activate()
+                #Checks if each door has been collided with and carries out action based on that
                 if self.hitbox.colliderect(door.getRect()):
                     print('WIN')
 
+    #This is the function which checks for collisions of the player with walls and then causes the player to bounce off of it
     def checkCollision(self, map):
+        #This function returns all of the walls for the map in a list
         walls = map.getWalls()
         collisionTolerance = 15
+        #This is how many pixels the player will bounce off the wall when collision occurs
         collisionBounce = 10
         player = self.hitbox
+        #This loop goes through each wall in the list above
         for wall in walls:
+            #Gets the rectangle of the wall
             rect = wall.getRect()
             'print(str(player.colliderect(rect)))'
+            #Checks if the rectangle of the player has collided with that rectangle (for the wall)
             if self.hitbox.colliderect(rect):
                 print('COLLIDING')
+                #Each of these if statements check which direction the player is currently moving
+                #and based on this decision, the direction the player bounces back is determined
                 if self.backward == True:
                     print('BOTTOM')
                     self.y -= collisionBounce
@@ -326,3 +331,18 @@ if abs(rect.left - player.right) < collisionTolerance and self.right == True:
 if abs(rect.right - player.left) < collisionTolerance and self.left == True:
     print('LEFT')
     self.x += collisionBounce'''
+
+'''    def playerToWallDistance(self,wallCoords):
+        playerCoords = self.getCoords()
+        #Sets x and y coordinates of the player as variables
+        xP = playerCoords[0]
+        yP = playerCoords[1]
+        xW = wallCoords[0]
+        yW = wallCoords[1]
+        xdist = abs(xP - xW)
+        ydist = abs(yP - yW)
+        #Calculates distance of player and wall from origin using method from physics class
+        distance = self.pythagoras(xdist, ydist)
+        #print(playerDistance)
+        #print(wallDistance)
+        return distance'''

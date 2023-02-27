@@ -189,7 +189,10 @@ class GameScreen(Screen):
             elif isinstance(item, objects.HidingSpace):
                 return colours.blue
             elif isinstance(item, objects.Lever):
-                return colours.green
+                if item.getActivated() == True:
+                    return colours.green
+                else:
+                    return colours.red
         elif isinstance(object, objects.Floor):
             type = object.getType()
             if type == 'carpet':
@@ -199,7 +202,10 @@ class GameScreen(Screen):
             elif type == 'wood':
                 return colours.lightBrown
         elif isinstance(object, objects.Door):
-            return colours.darkBrown
+            if object.checkDoorActivation() == True:
+                return colours.white
+            else:
+                return colours.darkBrown
 
 
 

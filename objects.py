@@ -122,9 +122,6 @@ class Lever(Object):
         self.activated = False
 
 
-    '''#This checks if the player is within the activation area
-    def inArea(self, playerRect):
-        pass'''
 
     #Function checks if lever has been activated
     def getActivated(self):
@@ -142,7 +139,6 @@ class HidingSpace(Object):
     def __init__(self, Coords):
         super().__init__(Coords)
         self.activationArea = pygame.Rect((self.Coords[0] - 1) * 32, (self.Coords[1]) * 32, 96, 96)
-
 
 
     def inArea(self, playerHitbox):
@@ -169,4 +165,11 @@ class Door(Object):
     
     def getColour(self):
         return self.colour
-    
+
+
+#########################       UNUSED CODE         ###################
+
+
+'''#This checks if the player is within the activation area
+def inArea(self, playerRect):
+    pass'''
