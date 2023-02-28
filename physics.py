@@ -1,5 +1,8 @@
 import pygame
 import math
+import objects
+import screens
+import colours
 pygame.init()
 
 class Physics():
@@ -32,8 +35,13 @@ class Projectile():
         self.ySpeed *= -1
 
     
+    def moveProjectile(self, screen):
+        self.rect.x += self.xSpeed
+        self.rect.y += self.ySpeed
 
-    def launchProjectile(self, screen):
+        pygame.draw.rect(screen.getScreen(), colours.red, self.rect)
+
+    '''def launchProjectile(self, screen):
         self.rect.x += self.xSpeed
         self.rect.y += self.ySpeed
 
@@ -42,5 +50,55 @@ class Projectile():
         if self.rect.bottom >= screen.getHeight() or self.rect.top <= 0:
             self.yCollide()
 
-        pygame.draw.rect(screen.getScreen(), (0,0,0), self.rect)
+        pygame.draw.rect(screen.getScreen(), (0,0,0), self.rect)'''
         
+class SightProjectile(Projectile):
+    def __init__(self, coords, xSpeed, ySpeed, height, width):
+        super().__init__(coords, xSpeed, ySpeed, height, width)
+        self.collided = False
+        self.launched = False
+        self.collidedObjects = []
+
+    def getCollided(self):
+        return self.collided
+    
+    def getLaunched(self):
+        return self.launched
+
+    def collideCheck(self, object):
+        return self.rect.colliderect(object)
+    
+    def setCollided(self, value):
+        self.collided = value
+
+    def searchObjects(self, searchObject):
+        found = False
+        for object in self.collidedObjects:
+            if object == searchObject:
+                found = True
+        return found
+    
+    def objectCheck(self, allObjects):
+        for object in allObjects:
+            rect = object.getRect()
+            if self.collideCheck(rect) == True:
+                #print(self.collideCheck(rect))
+                self.collidedObjects.append(object)
+                object.setVisible(True)
+                if isinstance(object, objects.Wall) or isinstance(object, objects.Door):
+                    self.collided = True
+            elif self.searchObjects(object) == False:
+                object.setVisible(False)
+            
+
+    def launchSightProjectile(self, screen, map, coords):
+        allObjects = map.getAllObjects()
+        self.rect.center = coords
+        self.launched = True
+        while self.collided == False:
+            self.moveProjectile(screen)
+            self.objectCheck(allObjects)
+        self.collidedObjects = []
+        
+        
+

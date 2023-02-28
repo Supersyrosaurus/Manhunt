@@ -182,30 +182,33 @@ class GameScreen(Screen):
                     self.displayRect(object.getRect(), self.checkObjectColour(object))
 
     def checkObjectColour(self, object):
-        if isinstance(object, objects.Wall):
-            item = object.getItem()
-            if item == None:
-                return colours.black
-            elif isinstance(item, objects.HidingSpace):
-                return colours.blue
-            elif isinstance(item, objects.Lever):
-                if item.getActivated() == True:
-                    return colours.green
+        if object.getVisible() == True:
+            if isinstance(object, objects.Wall):
+                item = object.getItem()
+                if item == None:
+                    return colours.black
+                elif isinstance(item, objects.HidingSpace):
+                    return colours.blue
+                elif isinstance(item, objects.Lever):
+                    if item.getActivated() == True:
+                        return colours.green
+                    else:
+                        return colours.red
+            elif isinstance(object, objects.Floor):
+                type = object.getType()
+                if type == 'carpet':
+                    return colours.navy
+                elif type == 'concrete':
+                    return colours.lightGrey
+                elif type == 'wood':
+                    return colours.lightBrown
+            elif isinstance(object, objects.Door):
+                if object.checkDoorActivation() == True:
+                    return colours.white
                 else:
-                    return colours.red
-        elif isinstance(object, objects.Floor):
-            type = object.getType()
-            if type == 'carpet':
-                return colours.navy
-            elif type == 'concrete':
-                return colours.lightGrey
-            elif type == 'wood':
-                return colours.lightBrown
-        elif isinstance(object, objects.Door):
-            if object.checkDoorActivation() == True:
-                return colours.white
-            else:
-                return colours.darkBrown
+                    return colours.darkBrown
+        else:
+            return colours.black
 
 
 

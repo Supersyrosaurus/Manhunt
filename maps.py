@@ -152,12 +152,25 @@ class Map():
         return interactables
 
     #Function that returns the door object based on the coordinates of the door
-    def getDoor(self):
+    def getDoors(self):
         doorList = []
         for doorCoord in self.doorCoords:
             door = self.map[doorCoord[1]][doorCoord[0]]
             doorList.append(door)
         return doorList
+    
+    def getAllObjects(self):
+        walls = self.getWalls()
+        floors = self.getFloors()
+        doors = self.getDoors()
+        all = []
+        for wall in walls:
+            all.append(wall)
+        for floor in floors:
+            all.append(floor)
+        for door in doors:
+            all.append(door)
+        return all
 
 
                 

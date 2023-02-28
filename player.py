@@ -5,7 +5,7 @@ import physics
 import time
 pygame.init()
 
-class Player(pygame.sprite.Sprite, physics.Projectile):
+class Player(pygame.sprite.Sprite):
     def __init__(self, x, y, img, scale, speed, sprintMultiplier, map):
         super().__init__
         #Coordinate attributes
@@ -37,12 +37,14 @@ class Player(pygame.sprite.Sprite, physics.Projectile):
         self.backward = False
         self.left = False
         self.right = False
+        self.sightProjectiles = []
+
 
     #Displays the player on whatever screen is passed to the method
     def displayPlayer(self, screen):
         if self.getHiding() == False:
-            pygame.draw.rect(screen, (255, 255, 255), self.activationArea)
-            pygame.draw.rect(screen, (255, 0, 0), self.hitbox)
+            #pygame.draw.rect(screen, (255, 255, 255), self.activationArea)
+            #pygame.draw.rect(screen, (255, 0, 0), self.hitbox)
             screen.blit(self.transformedImg, self.hitbox.topleft)
         
 
@@ -51,12 +53,12 @@ class Player(pygame.sprite.Sprite, physics.Projectile):
     def moveForward(self, pressed, sprintCheck):
         if pressed[pygame.K_w] and sprintCheck:
             self.y -= self.speed * self.sprintMultiplier
-            self.setMovement(True, 'F')
+            self.forward = True
         elif pressed[pygame.K_w]:
             self.y -= self.speed
-            self.setMovement(True, 'F')
+            self.forward = True
         else:
-            self.setMovement(False, 'F')
+            self.forward = False
         self.setCoords()            
 
     #Checks if the S key has been pressed and if it has then it increments the players coordinates by 1 and updates
@@ -64,12 +66,12 @@ class Player(pygame.sprite.Sprite, physics.Projectile):
     def moveBackward(self, pressed, sprintCheck):
         if pressed[pygame.K_s] and sprintCheck:
             self.y += self.speed * self.sprintMultiplier
-            self.setMovement(True, 'B')
+            self.backward = True
         elif pressed[pygame.K_s]:
             self.y += self.speed
-            self.setMovement(True, 'B')
+            self.backward = True
         else:
-            self.setMovement(False, 'B')
+            self.backward = False
         self.setCoords()            
 
     #Checks if the D key has been pressed and if it has then it increments the players coordinates by 1 and updates
@@ -77,12 +79,12 @@ class Player(pygame.sprite.Sprite, physics.Projectile):
     def moveRight(self, pressed, sprintCheck):
         if pressed[pygame.K_d] and sprintCheck:
             self.x += self.speed * self.sprintMultiplier
-            self.setMovement(True, 'R')
+            self.right = True
         elif pressed[pygame.K_d]:
+            self.right = True
             self.x += self.speed
-            self.setMovement(True, 'R')
         else:
-            self.setMovement(False, 'R')
+            self.right = False
         self.setCoords()
 
     #Checks if the A key has been pressed and if it has then it deducts 1 from the players coordinates and updates 
@@ -90,12 +92,12 @@ class Player(pygame.sprite.Sprite, physics.Projectile):
     def moveLeft(self, pressed, sprintCheck):
         if pressed[pygame.K_a] and sprintCheck:
             self.x -= self.speed * self.sprintMultiplier
-            self.setMovement(True, 'L')
+            self.left = True
         elif pressed[pygame.K_a]:
-            self.x -= self.speed  
-            self.setMovement(True, 'L')
+            self.x -= self.speed
+            self.left = True  
         else:
-            self.setMovement(False, 'L')
+            self.left = False
         self.setCoords()
 
 
@@ -228,36 +230,14 @@ class Player(pygame.sprite.Sprite, physics.Projectile):
         levers = map.getWalls('lever')
         self.maxLevers = len(levers)
 
-    #This function sets the movement directions as a boolean value based on the parameters passed
-    def setMovement(self, value, direction = None):
-        #Validates that the value passed is a boolean value
-        if value != True and value != False:
-            print('THIS VALUE IS INVALID, MUST BE BOOLEAN')
-        #If data is validated then attribute can be modified based on the direction passed
-        else:
-            #Each value can be changed based on the direction, however, 2 cannot be changed at the same time
-            #in this function
-            if direction != None:
-                if direction == 'F':
-                    self.forward = value
-                elif direction == 'B': 
-                    self.backward = value
-                elif direction == 'L':
-                    self.left = value
-                elif direction == 'R':
-                    self.right = value
-            else:
-                self.forward = value
-                self.backward = value
-                self.left = value
-                self.right = value
+
 
     #This function checks if the player has activated all of the levers and then returns a boolean value based on that
     def checkWin(self, map):
         #function returns the door objects in a list
-        doors = map.getDoor()
-        print(self.getActivatedLevers())
-        print(self.getMaxLevers())
+        doors = map.getDoors()
+        #print(self.getActivatedLevers())
+       # print(self.getMaxLevers())
         #checks if the player has activated all of the levers
         if self.getActivatedLevers() == self.getMaxLevers():
             #As there are multiple doors, this loop goes through each door 
@@ -273,7 +253,7 @@ class Player(pygame.sprite.Sprite, physics.Projectile):
         walls = map.getWalls()
         collisionTolerance = 15
         #This is how many pixels the player will bounce off the wall when collision occurs
-        collisionBounce = 10
+        collisionBounce = 5
         player = self.hitbox
         #This loop goes through each wall in the list above
         for wall in walls:
@@ -282,28 +262,74 @@ class Player(pygame.sprite.Sprite, physics.Projectile):
             'print(str(player.colliderect(rect)))'
             #Checks if the rectangle of the player has collided with that rectangle (for the wall)
             if self.hitbox.colliderect(rect):
-                print('COLLIDING')
+                #print('COLLIDING')
                 #Each of these if statements check which direction the player is currently moving
                 #and based on this decision, the direction the player bounces back is determined
                 if self.backward == True:
-                    print('BOTTOM')
+                    #print('BOTTOM')
                     self.y -= collisionBounce
 
                 if self.forward == True:
-                    print('TOP')
+                    #print('TOP')
                     self.y += collisionBounce
 
 
                 if self.right == True:
-                    print('RIGHT')
+                   # print('RIGHT')
                     self.x -= collisionBounce
 
                 if self.left == True:
-                    print('LEFT')
+                    #print('LEFT')
                     self.x += collisionBounce
+
+    def getHitbox(self):
+        return self.hitbox
                 
 
+    def createProjectiles(self):
+        length = 5
+
+        
+        projectile1 = physics.SightProjectile(self.getHitbox().topleft, 0, 5, length, length)
+        projectile2 = physics.SightProjectile(self.getHitbox().topleft, 0, -5, length, length)
+        projectile3 = physics.SightProjectile(self.getHitbox().topleft, 5, 0, length, length)
+        projectile4 = physics.SightProjectile(self.getHitbox().topleft, -5, 0, length, length)
+        projectile5 = physics.SightProjectile(self.getHitbox().topleft, -5, -5, length, length)
+        projectile6 = physics.SightProjectile(self.getHitbox().topleft, -5, 5, length, length)
+        projectile7 = physics.SightProjectile(self.getHitbox().topleft, 5, 5, length, length)
+        projectile8 = physics.SightProjectile(self.getHitbox().topleft, 5, -5, length, length)
+        self.sightProjectiles.append(projectile1)
+        #self.sightProjectiles.append(projectile2)
+        #self.sightProjectiles.append(projectile3)
+        #self.sightProjectiles.append(projectile4)
+        #self.sightProjectiles.append(projectile5)
+        #self.sightProjectiles.append(projectile6)
+        #self.sightProjectiles.append(projectile7)
+        #self.sightProjectiles.append(projectile8)
+
+
+    def fov(self, map, screen):
+    
+        if len(self.sightProjectiles) == 0:
+            self.createProjectiles()
+
+        for projectile in self.sightProjectiles:
+            if projectile.getCollided() == True or projectile.getLaunched() == False:
+                projectile.setCollided(False)
+                projectile.launchSightProjectile(screen, map, self.getHitbox().center)
+
+        
+                
+
+
+
+        
+            
+
+
+
 #FOR SIGHT USE COLLIDE RECT AND EVERY FLOOR TILE COLLIDED WITH MAKE COLOURED BUT ONLY MAKE WALL COLOURED WHEN COLLIDE
+
 
 
 ###########################     UNUSED CODE     ####################################
@@ -346,3 +372,27 @@ if abs(rect.right - player.left) < collisionTolerance and self.left == True:
         #print(playerDistance)
         #print(wallDistance)
         return distance'''
+
+'''#This function sets the movement directions as a boolean value based on the parameters passed
+    def setMovement(self, value, direction = None):
+        #Validates that the value passed is a boolean value
+        if value != True and value != False:
+            print('THIS VALUE IS INVALID, MUST BE BOOLEAN')
+        #If data is validated then attribute can be modified based on the direction passed
+        else:
+            #Each value can be changed based on the direction, however, 2 cannot be changed at the same time
+            #in this function
+            if direction != None:
+                if direction == 'F':
+                    self.forward = value
+                elif direction == 'B': 
+                    self.backward = value
+                elif direction == 'L':
+                    self.left = value
+                elif direction == 'R':
+                    self.right = value
+            else:
+                self.forward = value
+                self.backward = value
+                self.left = value
+                self.right = value'''

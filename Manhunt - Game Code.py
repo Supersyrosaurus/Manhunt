@@ -185,8 +185,9 @@ def setSpeed(rect, screen):
 xSpeed = 3
 ySpeed = 3
 otherSpeed = 2
-projectile1 = physics.Projectile((100,100), 3, 3, 50, 50)
-projectile2 = physics.Projectile((500,500), -5, -5, 50, 50)
+#projectile1 = physics.Projectile((100,100), 3, 3, 50, 50)
+#projectile2 = physics.Projectile((500,500), -5, -5, 50, 50)
+
 
 ########## TESTING DA MAP STOOF ##########
 
@@ -197,11 +198,13 @@ doorCoord = mapObjects.doors
 map = maps.Map(walls, floors, doorCoord, 20, 30)
 map.createMap()
 mapList = map.getMap()
+print(mapList)
 
 playerX = 3
 playerY = 6
-playerOne = player.Player(playerX * 32, playerY * 32, 'whiteCircle.png', 1, 5, 3, map)
+playerOne = player.Player(playerX * 32, playerY * 32, 'whiteCircle.png', 1, 2, 4, map)
 playerOne.setMaxLevers(map)
+
 
 def gameScreen(clock):
         running = True
@@ -209,7 +212,10 @@ def gameScreen(clock):
             clock.tick(60)
             game.displayGameScreen(map.getMap(), game.getScreen())
             playerOne.displayPlayer(game.getScreen())
-            #print(playerOne.getSound())
+            playerOne.fov(map, game)
+            playerOne.checkCollision(map)
+
+            
 
             canPress = True 
             
@@ -219,7 +225,7 @@ def gameScreen(clock):
                 if canPress == True:
                     playerOne.checkKeys(map)
                     canPress = False
-                playerOne.checkCollision(map)
+                
                 'print(playerOne.forward, playerOne.backward, playerOne.left, playerOne.right)'
                 
             pygame.display.update()

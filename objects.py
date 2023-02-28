@@ -12,6 +12,7 @@ class Object(physics.Physics):
         self.rect = pygame.Rect(self.Coords[0] * 32, self.Coords[1] * 32, 32, 32)
         #This is the center cooridnates of the object on the screen
         self.center = self.rect.center
+        self.visible = False 
 
     #Function returns the coordinates of the object
     def getCoords(self):
@@ -23,6 +24,15 @@ class Object(physics.Physics):
     def getCenter(self):
         return self.center
     
+    def getVisible(self):
+        return self.visible
+    
+    def setVisible(self, value):
+        if value == True or value == False:
+            self.visible = value
+        else:
+            print('VALUE IS NOT A BOOLEAN')
+        
 
 '''    #Procedure displays the object on the screen
     def display(self, screen, colour):
