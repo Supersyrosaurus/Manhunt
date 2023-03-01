@@ -286,40 +286,68 @@ class Player(pygame.sprite.Sprite):
     def getHitbox(self):
         return self.hitbox
                 
-
+    #This creates the projectiles around the player which will be used for the field of view
     def createProjectiles(self):
-        length = 5
+        #This is the length of each side of the projectile in pixels which will be passed into the projectiles class
+        length = 32
 
-        
-        projectile1 = physics.SightProjectile(self.getHitbox().topleft, 0, 5, length, length)
-        projectile2 = physics.SightProjectile(self.getHitbox().topleft, 0, -5, length, length)
-        projectile3 = physics.SightProjectile(self.getHitbox().topleft, 5, 0, length, length)
-        projectile4 = physics.SightProjectile(self.getHitbox().topleft, -5, 0, length, length)
-        projectile5 = physics.SightProjectile(self.getHitbox().topleft, -5, -5, length, length)
-        projectile6 = physics.SightProjectile(self.getHitbox().topleft, -5, 5, length, length)
-        projectile7 = physics.SightProjectile(self.getHitbox().topleft, 5, 5, length, length)
-        projectile8 = physics.SightProjectile(self.getHitbox().topleft, 5, -5, length, length)
+        #As there was no simpler way to create a loop as the projectiles need a specific speed, each one had to be created individually
+        projectile1 = physics.SightProjectile(self.getHitbox().topleft, 0, 5, length)
+        projectile2 = physics.SightProjectile(self.getHitbox().topleft, 0, -5, length)
+        projectile3 = physics.SightProjectile(self.getHitbox().topleft, 5, 0, length)
+        projectile4 = physics.SightProjectile(self.getHitbox().topleft, -5, 0, length)
+        projectile5 = physics.SightProjectile(self.getHitbox().topleft, -5, -5, length)
+        projectile6 = physics.SightProjectile(self.getHitbox().topleft, -5, 5, length)
+        projectile7 = physics.SightProjectile(self.getHitbox().topleft, 5, 5, length)
+        projectile8 = physics.SightProjectile(self.getHitbox().topleft, 5, -5, length)
+
+        #As the projectiles were created as individual variables, they must be appended to the projectiles list individually as well
         self.sightProjectiles.append(projectile1)
-        #self.sightProjectiles.append(projectile2)
-        #self.sightProjectiles.append(projectile3)
-        #self.sightProjectiles.append(projectile4)
-        #self.sightProjectiles.append(projectile5)
-        #self.sightProjectiles.append(projectile6)
-        #self.sightProjectiles.append(projectile7)
-        #self.sightProjectiles.append(projectile8)
+        self.sightProjectiles.append(projectile2)
+        self.sightProjectiles.append(projectile3)
+        self.sightProjectiles.append(projectile4)
+        self.sightProjectiles.append(projectile5)
+        self.sightProjectiles.append(projectile6)
+        self.sightProjectiles.append(projectile7)
+        self.sightProjectiles.append(projectile8)
 
 
     def fov(self, map, screen):
+        #This variable holds a 1D list of all of the objects in the map
+        allObjects = map.getAllObjects()
+        #This for loop goes through each of the objects in the list aboce
+        for object in allObjects:
+            #This sets the visibility of each object as False so that it appears black on the screen
+            object.setVisible(False)
     
+        #This checks if the projectiles have been made yet as they are appended to the list straight after they are made
+        #and the projectiles only need to be created once as they can be launched many times
         if len(self.sightProjectiles) == 0:
             self.createProjectiles()
 
+        #This for loop goes through each projectile in the self.projectiles list
         for projectile in self.sightProjectiles:
+            #This if statement checks whether the projectile has yet to be launched for the first time or if it has collided with the wall and finished
             if projectile.getCollided() == True or projectile.getLaunched() == False:
+                #If either of the above is true then it sets the collided attribute of the projectile as false
                 projectile.setCollided(False)
-                projectile.launchSightProjectile(screen, map, self.getHitbox().center)
+                #and then re-launches the projectile again to check, a list of objects it has collided with are returned
+                collided = projectile.launchSightProjectile(screen, map, self.getHitbox().center)
+                #This list is then appended to the self.collided list
+                self.collided.append(collided)
+
+        #This nested for loop goes through each object that all the projectiles have collided with
+        for projectile in self.collided:
+            for object in projectile:
+                #This sets the visibility of the object as true so that the player can see it
+                object.setVisible(True)
+        #The self.collided list has to be reset each time otherwise the previous objects would also be set as visible to the player
+        self.collided = []
+
+    def getCollided(self):
+        return self.collided
         
-                
+
 
 
 

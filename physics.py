@@ -41,21 +41,20 @@ class Projectile():
     
     def setCollided(self, value):
         self.collided = value
-
-    def xCollide(self):
-        self.xSpeed *= -1
-
-    def yCollide(self):
-        self.ySpeed *= -1
-
     
     def moveProjectile(self, screen):
         self.rect.x += self.xSpeed
         self.rect.y += self.ySpeed
 
-        pygame.draw.rect(screen.getScreen(), colours.red, self.rect)
+        #pygame.draw.rect(screen.getScreen(), colours.red, self.rect)
 
-    '''def launchProjectile(self, screen):
+    
+    '''def xCollide(self):
+        self.xSpeed *= -1
+
+    def yCollide(self):
+        self.ySpeed *= -1
+    def launchProjectile(self, screen):
         self.rect.x += self.xSpeed
         self.rect.y += self.ySpeed
 
@@ -92,18 +91,20 @@ class SightProjectile(Projectile):
                 object.setVisible(True)
                 if isinstance(object, objects.Wall) or isinstance(object, objects.Door):
                     self.collided = True
-            elif self.searchObjects(object) == False:
-                object.setVisible(False)
+            #elif self.searchObjects(object) == False:
+                #object.setVisible(False)
             
 
     def launchSightProjectile(self, screen, map, coords):
+        self.collidedObjects = []
         allObjects = map.getAllObjects()
         self.rect.center = coords
         self.launched = True
         while self.collided == False:
             self.moveProjectile(screen)
             self.objectCheck(allObjects)
-        self.collidedObjects = []
+        return self.collidedObjects
+        
         
         
 

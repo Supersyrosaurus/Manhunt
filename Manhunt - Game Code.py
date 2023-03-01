@@ -6,6 +6,7 @@ import physics
 import player
 import colours
 import mapObjects
+import time
 
 #Initialising the pygame module
 pygame.init()
@@ -229,7 +230,10 @@ def gameScreen(clock):
                 
             pygame.display.update()
 
+startTime = time.time()
 mainMenuScreen(mainMenu, settings, mode, clock)
+
+print(str(round(time.time() - startTime)))
 
 
 #####################          STUFF THAT MAY BE NEEDED LATER OR HAS BEEN USED FOR TESTING          ###################
