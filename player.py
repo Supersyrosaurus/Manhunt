@@ -347,8 +347,12 @@ class Player(pygame.sprite.Sprite):
     def getCollided(self):
         return self.collided
         
-
-
+    def sprintTimer(self):
+        startTime = time.time()
+        timer = round(time.time() - startTime)
+        while timer <= 5:
+            pass
+        
 
 
         
