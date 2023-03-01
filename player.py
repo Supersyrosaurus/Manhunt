@@ -252,10 +252,8 @@ class Player(pygame.sprite.Sprite):
     def checkCollision(self, map):
         #This function returns all of the walls for the map in a list
         walls = map.getWalls()
-        collisionTolerance = 15
         #This is how many pixels the player will bounce off the wall when collision occurs
         collisionBounce = 5
-        player = self.hitbox
         #This loop goes through each wall in the list above
         for wall in walls:
             #Gets the rectangle of the wall
