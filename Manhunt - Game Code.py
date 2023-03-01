@@ -216,7 +216,6 @@ def gameScreen(clock):
             playerOne.checkCollision(map)
 
             
-
             canPress = True 
             
             for event in pygame.event.get():

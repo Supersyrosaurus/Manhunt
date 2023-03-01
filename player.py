@@ -38,6 +38,7 @@ class Player(pygame.sprite.Sprite):
         self.left = False
         self.right = False
         self.sightProjectiles = []
+        self.collided = []
 
 
     #Displays the player on whatever screen is passed to the method
@@ -317,7 +318,6 @@ class Player(pygame.sprite.Sprite):
             if projectile.getCollided() == True or projectile.getLaunched() == False:
                 projectile.setCollided(False)
                 projectile.launchSightProjectile(screen, map, self.getHitbox().center)
-
         
                 
 

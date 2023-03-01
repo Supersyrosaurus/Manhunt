@@ -21,12 +21,26 @@ class Physics():
 
 
 class Projectile():
-    def __init__(self, coords, xSpeed, ySpeed, height, width):
+    def __init__(self, coords, xSpeed, ySpeed, length):
         super().__init__()
         self.xSpeed = xSpeed
         self.ySpeed = ySpeed
         self.coords = coords
-        self.rect = pygame.Rect(coords[0], coords[1], width, height)
+        self.rect = pygame.Rect(coords[0], coords[1], length, length)
+        self.collided = False
+        self.launched = False
+
+    def getLaunched(self):
+        return self.launched
+
+    def getCollided(self):
+        return self.collided
+    
+    def collideCheck(self, object):
+        return self.rect.colliderect(object)
+    
+    def setCollided(self, value):
+        self.collided = value
 
     def xCollide(self):
         self.xSpeed *= -1
@@ -53,23 +67,14 @@ class Projectile():
         pygame.draw.rect(screen.getScreen(), (0,0,0), self.rect)'''
         
 class SightProjectile(Projectile):
-    def __init__(self, coords, xSpeed, ySpeed, height, width):
-        super().__init__(coords, xSpeed, ySpeed, height, width)
-        self.collided = False
-        self.launched = False
+    def __init__(self, coords, xSpeed, ySpeed, length):
+        super().__init__(coords, xSpeed, ySpeed, length)
         self.collidedObjects = []
 
-    def getCollided(self):
-        return self.collided
     
-    def getLaunched(self):
-        return self.launched
-
-    def collideCheck(self, object):
-        return self.rect.colliderect(object)
+    def getCollidedObjects(self):
+        return self.collidedObjects
     
-    def setCollided(self, value):
-        self.collided = value
 
     def searchObjects(self, searchObject):
         found = False
@@ -102,3 +107,11 @@ class SightProjectile(Projectile):
         
         
 
+class SoundProjectile(Projectile):
+    def __init__(self, coords, xSpeed, ySpeed, length):
+        super().__init__(coords, xSpeed, ySpeed, length)
+        self.wallNum = 0
+
+    def launchSoundProjectile(self):
+        pass
+        
