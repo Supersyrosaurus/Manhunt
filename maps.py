@@ -159,6 +159,7 @@ class Map():
             doorList.append(door)
         return doorList
     
+    #This returns all of the objects as 1 complete list
     def getAllObjects(self):
         walls = self.getWalls()
         floors = self.getFloors()

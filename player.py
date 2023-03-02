@@ -344,6 +344,11 @@ class Player(pygame.sprite.Sprite):
 
     def getCollided(self):
         return self.collided
+    
+    def ready(self, map, screen):
+        self.displayPlayer(screen.getScreen())
+        self.fov(map, screen)
+        self.checkCollision(map)
         
     def sprintTimer(self):
         startTime = time.time()

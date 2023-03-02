@@ -172,9 +172,8 @@ class GameScreen(Screen):
         #Draws a rect on the screen
         pygame.draw.rect(self.screen, colour, rect)
 
-    def displayGameScreen(self, map, screen):
+    def displayGameScreen(self, map):
         #Displays the screen and the map
-        '''self.displayLeverCounter()'''
         self.displayScreen()
         for row in map:
             for object in row:
@@ -186,7 +185,7 @@ class GameScreen(Screen):
             if isinstance(object, objects.Wall):
                 item = object.getItem()
                 if item == None:
-                    return colours.black
+                    return colours.darkGrey
                 elif isinstance(item, objects.HidingSpace):
                     return colours.blue
                 elif isinstance(item, objects.Lever):
