@@ -26,6 +26,10 @@ class Hunter():
         self.backward = False
         self.sprinting = False
 
+    def displayHunter(self, screen):
+        screen.blit(self.transformedImg, self.hitbox.topleft)
+
+
     def moveForward(self):
         if self.getSprinting() == True:
             self.y -= self.speed * self.sprintMultiplier
