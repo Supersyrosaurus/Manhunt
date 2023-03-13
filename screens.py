@@ -1,6 +1,8 @@
 import pygame
 import player
 import hunter
+import objects
+import colours
 
 pygame.init()
 
@@ -158,18 +160,54 @@ class GameScreen(Screen):
         #self.player = player.player()
         #self.hunter = hunter.hunter()
 
-    def moveObject(self, rect):
-            pass
 
-    def displayRect(self, rect):
+    def displayLeverCounter(self, player):
+        maxLevers = player.getMaxLevers()
+        activatedLevers = player.getActivatedLevers()
+        renderText = self.renderText((str(activatedLevers) + '/' + str(maxLevers)), 100, (0,0,0), None)
+        self.screen.blit(renderText, (self.getWidth/2, self.getHeight/2))
+
+
+    def displayRect(self, rect, colour):
         #Draws a rect on the screen
-        pygame.draw.rect(self.screen, (0,0,0), rect)
+        pygame.draw.rect(self.screen, colour, rect)
 
-    def displayGameScreen(self, map, screen):
+    def displayGameScreen(self, map):
         #Displays the screen and the map
         self.displayScreen()
         for row in map:
             for object in row:
                 if object != 0:
-                    self.displayRect(object.getRect())
+                    self.displayRect(object.getRect(), self.checkObjectColour(object))
+
+    def checkObjectColour(self, object):
+        if object.getVisible() == True:
+            if isinstance(object, objects.Wall):
+                item = object.getItem()
+                if item == None:
+                    return colours.darkGrey
+                elif isinstance(item, objects.HidingSpace):
+                    return colours.blue
+                elif isinstance(item, objects.Lever):
+                    if item.getActivated() == True:
+                        return colours.green
+                    else:
+                        return colours.red
+            elif isinstance(object, objects.Floor):
+                type = object.getType()
+                if type == 'carpet':
+                    return colours.navy
+                elif type == 'concrete':
+                    return colours.lightGrey
+                elif type == 'wood':
+                    return colours.lightBrown
+            elif isinstance(object, objects.Door):
+                if object.checkDoorActivation() == True:
+                    return colours.white
+                else:
+                    return colours.darkBrown
+        else:
+            return colours.black
+
+
 

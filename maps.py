@@ -9,10 +9,10 @@ class Map():
     #door is passed as just coordinates 
     #The coordinates in each of these are not the display coordinates but
     #the grid coordinates
-    def __init__(self, walls, floors, doorCoord, mapLength):
+    def __init__(self, walls, floors, doorCoords, mapHeight, mapWidth):
         #doorCoord is the coordinates of the node with the door
         #not the display coordinates
-        self.doorCoord = doorCoord
+        self.doorCoords = doorCoords
         #This is passed as a dictionary which only contains the coordinates of
         #Each type of wall 
         self.walls = walls
@@ -22,7 +22,9 @@ class Map():
         self.map = []
         #As there needs to be an outer border of empty walls, 
         #The real height and width of the map will need to be increased by 2
-        self.mapLength = mapLength + 2
+        #self.mapLength = mapLength + 2
+        self.mapHeight = mapHeight
+        self.mapWidth = mapWidth
 
     def getMap(self):
         return self.map
@@ -37,18 +39,18 @@ class Map():
     #Creates an empty shell for the map with an outer border of walls and empty spaces in the middle
     def createEmptyMap(self):
         #Loops for as long as the length of the map is
-        for y in range(self.mapLength):
+        for y in range(self.mapHeight):
             #for every loop a new list is appended
             self.map.append([])
-            for x in range(self.mapLength):
+            for x in range(self.mapWidth):
                 #for every loop a new element is appended to the new list
-                if y == 0 or y == self.mapLength - 1:
+                if y == 0 or y == self.mapHeight - 1:
                     #This if statement checks if it is the first list or the last list
                     #and if it is it fills it with wall objects 
                     wall = objects.Wall((x, y))
                     self.map[y].append(wall)
                     self.borderWalls.append((x,y))
-                elif x == 0 or x == self.mapLength - 1:
+                elif x == 0 or x == self.mapWidth - 1:
                     #This checks if the element is the first or the last
                     #and if it is then it appends a wall object instead 
                     wall = objects.Wall((x, y))
@@ -86,8 +88,9 @@ class Map():
 
     #Procedure that adds the door to the map
     def addDoor(self):
-        door = objects.Door(self.doorCoord)
-        self.map[self.doorCoord[1]][self.doorCoord[0]] = door
+        for doorCoord in self.doorCoords:
+            door = objects.Door(doorCoord)
+            self.map[doorCoord[1]][doorCoord[0]] = door
 
     #Function that returns all of the walls or a type of wall
     def getWallCoords(self, category = None):
@@ -96,6 +99,7 @@ class Map():
             for type in self.walls:
                 for wall in self.walls[type]:
                     allWalls.append(wall)
+            
             return allWalls
         else:
             return self.walls[category]
@@ -132,10 +136,42 @@ class Map():
     #Function that returns an object based on the coordinates
     def getObject(self, coords):
         return self.map[coords[1]][coords[0]]
-        
+    
+    #Function that returns all of the walls which the player can interact with (walls which have levers etc)
+    def getItemWalls(self):
+    
+        HWalls = self.getWalls('hidingSpace')
+        LWalls = self.getWalls('lever')
+        interactables = []
 
+        for HWall in HWalls:
+            interactables.append(HWall)
+        for LWall in LWalls:
+            interactables.append(LWall)
 
+        return interactables
 
+    #Function that returns the door object based on the coordinates of the door
+    def getDoors(self):
+        doorList = []
+        for doorCoord in self.doorCoords:
+            door = self.map[doorCoord[1]][doorCoord[0]]
+            doorList.append(door)
+        return doorList
+    
+    #This returns all of the objects as 1 complete list
+    def getAllObjects(self):
+        walls = self.getWalls()
+        floors = self.getFloors()
+        doors = self.getDoors()
+        all = []
+        for wall in walls:
+            all.append(wall)
+        for floor in floors:
+            all.append(floor)
+        for door in doors:
+            all.append(door)
+        return all
 
 
                 
