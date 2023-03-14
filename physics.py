@@ -58,7 +58,7 @@ class Projectile():
         self.rect.x += self.xSpeed
         self.rect.y += self.ySpeed
 
-        pygame.draw.rect(screen.getScreen(), colours.red, self.rect)
+        '''pygame.draw.rect(screen.getScreen(), colours.red, self.rect)'''
 
     
     '''def xCollide(self):
