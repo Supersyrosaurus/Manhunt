@@ -28,6 +28,7 @@ mainMenu = screens.Screen(colours.lightGrey)
 settings = screens.Screen(colours.lightGrey)
 mode = screens.Screen(colours.lightGrey)
 game = screens.GameScreen(colours.lightGrey)
+win = screens.Screen(colours.lightGrey)
 
 #Variables for mainMenu
 mainMenu_texts = ['Manhunt']
@@ -84,6 +85,16 @@ game_imageScales = []
 game.renderMTexts(game_texts, game_textSizes, game_textColours, game_textFonts, game_textCoords)
 game.addImages(game_images, game_imageCoords, game_imageScales)
 
+#Variables for win screen
+win_texts = []
+win_textSizes = [100]
+win_textColours = [colours.black]
+win_textFonts = [None]
+win_textCoords = [(320, 80)]
+win_images = []
+win_imageCoords = [] 
+win_imageScales = []
+win.addImages(win_images, win_imageCoords, win_imageScales)
 
 
 def mainMenuScreen(mainMenu, settings, mode, clock):
@@ -149,30 +160,45 @@ print(mapList)
 
 playerX = 3
 playerY = 6
-playerOne = player.Player(playerX * 32, playerY * 32, 'whiteCircle.png', 1, 2, 4, map)
+playerOne = player.Player(playerX * 32, playerY * 32, 'whiteCircle.png', 1, 2, 3, map)
 playerOne.setMaxLevers(map)
 
 
 def gameScreen(clock):
         running = True
         while running:
-            clock.tick(60)
+            clock.tick(120)
             game.displayGameScreen(map.getMap())
-            playerOne.ready(map, game)
-
-            
+            playerWin = playerOne.ready(map, game)
+            #lose = hunter.checkLose()
+            if playerWin:
+                return False
+                running = winScreen(clock)
             canPress = True 
-            
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     return False
-                if canPress == True:
-                    playerOne.checkKeys(map)
-                    canPress = False
-                
-                'print(playerOne.forward, playerOne.backward, playerOne.left, playerOne.right)'
+                playerOne.interactCheck(event, map)
                 
             pygame.display.update()
+
+def winScreen(clock):
+    startTime = time.time()
+    win_texts.append(game.getTimer)
+    print(game.getTimer())
+    win.renderMTexts(win_texts, win_textSizes, win_textColours, win_textFonts, win_textCoords)
+    timer = 0
+    while timer != 10:
+        clock.tick(120)
+        win.displayScreen()
+        timer = round(time.time() - startTime)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return False
+        pygame.display.update()
+    return False
+
+
 
 startTime = time.time()
 mainMenuScreen(mainMenu, settings, mode, clock)
@@ -182,134 +208,8 @@ print(str(round(time.time() - startTime)))
 
 #####################          STUFF THAT MAY BE NEEDED LATER OR HAS BEEN USED FOR TESTING          ###################
 
-'''setSpeed(movingRect, game)
-            pygame.draw.rect(game.getScreen(), (255, 0, 255), otherRect)
-            projectile1.launchProjectile(game)
-            projectile2.launchProjectile(game)
-            canPress = True
-                pressed = pygame.key.get_pressed()
-                
-                if pressed[pygame.K_w] and canPress == True:
-                    projectile1.xCollide()
-                    print(str(projectile1.xSpeed))
-                    canPress = False
-                    
-                if pressed[pygame.K_s] and canPress == True:
-                    projectile1.yCollide()
-                    print(str(projectile1.ySpeed))
+'''if canPress == True:
+                    playerOne.checkKeys(map)
                     canPress = False'''
-
-
-
-
-
-
-
-'''#Wall testing stuff 
-#Initialising the pygame module
-pygame.init()
-
-wallsDic = {'empty':[(1,1)], 'hidingSpace':[(2,2)], 'lever':[(3,2)]}
-floorsDic = {'wood':[(1,4),(5,4)], 'concrete':[(1,5),(2,5),], 'carpet':[(4,3)]}
-doorCoord = (3 ,6)
-
-gameMap = maps.Map(wallsDic, floorsDic, doorCoord, 5)
-gameMap.createMap()
-for y in gameMap.map:
-    print(y)
-print(gameMap.getFloors('wood'))
-print(gameMap.getObject((3,6)))
-print(gameMap.getWalls())'''
-
-
-#Loop for game screen
-'''running = True
-while running:
-
-    #Changing background colour
-    mainMenu.displayScreen()
-    if mainMenu.searchButton('start').clickCheck(mainMenu.screen) == True:
-        print('Start')
-    if mainMenu.searchButton('options').clickCheck(mainMenu.screen) == True:
-        mainMenu.closeScreen()
-        settings.displayScreen()
-        print('Setting')
-
-
-    #event handler
-    for event in pygame.event.get():
-        #Checks through all of the events that are happening in the window
-        #If user presses cross button window closed
-        if event.type == pygame.QUIT:
-            running = False'''
-        
-'''        if settings.searchButton('start').clickCheck(mainMenu.screen) == True:
-            print('Start')
-        if settings.searchButton('options').clickCheck(mainMenu.screen) == True:
-            settings()
-            print('settings')
-            running = False'''
-
-#Going through a dictionary
-'''print(wallsDic)
-for list in wallsDic:
-    print(wallsDic[list])
-    for element in wallsDic[list]:
-        print(element)'''
-
-
-#Testing rectangles collisions
-'''movingRect = pygame.Rect(25, 50, 80, 80)
-otherRect =pygame.Rect(150, 300, 400, 100)
-
-def setSpeed(rect, screen):
-        global otherSpeed, xSpeed, ySpeed
-        rect.x += xSpeed
-        rect.y += ySpeed
-        
-        #Collsion with screen borders
-        if rect.right >= screen.getWidth() or rect.left <= 0:
-            xSpeed *= -1
-            print(xSpeed)
-        if rect.top <= 0 or rect.bottom >= screen.getHeight():
-            ySpeed *= -1
-            print(xSpeed)
-
-        #Moving other rect
-        otherRect.y += otherSpeed
-        if otherRect.top <= 0 or otherRect.bottom >= screen.getHeight():
-            otherSpeed *= -1 
-
-        #Collision with other rects
-        collisionTolerance = 10
-        #Checking if the moving rectangle has collided with another rectangle
-        if movingRect.colliderect(otherRect):
-            #Each one of these checks in what way the rectangles have collided with each other
-            #As the 'movingRect' must go in the opposite direction when it hits a different object, to know which 
-            #direction to move it in, we need to check how one rectangle has collided relative to the other
-            #to do this we compare the absolute values of the difference of the opposite sides of each of the rectangles
-            #to the collisionTollerance (which is how close one rect must be to the other in pixels to be considered a collision)
-            #and we also need to check in which direction the object is moving by comparing the speed of the object in a specific direction
-            #as one of the objects may have collided with another object and they are moving in the same direction which could cause the object
-            #to move in the opposite direction even though it should still continue in the same direction 
-            if abs(otherRect.top - movingRect.bottom) < collisionTolerance and ySpeed > 0:
-                ySpeed *= -1
-                print(ySpeed)
-            if abs(otherRect.bottom - movingRect.top) < collisionTolerance and ySpeed < 0:
-                ySpeed *= -1
-                print(ySpeed)
-            if abs(otherRect.left - movingRect.right) < collisionTolerance and xSpeed > 0:
-                xSpeed *= -1
-                print(xSpeed)
-            if abs(otherRect.right - movingRect.left) < collisionTolerance and xSpeed < 0:
-                xSpeed *= -1
-                print(xSpeed)
-            
-        #This redraws the 'movingRect' - 'otherRect' is drawn in main game loop
-        pygame.draw.rect(screen.getScreen(), (0,0,0), rect)
-
-xSpeed = 3
-ySpeed = 3
-otherSpeed = 2
-#projectile1 = physics.Projectile((100,100), 3, 3, 50, 50)
-#projectile2 = physics.Projectile((500,500), -5, -5, 50, 50)'''
+                
+'print(playerOne.forward, playerOne.backward, playerOne.left, playerOne.right)'
