@@ -34,18 +34,12 @@ class Object(physics.Physics):
             print('VALUE IS NOT A BOOLEAN')
         
 
-'''    #Procedure displays the object on the screen
-    def display(self, screen, colour):
-        pygame.draw.rect(screen, colour, self.rect)
-'''
-
 class Wall(Object):
     def __init__(self, Coords, type = None):
         super().__init__(Coords)
         self.type = type
         #This sets the wall as 
         self.item = self.setItem()
-        self.colour = self.setColour()
 
 
     def setItem(self):
@@ -64,22 +58,7 @@ class Wall(Object):
     def getItem(self):
         return self.item
     
-    def setColour(self):
-        #If type is none that means that there is nothing on the wall
-        if self.type == 'empty':
-            return colours.black
 
-        #If type is 0 then that means that there is a hidingSpace on the wall
-        if self.type == 'hidingSpace':
-            return colours.blue
-
-        #If type is 1 then that means that there is a lever on the wall
-        if self.type == 'lever':
-           return colours.green
-
-    def getColour(self):
-        return self.colour
-    
             
     
             
@@ -89,7 +68,7 @@ class Floor(Object):
         self.type = type
         #Stores the level of sound for each floor object depending on the type of floor
         self.soundLevel = self.setSound()
-        self.colour = self.setColour()
+
     
     #Procedure sets the sound level depending on the type of the floor
     def setSound(self):
@@ -109,21 +88,6 @@ class Floor(Object):
     def getType(self):
         return self.type
     
-    def setColour(self):
-        #If type is none that means that there is nothing on the wall
-        if self.type == 'carpet':
-            return colours.navy
-
-        #If type is 0 then that means that there is a hidingSpace on the wall
-        if self.type == 'concrete':
-            return colours.lightGrey
-
-        #If type is 1 then that means that there is a lever on the wall
-        if self.type == 'wood':
-           return colours.green
-        
-    def getColour(self):
-        return self.colour
 
 
 class Lever(Object):
@@ -160,7 +124,6 @@ class Door(Object):
     def __init__(self, Coords):
         super().__init__(Coords)
         self.activated = False
-        self.colour = colours.lightBrown
 
     #Function that returns whether the door has been activated
     def checkDoorActivation(self):
@@ -180,6 +143,3 @@ class Door(Object):
 #########################       UNUSED CODE         ###################
 
 
-'''#This checks if the player is within the activation area
-def inArea(self, playerRect):
-    pass'''

@@ -58,24 +58,7 @@ class Projectile():
         self.rect.x += self.xSpeed
         self.rect.y += self.ySpeed
 
-        #pygame.draw.rect(screen.getScreen(), colours.red, self.rect)
 
-    
-    '''def xCollide(self):
-        self.xSpeed *= -1
-
-    def yCollide(self):
-        self.ySpeed *= -1
-    def launchProjectile(self, screen):
-        self.rect.x += self.xSpeed
-        self.rect.y += self.ySpeed
-
-        if self.rect.right >= screen.getWidth() or self.rect.left <= 0:
-            self.xCollide()
-        if self.rect.bottom >= screen.getHeight() or self.rect.top <= 0:
-            self.yCollide()
-
-        pygame.draw.rect(screen.getScreen(), (0,0,0), self.rect)'''
         
 #This is the class for sight projectiles, which inherits projectile
 class SightProjectile(Projectile):
@@ -108,7 +91,6 @@ class SightProjectile(Projectile):
             #Method invoked with that object above passed to check if the projectile has
             #collided with it
             if self.collideCheck(rect) == True:
-                #print(self.collideCheck(rect))
                 #If it has then it is added to the collided objects list
                 self.collidedObjects.append(object)
                 #The visibility of that object is set to True so it can be seen
@@ -116,9 +98,7 @@ class SightProjectile(Projectile):
                 #Checks if the object is a door or a wall and if it is then it has collided so collided is True
                 if isinstance(object, objects.Wall) or isinstance(object, objects.Door):
                     self.collided = True
-            #elif self.searchObjects(object) == False:
-                #object.setVisible(False)
-            
+
     #This method launches the projectile and then runs the other methods in order to check
     #what objects the projectile has collided with and returns the list of objects the projecile
     #Has collided with
