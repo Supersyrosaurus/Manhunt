@@ -149,17 +149,17 @@ print(mapList)
 
 playerX = 3
 playerY = 6
-playerOne = player.Player(playerX * 32, playerY * 32, 'whiteCircle.png', 1, 2, 4, map)
+playerOne = player.Player(playerX * 32, playerY * 32, 'whiteCircle.png', 1, 2, 3, map)
 playerOne.setMaxLevers(map)
 
 
 def gameScreen(clock):
         running = True
         while running:
-            clock.tick(60)
+            clock.tick(120)
             game.displayGameScreen(map.getMap())
             playerOne.ready(map, game)
-
+            print(playerOne.getSound())
             
             canPress = True 
             
