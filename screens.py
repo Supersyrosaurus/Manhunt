@@ -3,6 +3,7 @@ import player
 import hunter
 import objects
 import colours
+import time
 
 pygame.init()
 
@@ -157,6 +158,7 @@ class GameScreen(Screen):
     def __init__(self, colour):
         super().__init__(colour)
         self.colour = colour
+        self.timer = 0
         #self.player = player.player()
         #self.hunter = hunter.hunter()
 
@@ -174,6 +176,7 @@ class GameScreen(Screen):
 
     def displayGameScreen(self, map):
         #Displays the screen and the map
+        self.timer = time.time()
         self.displayScreen()
         for row in map:
             for object in row:
@@ -209,5 +212,7 @@ class GameScreen(Screen):
         else:
             return colours.black
 
-
-
+    def getTimer(self):
+        endTime = time.time() - self.timer
+        playTime = 'Time:' + str(round(endTime))
+        return playTime

@@ -28,6 +28,7 @@ mainMenu = screens.Screen(colours.lightGrey)
 settings = screens.Screen(colours.lightGrey)
 mode = screens.Screen(colours.lightGrey)
 game = screens.GameScreen(colours.lightGrey)
+win = screens.Screen(colours.lightGrey)
 
 #Variables for mainMenu
 mainMenu_texts = ['Manhunt']
@@ -84,6 +85,16 @@ game_imageScales = []
 game.renderMTexts(game_texts, game_textSizes, game_textColours, game_textFonts, game_textCoords)
 game.addImages(game_images, game_imageCoords, game_imageScales)
 
+#Variables for win screen
+win_texts = []
+win_textSizes = [100]
+win_textColours = [colours.black]
+win_textFonts = [None]
+win_textCoords = [(320, 80)]
+win_images = []
+win_imageCoords = [] 
+win_imageScales = []
+win.addImages(win_images, win_imageCoords, win_imageScales)
 
 
 def mainMenuScreen(mainMenu, settings, mode, clock):
@@ -158,21 +169,36 @@ def gameScreen(clock):
         while running:
             clock.tick(120)
             game.displayGameScreen(map.getMap())
-            playerOne.ready(map, game)
-            print(playerOne.getSound())
-            
+            playerWin = playerOne.ready(map, game)
+            #lose = hunter.checkLose()
+            if playerWin:
+                return False
+                running = winScreen(clock)
             canPress = True 
-            
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     return False
-                if canPress == True:
-                    playerOne.checkKeys(map)
-                    canPress = False
-                
-                'print(playerOne.forward, playerOne.backward, playerOne.left, playerOne.right)'
+                playerOne.interactCheck(event, map)
                 
             pygame.display.update()
+
+def winScreen(clock):
+    startTime = time.time()
+    win_texts.append(game.getTimer)
+    print(game.getTimer())
+    win.renderMTexts(win_texts, win_textSizes, win_textColours, win_textFonts, win_textCoords)
+    timer = 0
+    while timer != 10:
+        clock.tick(120)
+        win.displayScreen()
+        timer = round(time.time() - startTime)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return False
+        pygame.display.update()
+    return False
+
+
 
 startTime = time.time()
 mainMenuScreen(mainMenu, settings, mode, clock)
@@ -182,3 +208,8 @@ print(str(round(time.time() - startTime)))
 
 #####################          STUFF THAT MAY BE NEEDED LATER OR HAS BEEN USED FOR TESTING          ###################
 
+'''if canPress == True:
+                    playerOne.checkKeys(map)
+                    canPress = False'''
+                
+'print(playerOne.forward, playerOne.backward, playerOne.left, playerOne.right)'
