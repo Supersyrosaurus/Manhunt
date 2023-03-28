@@ -3,6 +3,10 @@ import sprite
 import math
 pygame.init()
 
+class AStar():
+
+
+
 class Hunter(sprite.Sprite):
     def __init__(self, x, y, img, scale, speed, sprintMultiplier, map):
         super().__init__(x, y, img, scale, speed, sprintMultiplier)
