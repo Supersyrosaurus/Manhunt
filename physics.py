@@ -126,6 +126,32 @@ class SoundProjectile(Projectile):
         super().__init__(coords, xSpeed, ySpeed, length)
         self.wallNum = 0
 
-    def launchSoundProjectile(self):
-        pass
-        
+    def playerCollision(self, player):
+        if self.collideCheck(player):
+            return True
+        return False
+
+    def launchSoundProjectile(self, screen, coords, map):
+        self.rect.center = coords
+        walls = map.getWalls()
+        while self.playerCollision() == False:
+            self.moveProjectile(screen)
+            self.wallCheck(walls)
+        collidedNum = self.wallNum
+        self.wallNum = 0
+        return collidedNum
+    
+    def wallCheck(self, walls):
+        for wall in walls:
+            if self.collideCheck(wall) == True:
+                self.wallNum += 1
+            
+    def setXSpeed(self, value):
+        if isinstance(value, int) == False:
+            print('NOT AN INTEGER VALUE FOR XSPEED')
+        self.xSpeed = value
+    
+    def setYSpeed(self, value):
+        if isinstance(value, int) == False:
+            print('NOT AN INTEGER VALUE FOR YSPEED')
+        self.ySpeed = value
