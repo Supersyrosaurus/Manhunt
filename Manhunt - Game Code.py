@@ -1,12 +1,11 @@
 import pygame
 import screens
-import objects
 import maps
-import physics
 import player
 import colours
 import mapObjects
 import time
+import hunter
 
 #Initialising the pygame module
 pygame.init()
@@ -156,13 +155,15 @@ doorCoord = mapObjects.doors
 map = maps.Map(walls, floors, doorCoord, 20, 30)
 map.createMap()
 mapList = map.getMap()
-print(mapList)
 
 playerX = 3
 playerY = 6
-playerOne = player.Player(playerX * 32, playerY * 32, 'whiteCircle.png', 1, 2, 3, map)
+playerOne = player.Player(playerX * 32, playerY * 32, 'BlueCircle.png', 1, 2, 3, map)
 playerOne.setMaxLevers(map)
 
+hunterX = 27
+hunterY = 15
+hunterOne = hunter.Hunter(hunterX * 32, hunterY * 32, 'RedCircle.png', 1, 2, 2)
 
 def gameScreen(clock):
         running = True
@@ -170,7 +171,8 @@ def gameScreen(clock):
             clock.tick(120)
             game.displayGameScreen(map.getMap())
             playerWin = playerOne.ready(map, game)
-            #lose = hunter.checkLose()
+            print(playerOne.getMapCoords())
+            hunterWin = hunterOne.ready(game.getScreen(), map, playerOne)
             if playerWin:
                 return False
                 running = winScreen(clock)

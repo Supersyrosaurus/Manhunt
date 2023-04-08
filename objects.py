@@ -1,10 +1,8 @@
 import pygame
-import physics
-import colours
 
 pygame.init()
 
-class Object(physics.Physics):
+class Object():
     def __init__(self, Coords):
         #Each object has coordinates on the map
         self.Coords = Coords

@@ -58,6 +58,17 @@ class Projectile():
         self.rect.x += self.xSpeed
         self.rect.y += self.ySpeed
 
+    #This method changes the x speed of the projectile to whatever is passed into the method 
+    def setXSpeed(self, value):
+        if isinstance(value, int) == False:
+            print('NOT AN INTEGER VALUE FOR XSPEED')
+        self.xSpeed = value
+    
+    #This method changes the y speed of the projectile to whatever is passed into the method
+    def setYSpeed(self, value):
+        if isinstance(value, int) == False:
+            print('NOT AN INTEGER VALUE FOR YSPEED')
+        self.ySpeed = value
 
         
 #This is the class for sight projectiles, which inherits projectile
@@ -120,38 +131,36 @@ class SightProjectile(Projectile):
         
         
         
-
+#This is the sound projectile class which will be used by the hunter to determine the number of walls between the player and the hunter
 class SoundProjectile(Projectile):
     def __init__(self, coords, xSpeed, ySpeed, length):
         super().__init__(coords, xSpeed, ySpeed, length)
+        #This attribute will be used to record the number of wall which the projectile has collided into
         self.wallNum = 0
 
+    #This method checks if the projectile has collided into the player by taking the player's hitbox as a parameter
     def playerCollision(self, player):
-        if self.collideCheck(player):
-            return True
-        return False
+        if self.collideCheck(player.getHitbox()):
+            self.setCollided(True)
+        self.setCollided(False)
 
-    def launchSoundProjectile(self, screen, coords, map):
+    #This method launches the sound projectile and then returns the number of walls the projecitle has collided into
+    def launchSoundProjectile(self, screen, coords, map, player):
         self.rect.center = coords
         walls = map.getWalls()
-        while self.playerCollision() == False:
+        while self.collided == False:
             self.moveProjectile(screen)
             self.wallCheck(walls)
+            self.playerCollision(player)
+            print(self.collided)
+        print(self.collided)
         collidedNum = self.wallNum
         self.wallNum = 0
         return collidedNum
     
+    #This method checks if the projectile has collided with a wall in the map and if it has then it increments the number of walls collided
     def wallCheck(self, walls):
         for wall in walls:
             if self.collideCheck(wall) == True:
                 self.wallNum += 1
             
-    def setXSpeed(self, value):
-        if isinstance(value, int) == False:
-            print('NOT AN INTEGER VALUE FOR XSPEED')
-        self.xSpeed = value
-    
-    def setYSpeed(self, value):
-        if isinstance(value, int) == False:
-            print('NOT AN INTEGER VALUE FOR YSPEED')
-        self.ySpeed = value
