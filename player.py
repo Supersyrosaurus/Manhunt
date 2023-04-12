@@ -235,9 +235,10 @@ class Player(sprite.Sprite):
         self.sightProjectiles.append(projectile7)
         self.sightProjectiles.append(projectile8)
 
-    def fov(self, map, screen):
+    def fov(self, map, screen, hunter):
         #This variable holds a 1D list of all of the objects in the map
         allObjects = map.getAllObjects()
+        allObjects.append(hunter)
         #This for loop goes through each of the objects in the list aboce
         for object in allObjects:
             #This sets the visibility of each object as False so that it appears black on the screen
@@ -255,7 +256,7 @@ class Player(sprite.Sprite):
                 #If either of the above is true then it sets the collided attribute of the projectile as false
                 projectile.setCollided(False)
                 #and then re-launches the projectile again to check, a list of objects it has collided with are returned
-                collided = projectile.launchSightProjectile(screen, map, self.getHitbox().center)
+                collided = projectile.launchSightProjectile(screen, allObjects, self.getHitbox().center, hunter)
                 #This list is then appended to the self.collided list
                 self.collided.append(collided)
 
@@ -270,14 +271,19 @@ class Player(sprite.Sprite):
     def getCollided(self):
         return self.collided
     
-    def ready(self, map, screen):
+    def ready(self, map, screen, hunter):
         self.displayPlayer(screen.getScreen())
-        self.fov(map, screen)
+        self.fov(map, screen, hunter)
         self.checkCollision(map)
         self.checkSound(map)
         win = self.checkKeys(map)
         if win:
             return True
         
+    def getMovement(self):
+        if self.getForward() or self.getBackward() or self.getLeft() or self.getRight():
+            return True
+        else:
+            return False
 
 ###########################     UNUSED CODE     ####################################

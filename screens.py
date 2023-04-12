@@ -178,13 +178,14 @@ class GameScreen(Screen):
         #Displays the screen and the map
         self.timer = time.time()
         self.displayScreen()
+        
         for row in map:
             for object in row:
                 if object != 0:
                     self.displayRect(object.getRect(), self.checkObjectColour(object))
 
     def checkObjectColour(self, object):
-        #if object.getVisible() == True:
+        if object.getVisible() == True:
             if isinstance(object, objects.Wall):
                 item = object.getItem()
                 if item == None:
@@ -209,8 +210,8 @@ class GameScreen(Screen):
                     return colours.white
                 else:
                     return colours.darkBrown
-        #else:
-            #return colours.black
+        else:
+            return colours.black
 
     def getTimer(self):
         endTime = time.time() - self.timer

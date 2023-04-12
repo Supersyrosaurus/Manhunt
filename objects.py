@@ -71,10 +71,10 @@ class Floor(Object):
     #Procedure sets the sound level depending on the type of the floor
     def setSound(self):
         if self.type == 'carpet':
-            return 0.2
+            return 0.3
             
         if self.type == 'concrete':
-            return 0.5
+            return 0.6
             
         if self.type == 'wood':
             return 0.9
