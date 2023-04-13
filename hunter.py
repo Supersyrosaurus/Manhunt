@@ -13,10 +13,14 @@ class Hunter(sprite.Sprite):
     def __init__(self, x, y, img, scale, speed, sprintMultiplier):
         super().__init__(x, y, img, scale, speed, sprintMultiplier)
         self.soundProj = None
-        self.soundProjSpeed = 10
+        self.soundProjSpeed = 16
         self.heard = False
+
         self.goalCoords = None
         self.visible = False
+
+        self.sightProj = []
+        self.seen = False
 
     def displayHunter(self, screen):
         self.displaySprite(screen)
@@ -82,10 +86,7 @@ class Hunter(sprite.Sprite):
             yDist = coordDist[1]
             direction = self.checkDirection(xDist, yDist)
             if xDist != 0 and yDist != 0:
-                #print('direction', direction)
-                #print('doing')
                 angle = self.angleCalcR(xDist, yDist)
-                #print('angle', angle)
                 speeds = self.speedCalcR(angle)
                 xSpeed = speeds[0] * direction[0]
                 ySpeed = speeds[1] * direction[1]
@@ -95,7 +96,6 @@ class Hunter(sprite.Sprite):
             elif yDist == 0:
                 ySpeed = 0
                 xSpeed = self.soundProjSpeed * direction[0]
-            #print(xSpeed, ySpeed)
             soundProj.setXSpeed(xSpeed)
             soundProj.setYSpeed(ySpeed)
             walls = soundProj.launchSoundProjectile(screen, self.getHitbox().center, map, player)
@@ -106,8 +106,6 @@ class Hunter(sprite.Sprite):
     #This method calculates the distance in each axis
     def coordinateDistance(self, coords):
         hCoords = self.getCoords()
-        print(coords)
-        print(hCoords)
         startX = coords[0]
         endX = hCoords[0]
         startY = coords[1]
@@ -167,15 +165,107 @@ class Hunter(sprite.Sprite):
         mapList = map.getMap()
 
     def createSoundProjectile(self):
-        self.soundProj = physics.SoundProjectile(self.getHitbox().center, 0, 0, 10)
+        self.soundProj = physics.SoundProjectile(self.getHitbox().center, 0, 0, 1)
     
+    def setSeen(self, value):
+        if value != True and value != False:
+            print('VALUE FOR SEEN IS NOT BOOLEAN')
+        self.seen = value
+
+    def getSeen(self):
+        return self.seen
+
+    def createSightProjectile(self):
+        for x in range(0, 3):
+            proj = physics.HunterSightProjectile(self.getHitbox().center, 0, 0, 32)
+            self.sightProj.append(proj)
+
+    def fov(self, screen, map, player):
+        allWalls = map.getWalls()
+        allWalls.append(player)
+        projSpeed = 20
+        if len(self.sightProj) == 0:
+            self.createSightProjectile()
+            print(self.sightProj)
+
+        self.setProjDirection(projSpeed)
+        for proj in self.sightProj:
+            if proj.getCollided() == True or proj.getLaunched() == False:
+                proj.setCollided(False)
+                collided = proj.launchSightProjectile(screen, self.getHitbox().center, allWalls)
+                print(proj.getPlayerCollision())
+        self.setSeen(collided)
+        
+
+
+    def setProjDirection(self, projSpeed):
+        if self.getBackward():
+            #LEFT
+            self.sightProj[0].setXSpeed(projSpeed * -1)
+            self.sightProj[0].setYSpeed(projSpeed)
+            #MIDDLE
+            self.sightProj[1].setXSpeed(0)
+            self.sightProj[1].setYSpeed(projSpeed)
+            #RIGHT
+            self.sightProj[2].setXSpeed(projSpeed)
+            self.sightProj[2].setYSpeed(projSpeed)
+
+        elif self.getRight():
+            #TOP
+            self.sightProj[0].setXSpeed(projSpeed)
+            self.sightProj[0].setYSpeed(projSpeed * -1)
+            #MIDDLE
+            self.sightProj[1].setXSpeed(projSpeed)
+            self.sightProj[1].setYSpeed(0)
+            #BOTTOM
+            self.sightProj[2].setXSpeed(projSpeed)
+            self.sightProj[2].setYSpeed(projSpeed)
+
+        elif self.getLeft():
+            #TOP
+            self.sightProj[0].setXSpeed(projSpeed * -1)
+            self.sightProj[0].setYSpeed(projSpeed * -1)
+            #MIDDLE
+            self.sightProj[1].setXSpeed(projSpeed * -1)
+            self.sightProj[1].setYSpeed(0)
+            #BOTTOM
+            self.sightProj[2].setXSpeed(projSpeed * -1)
+            self.sightProj[2].setYSpeed(projSpeed)
+
+        else:
+            #LEFT
+            self.sightProj[0].setXSpeed(projSpeed * -1)
+            self.sightProj[0].setYSpeed(projSpeed * -1)
+            #MIDDLE
+            self.sightProj[1].setXSpeed(0)
+            self.sightProj[1].setYSpeed(projSpeed * -1)
+            #RIGHT
+            self.sightProj[2].setXSpeed(projSpeed)
+            self.sightProj[2].setYSpeed(projSpeed * -1)
+
+    def randomMove(self):
+        x = random.randint(1, 4)
+        if x == 1:
+            self.moveForward()
+        if x == 2:
+            self.moveBackward()
+        if x == 3:
+            self.moveRight()
+        if x == 4:
+            self.moveLeft()
+
+
     def ready(self, screen, map, player):
         self.setCoords()
         if self.visible == True:
-            print(self.visible)
             self.displayHunter(screen)
         heard = self.sound(player, screen, map)
         self.setHeard(heard)
+        self.fov(screen, map, player)
+        #print(self.getSeen())
+        self.randomMove()
+        self.checkCollision(map)
+        
         '''walls = self.checkWalls(player, screen, map)
         print(str(walls))'''
 
@@ -214,37 +304,3 @@ class Hunter(sprite.Sprite):
 
 
 
-'''  def moveForward(self):
-        if self.getSprinting() == True:
-            self.y -= self.speed * self.sprintMultiplier
-        else:
-            self.y -= self.speed
-        self.forward = True
-
-    def moveBackward(self):
-        if self.getSprinting() == True:
-            self.y += self.speed * self.sprintMultiplier
-        else:
-            self.y += self.speed
-        self.backward = True
-
-    def moveLeft(self):
-        if self.getSprinting() == True:
-            self.x -= self.speed * self.sprintMultiplier
-        else:
-            self.x -= self.speed
-        self.left = True
-
-    def moveRight(self):
-        if self.getSprinting() == True:
-            self.x += self.speed * self.sprintMultiplier
-        else:
-            self.x -= self.speed
-        self.right = True
-
-    def getSprinting(self):
-        return self.sprinting
-    
-    def setSprinting(self, value):
-        self.sprinting = value
-'''

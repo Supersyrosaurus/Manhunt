@@ -161,8 +161,8 @@ playerY = 6
 playerOne = player.Player(playerX * 32, playerY * 32, 'BlueCircle.png', 1, 2, 3, map)
 playerOne.setMaxLevers(map)
 
-hunterX = 27
-hunterY = 15
+hunterX = 15
+hunterY = 10
 hunterOne = hunter.Hunter(hunterX * 32, hunterY * 32, 'RedCircle.png', 1, 2, 2)
 
 def gameScreen(clock):

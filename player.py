@@ -256,7 +256,7 @@ class Player(sprite.Sprite):
                 #If either of the above is true then it sets the collided attribute of the projectile as false
                 projectile.setCollided(False)
                 #and then re-launches the projectile again to check, a list of objects it has collided with are returned
-                collided = projectile.launchSightProjectile(screen, allObjects, self.getHitbox().center, hunter)
+                collided = projectile.launchSightProjectile(screen, allObjects, self.getHitbox().center)
                 #This list is then appended to the self.collided list
                 self.collided.append(collided)
 

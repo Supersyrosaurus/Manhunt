@@ -3,6 +3,7 @@ import math
 import objects
 import hunter
 import colours
+import player
 pygame.init()
 
 class Physics():
@@ -60,18 +61,18 @@ class Projectile():
 
     #This method changes the x speed of the projectile to whatever is passed into the method 
     def setXSpeed(self, value):
-        if isinstance(value, float) == False:
+        if isinstance(value, float) == False and isinstance(value, int) == False:
             print('NOT AN INTEGER VALUE FOR XSPEED')
         self.xSpeed = value
     
     #This method changes the y speed of the projectile to whatever is passed into the method
     def setYSpeed(self, value):
-        if isinstance(value, float) == False:
+        if isinstance(value, float) == False and isinstance(value, int) == False:
             print('NOT AN INTEGER VALUE FOR YSPEED')
         self.ySpeed = value
 
     def displayProjectile(self, screen):
-        pygame.draw.rect(screen, colours.black, self.rect)
+        pygame.draw.rect(screen, colours.red, self.rect)
 
 #This is the class for sight projectiles, which inherits projectile
 class SightProjectile(Projectile):
@@ -133,7 +134,47 @@ class SightProjectile(Projectile):
         return self.collidedObjects
         
         
+class HunterSightProjectile(Projectile):
+    def __init__(self, coords, xSpeed, ySpeed, length):
+        super().__init__(coords, xSpeed, ySpeed, length)
+        self.playerCollision = False
+
+    #This method checks if the projectile has collided with any walls or the player
+    #and if it has then it returns the collided attribute as True and 
+    #if the projectile has collided with the player then the playerCollision attribute is
+    #also set as True
+    def checkCollisions(self, allWalls):
+        for wall in allWalls:
+            if isinstance(wall, player.Player):
+                rect = wall.getHitbox()
+            else:
+                rect = wall.getRect()
         
+            if self.collideCheck(rect):
+                if isinstance(wall, player.Player):
+                    self.collided = True
+                    self.playerCollision = True
+                else:
+                    self.collided = True
+
+    #This method is very similar to the original sight projectile method
+    def launchSightProjectile(self, screen, coords, allWalls):
+        self.rect.center = coords
+        self.launched = True
+        self.playerCollision = False
+        while self.collided == False:
+            self.moveProjectile(screen)
+            self.displayProjectile(screen)
+            self.checkCollisions(allWalls)
+        return self.playerCollision
+
+    #This metho just returns the playerCollision attribute
+    def getPlayerCollision(self):
+        return self.playerCollision
+    
+
+
+
 #This is the sound projectile class which will be used by the hunter to determine the number of walls between the player and the hunter
 class SoundProjectile(Projectile):
     def __init__(self, coords, xSpeed, ySpeed, length):
@@ -157,7 +198,6 @@ class SoundProjectile(Projectile):
         walls = map.getWalls()
         while self.collided == False:
             self.moveProjectile(screen)
-            self.displayProjectile(screen)
             self.wallCheck(walls)
             self.playerCollision(player, screen)
         collidedNum = self.wallNum
