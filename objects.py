@@ -80,12 +80,6 @@ class Object():
             self.setGCost(last.getGCost() + 1)
         self.setFCost()
 
-    '''def setGFCost(self, value):
-        if isinstance(value, float) == False and isinstance(value, int) == False:
-            print('GCOST VALUE IS NOT AN INT OR FLOAT')
-        self.gCost = value
-        self.setFCost()'''
-
     def getGCost(self):
         return self.gCost
 

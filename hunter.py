@@ -389,19 +389,6 @@ class Hunter(sprite.Sprite):
                 self.checkCollision(map)
         print(self.getCoords())
 
-    ''' while hCoords != gCoords:
-        if xDir > 0:
-            self.moveLeft()
-        elif xDir < 0:
-            self.moveRight()
-        elif yDir > 0:
-            self.moveBackward()
-        elif yDir < 0:
-            self.moveForward()
-        hCoords = self.getCoords()
-        print(hCoords, gCoords)'''
-            
-
     #This is the overarching method for the pathfinding algorithm which includes the movement and the calculations
     def pathfind(self, endCoords, map):
         endNode = self.aStar(endCoords, map)
@@ -413,8 +400,6 @@ class Hunter(sprite.Sprite):
             print('doing')
             self.traverse(node, map)
         self.setSprinting(False)
-
-
 
     def ready(self, screen, map, player):
         self.setCoords()
