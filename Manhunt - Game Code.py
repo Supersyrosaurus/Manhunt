@@ -163,16 +163,23 @@ playerOne.setMaxLevers(map)
 
 hunterX = 15
 hunterY = 10
-hunterOne = hunter.Hunter(hunterX * 32, hunterY * 32, 'RedCircle.png', 1, 2, 2)
+hunterOne = hunter.Hunter(hunterX * 32, hunterY * 32, 'RedCircle.png', 1, 1, 4)
 
 def gameScreen(clock):
         running = True
+        done = 0
         while running:
             clock.tick(120)
             game.displayGameScreen(map.getMap())
             playerWin = playerOne.ready(map, game, hunterOne)
             #print(playerOne.getMapCoords())
             hunterWin = hunterOne.ready(game.getScreen(), map, playerOne)
+            if done == 0:
+                hunterOne.pathfind((3, 6), map)
+            if done == 100:
+                hunterOne.pathfind((26, 15), map)  
+            done += 1
+
             if playerWin:
                 return False
                 running = winScreen(clock)
@@ -181,7 +188,7 @@ def gameScreen(clock):
                 if event.type == pygame.QUIT:
                     return False
                 playerOne.interactCheck(event, map)
-                
+
             pygame.display.update()
 
 def winScreen(clock):
@@ -204,7 +211,6 @@ def winScreen(clock):
 
 startTime = time.time()
 mainMenuScreen(mainMenu, settings, mode, clock)
-
 print(str(round(time.time() - startTime)))
 
 

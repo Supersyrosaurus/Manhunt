@@ -185,7 +185,7 @@ class GameScreen(Screen):
                     self.displayRect(object.getRect(), self.checkObjectColour(object))
 
     def checkObjectColour(self, object):
-        if object.getVisible() == True:
+        #if object.getVisible() == True:
             if isinstance(object, objects.Wall):
                 item = object.getItem()
                 if item == None:
@@ -198,6 +198,10 @@ class GameScreen(Screen):
                     else:
                         return colours.red
             elif isinstance(object, objects.Floor):
+                #GET RID OF THIS DOWN
+                if object.path == True:
+                    return colours.red
+                #GET RID OF THIS UP
                 type = object.getType()
                 if type == 'carpet':
                     return colours.navy
@@ -210,8 +214,8 @@ class GameScreen(Screen):
                     return colours.white
                 else:
                     return colours.darkBrown
-        else:
-            return colours.black
+        #else:
+            #return colours.black
 
     def getTimer(self):
         endTime = time.time() - self.timer
