@@ -90,8 +90,7 @@ class Player(sprite.Sprite):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_e:
                 self.interact(map)
-        
-        
+               
     #This procedure carries out the interaction function for the player 
     def interact(self,map):
         if self.hiding == False:
@@ -111,7 +110,6 @@ class Player(sprite.Sprite):
         else:
             self.setHiding(False)
 
-
     #This returns a boolean value based on if the player is pressing the shift button or not
     def sprintCheck(self, pressed):
         if pressed[pygame.K_LSHIFT]:
@@ -126,7 +124,6 @@ class Player(sprite.Sprite):
         self.setCoords()
         #Sets the coordinates of the activation area as the center of the hitbox of the player
         self.activationArea.center = self.hitbox.center
-
 
     #This method checks if the W, A, S, D, E, or LEFT SHIFT buttons are pressed and then carries out various actions depending 
     #on the button that is pressed 
@@ -212,8 +209,7 @@ class Player(sprite.Sprite):
                 if self.hitbox.colliderect(door.getRect()):
                     #Returns to end game loop
                     return True
-
-                
+             
     #This creates the projectiles around the player which will be used for the field of view
     def createProjectiles(self):
         #This is the length of each side of the projectile in pixels which will be passed into the projectiles class
@@ -239,10 +235,10 @@ class Player(sprite.Sprite):
         self.sightProjectiles.append(projectile7)
         self.sightProjectiles.append(projectile8)
 
-
-    def fov(self, map, screen):
+    def fov(self, map, screen, hunter):
         #This variable holds a 1D list of all of the objects in the map
         allObjects = map.getAllObjects()
+        allObjects.append(hunter)
         #This for loop goes through each of the objects in the list aboce
         for object in allObjects:
             #This sets the visibility of each object as False so that it appears black on the screen
@@ -260,7 +256,7 @@ class Player(sprite.Sprite):
                 #If either of the above is true then it sets the collided attribute of the projectile as false
                 projectile.setCollided(False)
                 #and then re-launches the projectile again to check, a list of objects it has collided with are returned
-                collided = projectile.launchSightProjectile(screen, map, self.getHitbox().center)
+                collided = projectile.launchSightProjectile(screen, allObjects, self.getHitbox().center)
                 #This list is then appended to the self.collided list
                 self.collided.append(collided)
 
@@ -275,143 +271,19 @@ class Player(sprite.Sprite):
     def getCollided(self):
         return self.collided
     
-    def ready(self, map, screen):
+    def ready(self, map, screen, hunter):
         self.displayPlayer(screen.getScreen())
-        self.fov(map, screen)
+        self.fov(map, screen, hunter)
         self.checkCollision(map)
         self.checkSound(map)
         win = self.checkKeys(map)
         if win:
             return True
         
+    def getMovement(self):
+        if self.getForward() or self.getBackward() or self.getLeft() or self.getRight():
+            return True
+        else:
+            return False
 
 ###########################     UNUSED CODE     ####################################
-'''class Sprite():
-    def __init__(self, x, y, img, scale, speed, sprintMultiplier):
-        self.x = x
-        self.y = y
-        self.mapX = round(self.x/32)
-        self.mapY = round(self.y/32) 
-        #Image attributes
-        self.img = pygame.image.load(img).convert_alpha()
-        width = self.img.get_width()
-        height = self.img.get_height()
-        self.transformedImg = pygame.transform.scale(self.img, (int(width * scale), int(height * scale)))
-        self.width = self.transformedImg.get_width()
-        self.height = self.transformedImg.get_height()
-        #Hitbox of the player by creating a rectangle around the player img
-        self.hitbox = self.transformedImg.get_rect()
-        #Speed in any direction
-        self.speed = speed
-        #This is the sprinting multiplier which increases the speed of the player by that much
-        self.sprintMultiplier = sprintMultiplier
-        self.forward = False
-        self.backward = False
-        self.left = False
-        self.right = False
-        self.sprinting = False
-
-    def moveForward(self):
-        self.forward = True
-        if self.sprinting == True:
-            self.y -= self.speed * self.sprintMultiplier
-        else:
-            self.y -= self.speed
-    
-    def moveBackward(self):
-        self.backward = True
-        if self.sprinting == True:
-            self.y += self.speed * self.sprintMultiplier
-        else:
-            self.y += self.speed
-
-    def moveLeft(self):
-        self.left = True
-        if self.sprinting == True:
-            self.x -= self.speed * self.sprintMultiplier
-        else:
-            self.x -= self.speed
-
-
-    def moveRight(self):
-        self.right = True
-        if self.sprinting == True:
-            self.x += self.speed * self.sprintMultiplier
-        else:
-            self.x += self.speed
-
-    def setSprinting(self, value):
-        if value == True or value == False:
-            self.sprinting = value
-        else:
-            print('NOT RIGHT DATA TYPE FOR SPRINTING')
-            
-        
-    def getSprinting(self):
-        return self.sprinting
-    
-    def getForward(self):
-        return self.forward
-
-    def getBackward(self):
-        return self.backward
-
-    def getLeft(self):
-        return self.left
-
-    def getRight(self):
-        return self.right
-
-
-    def setCoords(self):
-        self.hitbox.center = (self.x, self.y)
-
-    #This returns the coordinates of the player divided by 32 as the size of the map is a factor of 32 compared to the size of the screen
-    def getMapCoords(self):
-        x = round(self.hitbox.center[0]/32)
-        y = round(self.hitbox.center[1]/32)
-        return (x, y)
-
-    #This returns the center of the hitbox which is in the same place as the player
-    def getCoords(self):
-        return self.hitbox.center
-
-    #This is the function which checks for collisions of the player with walls and then causes the player to bounce off of it
-    def checkCollision(self, map):
-        #This function returns all of the walls for the map in a list
-        walls = map.getWalls()
-        #This is how many pixels the player will bounce off the wall when collision occurs
-        collisionBounce = 5
-        #This loop goes through each wall in the list above
-        for wall in walls:
-            #Gets the rectangle of the wall
-            rect = wall.getRect()
-            'print(str(player.colliderect(rect)))'
-            #Checks if the rectangle of the player has collided with that rectangle (for the wall)
-            if self.hitbox.colliderect(rect):
-                #print('COLLIDING')
-                #Each of these if statements check which direction the player is currently moving
-                #and based on this decision, the direction the player bounces back is determined
-                if self.backward == True:
-                    #print('BOTTOM')
-                    self.y -= collisionBounce
-
-                if self.forward == True:
-                    #print('TOP')
-                    self.y += collisionBounce
-
-
-                if self.right == True:
-                   # print('RIGHT')
-                    self.x -= collisionBounce
-
-                if self.left == True:
-                    #print('LEFT')
-                    self.x += collisionBounce
-
-    def getHitbox(self):
-        return self.hitbox
-
-    def displaySprite(self, screen):
-        screen.blit(self.transformedImg, self.hitbox.topleft)
-'''

@@ -1,8 +1,9 @@
 import pygame
 import math
 import objects
-import screens
+import hunter
 import colours
+import player
 pygame.init()
 
 class Physics():
@@ -58,8 +59,21 @@ class Projectile():
         self.rect.x += self.xSpeed
         self.rect.y += self.ySpeed
 
+    #This method changes the x speed of the projectile to whatever is passed into the method 
+    def setXSpeed(self, value):
+        if isinstance(value, float) == False and isinstance(value, int) == False:
+            print('NOT AN INTEGER VALUE FOR XSPEED')
+        self.xSpeed = value
+    
+    #This method changes the y speed of the projectile to whatever is passed into the method
+    def setYSpeed(self, value):
+        if isinstance(value, float) == False and isinstance(value, int) == False:
+            print('NOT AN INTEGER VALUE FOR YSPEED')
+        self.ySpeed = value
 
-        
+    def displayProjectile(self, screen):
+        pygame.draw.rect(screen, colours.red, self.rect)
+
 #This is the class for sight projectiles, which inherits projectile
 class SightProjectile(Projectile):
     def __init__(self, coords, xSpeed, ySpeed, length):
@@ -87,7 +101,10 @@ class SightProjectile(Projectile):
     def objectCheck(self, allObjects):
         #Goes through all of the objects in the map
         for object in allObjects:
-            rect = object.getRect()
+            if isinstance(object, hunter.Hunter):
+                rect = object.getHitbox()
+            else:
+                rect = object.getRect()
             #Method invoked with that object above passed to check if the projectile has
             #collided with it
             if self.collideCheck(rect) == True:
@@ -102,11 +119,9 @@ class SightProjectile(Projectile):
     #This method launches the projectile and then runs the other methods in order to check
     #what objects the projectile has collided with and returns the list of objects the projecile
     #Has collided with
-    def launchSightProjectile(self, screen, map, coords):
+    def launchSightProjectile(self, screen, allObjects, coords):
         #Sets the collided objects as an empty list each time the projectile is launched
         self.collidedObjects = []
-        #This is a list of all of the objects in the map
-        allObjects = map.getAllObjects()
         #The center of the projectile is set as the coordinates passed
         self.rect.center = coords
         self.launched = True
@@ -119,13 +134,86 @@ class SightProjectile(Projectile):
         return self.collidedObjects
         
         
-        
+class HunterSightProjectile(Projectile):
+    def __init__(self, coords, xSpeed, ySpeed, length):
+        super().__init__(coords, xSpeed, ySpeed, length)
+        self.playerCollision = False
 
+    #This method checks if the projectile has collided with any walls or the player
+    #and if it has then it returns the collided attribute as True and 
+    #if the projectile has collided with the player then the playerCollision attribute is
+    #also set as True
+    def checkCollisions(self, allWalls):
+        for wall in allWalls:
+            if isinstance(wall, player.Player):
+                rect = wall.getHitbox()
+            else:
+                rect = wall.getRect()
+        
+            if self.collideCheck(rect):
+                if isinstance(wall, player.Player):
+                    self.collided = True
+                    self.playerCollision = True
+                else:
+                    self.collided = True
+
+    #This method is very similar to the original sight projectile method
+    def launchSightProjectile(self, screen, coords, allWalls):
+        self.rect.center = coords
+        self.launched = True
+        self.playerCollision = False
+        while self.collided == False:
+            self.moveProjectile(screen)
+            #self.displayProjectile(screen)
+            self.checkCollisions(allWalls)
+        return self.playerCollision
+
+    #This metho just returns the playerCollision attribute
+    def getPlayerCollision(self):
+        return self.playerCollision
+    
+
+
+
+#This is the sound projectile class which will be used by the hunter to determine the number of walls between the player and the hunter
 class SoundProjectile(Projectile):
     def __init__(self, coords, xSpeed, ySpeed, length):
         super().__init__(coords, xSpeed, ySpeed, length)
+        #This attribute will be used to record the number of wall which the projectile has collided into
         self.wallNum = 0
+        self.collidedWalls  = []
 
-    def launchSoundProjectile(self):
-        pass
-        
+    #This method checks if the projectile has collided into the player by taking the player's hitbox as a parameter
+    def playerCollision(self, player, screen):
+        if self.collideCheck(player.getHitbox()) or self.rect.x < 0 or self.rect.x > 960 or self.rect.y < 0 or self.rect.y > 640:
+            self.setCollided(True)
+            return
+        self.setCollided(False)
+
+    #This method launches the sound projectile and then returns the number of walls the projecitle has collided into
+    def launchSoundProjectile(self, screen, coords, map, player):
+        self.wallNum = 0
+        self.launched = True
+        self.rect.center = coords
+        walls = map.getWalls()
+        while self.collided == False:
+            self.moveProjectile(screen)
+            self.wallCheck(walls)
+            self.playerCollision(player, screen)
+        collidedNum = self.wallNum
+        self.collidedWalls = []
+        #self.wallNum = 0
+        return collidedNum
+    
+    #This method checks if the projectile has collided with a wall in the map and if it has then it increments the number of walls collided
+    def wallCheck(self, walls):
+        for wall in walls:
+            if self.collideCheck(wall) == True and self.alreadyCollided(wall) == False:
+                self.wallNum += 1
+                self.collidedWalls.append(wall)
+            
+    def alreadyCollided(self, check):
+        for wall in self.collidedWalls:
+            if check == wall:
+                return True
+        return False

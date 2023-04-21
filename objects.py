@@ -1,10 +1,8 @@
 import pygame
-import physics
-import colours
-
+import math
 pygame.init()
 
-class Object(physics.Physics):
+class Object():
     def __init__(self, Coords):
         #Each object has coordinates on the map
         self.Coords = Coords
@@ -13,6 +11,25 @@ class Object(physics.Physics):
         #This is the center cooridnates of the object on the screen
         self.center = self.rect.center
         self.visible = False 
+        self.hCost = 0
+        self.fCost = 0
+        self.gCost = 0
+        self.last = None
+        self.path = False
+
+
+    def reset(self):
+        self.hCost = 0
+        self.fCost = 0
+        self.gCost = 0
+        self.last = None
+        self.path = False
+
+    def setLast(self, value):
+        self.last = value
+
+    def getLast(self):
+        return self.last
 
     #Function returns the coordinates of the object
     def getCoords(self):
@@ -32,7 +49,45 @@ class Object(physics.Physics):
             self.visible = value
         else:
             print('VALUE IS NOT A BOOLEAN')
+    
+    def pythagoras(self, a, b):
+        sqra = a**2
+        sqrb = b**2
+        sqrc = sqra + sqrb
+        c = math.sqrt(sqrc)
+        c = round(c)
+        return c
+
+    def calcHCost(self, endCoords):
+        startCoords = self.getCoords()
+        xDist = endCoords[0] - startCoords[0]
+        yDist = endCoords[1] - startCoords[1]
+        dist = self.pythagoras(xDist, yDist)
+        self.hCost = dist
+        print(self.hCost)
         
+    def setFCost(self):
+        self.fCost = self.gCost + self.hCost
+
+    def setGCost(self, value):
+        self.gCost = value
+
+    def setGFCost(self, value = None):
+        if value != None:
+            self.setGCost(0)
+        else:
+            last = self.last
+            self.setGCost(last.getGCost() + 1)
+        self.setFCost()
+
+    def getGCost(self):
+        return self.gCost
+
+    def getFCost(self):
+        return self.fCost
+
+    def getHCost(self):
+        return self.hCost
 
 class Wall(Object):
     def __init__(self, Coords, type = None):
@@ -73,10 +128,10 @@ class Floor(Object):
     #Procedure sets the sound level depending on the type of the floor
     def setSound(self):
         if self.type == 'carpet':
-            return 0.2
+            return 0.3
             
         if self.type == 'concrete':
-            return 0.5
+            return 0.6
             
         if self.type == 'wood':
             return 0.9

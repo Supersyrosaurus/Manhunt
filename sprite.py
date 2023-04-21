@@ -27,6 +27,7 @@ class Sprite():
         self.right = False
         self.sprinting = False
 
+    #This method moves the player up by a specific number of pixels in the negative Y direction
     def moveForward(self):
         self.forward = True
         if self.sprinting == True:
@@ -34,6 +35,7 @@ class Sprite():
         else:
             self.y -= self.speed
     
+    #This method moves the player up by a specific number of pixels in the positive Y direction
     def moveBackward(self):
         self.backward = True
         if self.sprinting == True:
@@ -41,6 +43,7 @@ class Sprite():
         else:
             self.y += self.speed
 
+    #This method moves the player up by a specific number of pixels in the negative X direction
     def moveLeft(self):
         self.left = True
         if self.sprinting == True:
@@ -48,7 +51,7 @@ class Sprite():
         else:
             self.x -= self.speed
 
-
+    #This method moves the player up by a specific number of pixels in the positive X direction
     def moveRight(self):
         self.right = True
         if self.sprinting == True:
@@ -60,8 +63,7 @@ class Sprite():
         if value == True or value == False:
             self.sprinting = value
         else:
-            print('NOT RIGHT DATA TYPE FOR SPRINTING')
-            
+            print('NOT RIGHT DATA TYPE FOR SPRINTING')         
         
     def getSprinting(self):
         return self.sprinting
@@ -102,7 +104,6 @@ class Sprite():
         for wall in walls:
             #Gets the rectangle of the wall
             rect = wall.getRect()
-            'print(str(player.colliderect(rect)))'
             #Checks if the rectangle of the player has collided with that rectangle (for the wall)
             if self.hitbox.colliderect(rect):
                 #print('COLLIDING')
