@@ -24,6 +24,9 @@ class Hunter(sprite.Sprite):
 
         self.firstMove = False
 
+        self.path = None
+        self.pathIndex = 0
+
 
     def displayHunter(self, screen):
         self.displaySprite(screen)
@@ -126,17 +129,17 @@ class Hunter(sprite.Sprite):
             wallNum = self.checkWalls(player, screen, map)
             maxSound -= wallNum
             if maxSound <= 50:
-                return False
+                self.setHeard(False)
             elif maxSound <= 75:
                 chance = random.randint(51, 75)
                 if chance == maxSound:
-                    return True
+                    self.setHeard(True)
                 else:
-                    return False
+                    self.setHeard(False)
             else:
-                return True
+                self.setHeard(True)
         else:
-            return False
+            self.setHeard(False)
 
     def getHeard(self):
         return self.heard
@@ -263,7 +266,7 @@ class Hunter(sprite.Sprite):
         startNode.setGFCost(0)
         #The start node is added to the open list as its the first one to be considered
         open.append(startNode)
-        print(open)
+        #print(open)
 
         #This loop runs while the endpoint has not been found
         while found == False:
@@ -283,7 +286,7 @@ class Hunter(sprite.Sprite):
                     index = x
             #After the node with the lowest fCost is found then the node is added to the closed list
             closed.append(current)
-            print(current)
+            #print(current)
             #and deleted from the open list
             del open[index]
             #print(open)
@@ -292,7 +295,7 @@ class Hunter(sprite.Sprite):
             #This checks if the current node is the node which we are looking for
             #If it is then the loop will be broken
             if current.getCoords() == endCoords:
-                print(current.getCoords())
+                #print(current.getCoords())
                 found = True
             
             
@@ -354,60 +357,108 @@ class Hunter(sprite.Sprite):
     #This method checks the hunter's positition relative to a node
     #and based on that moves in a specific direction
     def traverse(self, node, map):
-        if self.firstMove == False:
+        '''if self.firstMove == False:
             loop = 4
             self.firstMove = True
         else:
-            loop = 8
+            loop = 8'''
         hCoords = self.getHitbox().center
         gCoords = node.getRect().center
         xH, yH = hCoords
         xG, yG = gCoords
         xDir = xH - xG
         yDir = yH - yG
-        print(hCoords)
-        print(gCoords)
+        #print(hCoords)
+        #print(gCoords)
         if xDir > 0:
-            for x in range(loop):
-                self.moveLeft()
-                self.setCoords()
-                self.checkCollision(map)
+            #for x in range(loop):
+            self.moveLeft()
+            self.setCoords()
+            self.checkCollision(map)
         if xDir < 0:
-            for x in range(loop):
-                self.moveRight()
-                self.setCoords()
-                self.checkCollision(map)
+            #for x in range(loop):
+            self.moveRight()
+            self.setCoords()
+            self.checkCollision(map)
         if yDir > 0:
-            for x in range(loop):
-                self.moveForward()
-                self.setCoords()
-                self.checkCollision(map)
+            #for x in range(loop):
+            self.moveForward()
+            self.setCoords()
+            self.checkCollision(map)
         if yDir < 0:
-            for x in range(loop):
-                self.moveBackward()
-                self.setCoords()
-                self.checkCollision(map)
-        print(self.getCoords())
+            #for x in range(loop):
+            self.moveBackward()
+            self.setCoords()
+            self.checkCollision(map)
+        #print(self.getCoords())
 
     #This is the overarching method for the pathfinding algorithm which includes the movement and the calculations
     def pathfind(self, endCoords, map):
         endNode = self.aStar(endCoords, map)
-        path = self.findPath(endNode)
-        print('path:')
-        print(path)
+        self.path = self.findPath(endNode)
+        #print('path:')
+        #print(self.path)
         self.setSprinting(True)
-        for node in path:
+        '''for node in self.path:
             print('doing')
             self.traverse(node, map)
-        self.setSprinting(False)
+        self.setSprinting(False)'''
+
+    #This method checks whether the hunter has a path to follow or not 
+    #and based on this it either makes the hunter follow that path or 
+    #reset the variables for another path
+    def followPath(self, map):
+        if self.pathIndex < len(self.path):
+            node = self.path[self.pathIndex]
+            self.traverse(node, map)
+            nodeCoords = node.getRect().center
+            if nodeCoords == self.getCoords():
+                self.pathIndex += 1
+            print(self.pathIndex)
+        else:
+            self.path = None
+            self.pathIndex = 0
+
+    #This method checks whether the hunter needs to create a new path or not and
+    #it also checks if the hunter has either seen or heard the player.
+    def checkPath(self, map, player):
+        hiding = player.getHiding()
+        if self.path != None:
+            if (self.heard == True or self.seen == True) and hiding == False:
+                endCoords = player.getMapCoords()
+                self.pathfind(endCoords, map)
+            elif hiding == True and self.path == None:
+                self.randomPath(map) 
+        else:
+            self.randomPath(map)
+        self.followPath(map) 
+
+    #This method generates a random path for the hunter to follow
+    def randomPath(self, map):
+        floors = map.getFloors()
+        index = random.randint(0, len(floors))
+        floor = floors[index]
+        endCoords = floor.getCoords() 
+        self.pathfind(endCoords, map)
+
+    #This method checks if the hunter has won the game
+    def checkWin(self, player):
+        pRect = player.getHitbox()
+        hRect = self.getHitbox()
+        if hRect.colliderect(pRect):
+            return True
 
     def ready(self, screen, map, player):
         self.setCoords()
-        if self.visible == True:
-            self.displayHunter(screen)
-        heard = self.sound(player, screen, map)
-        self.setHeard(heard)
+        #if self.visible == True:
+        self.displayHunter(screen)
+        self.sound(player, screen, map)
         self.fov(screen, map, player)
+        self.checkPath(map, player)
+        win = self.checkWin(player)
+        if win == True:
+            return True
+        
         #print(self.getSeen())
         #self.randomMove()
         #self.checkCollision(map)
