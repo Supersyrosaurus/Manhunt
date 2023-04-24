@@ -27,6 +27,7 @@ class Hunter(sprite.Sprite):
         self.path = None
         self.pathIndex = 0
 
+        self.chasing = False
 
     def displayHunter(self, screen):
         self.displaySprite(screen)
@@ -35,6 +36,7 @@ class Hunter(sprite.Sprite):
         xSqr = x**2
         ySqr = y**2
         dist = math.sqrt(xSqr + ySqr)
+        return dist
 
     #This method returns what values the xSpeed and ySpeed of the sound projectile should be
     def checkDirection(self, xDist, yDist):
@@ -119,11 +121,20 @@ class Hunter(sprite.Sprite):
         yDist = startY - endY
         return xDist, yDist
 
+    def calcDistance(self, player):
+        playerCoords = player.getCoords()
+        xDist, yDist = self.coordinateDistance(playerCoords)
+        dist = self.pythagoras(xDist, yDist)
+        return dist
+
     #This method calculates whether the hunter should be able to hear the player or not
     #and returns a boolean value based on that
     def sound(self, player, screen, map):
         maxSound = 100
         soundLevel = player.getSound()
+        dist = self.calcDistance(player)
+        if dist > 600:
+            return False
         if isinstance(soundLevel, float) and player.getMovement():
             maxSound = soundLevel * maxSound
             wallNum = self.checkWalls(player, screen, map)
@@ -424,12 +435,15 @@ class Hunter(sprite.Sprite):
     def checkPath(self, map, player):
         hiding = player.getHiding()
         if self.path != None:
-            if (self.heard == True or self.seen == True) and hiding == False:
+            if (self.heard == True or self.seen == True) and hiding == False and self.getChasing() == False:
                 endCoords = player.getMapCoords()
                 self.pathfind(endCoords, map)
+                self.setChasing(True)
             elif hiding == True and self.path == None:
+                self.setChasing(False)
                 self.randomPath(map) 
         else:
+            self.setChasing(False)
             self.randomPath(map)
         self.followPath(map) 
 
@@ -447,6 +461,12 @@ class Hunter(sprite.Sprite):
         hRect = self.getHitbox()
         if hRect.colliderect(pRect):
             return True
+
+    def getChasing(self):
+        return self.chasing
+    
+    def setChasing(self, value):
+        self.chasing = value
 
     def ready(self, screen, map, player):
         self.setCoords()
