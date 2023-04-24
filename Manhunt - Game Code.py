@@ -163,7 +163,7 @@ playerOne.setMaxLevers(map)
 
 hunterX = 15
 hunterY = 10
-hunterOne = hunter.Hunter(hunterX * 32, hunterY * 32, 'RedCircle.png', 1, 1, 4)
+hunterOne = hunter.Hunter(hunterX * 32, hunterY * 32, 'RedCircle.png', 1, 2, 2)
 
 def gameScreen(clock):
         running = True
@@ -184,7 +184,9 @@ def gameScreen(clock):
             if playerWin:
                 return False
                 running = winScreen(clock)
-            canPress = True 
+            if hunterWin:
+                return False
+                running = loseScreen(clock)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     return False

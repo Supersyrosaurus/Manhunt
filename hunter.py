@@ -405,6 +405,8 @@ class Hunter(sprite.Sprite):
 
     #This is the overarching method for the pathfinding algorithm which includes the movement and the calculations
     def pathfind(self, endCoords, map):
+        print(map.getObject(endCoords))
+        print(endCoords)
         endNode = self.aStar(endCoords, map)
         self.path = self.findPath(endNode)
         #print('path:')
@@ -425,7 +427,7 @@ class Hunter(sprite.Sprite):
             nodeCoords = node.getRect().center
             if nodeCoords == self.getCoords():
                 self.pathIndex += 1
-            print(self.pathIndex)
+            #print(self.pathIndex)
         else:
             self.path = None
             self.pathIndex = 0
@@ -459,7 +461,7 @@ class Hunter(sprite.Sprite):
     def checkWin(self, player):
         pRect = player.getHitbox()
         hRect = self.getHitbox()
-        if hRect.colliderect(pRect):
+        if hRect.colliderect(pRect) and player.getHiding() == False:
             return True
 
     def getChasing(self):
