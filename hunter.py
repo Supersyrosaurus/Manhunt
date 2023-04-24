@@ -411,7 +411,6 @@ class Hunter(sprite.Sprite):
         self.path = self.findPath(endNode)
         #print('path:')
         #print(self.path)
-        self.setSprinting(True)
         '''for node in self.path:
             print('doing')
             self.traverse(node, map)
@@ -441,10 +440,13 @@ class Hunter(sprite.Sprite):
                 endCoords = player.getMapCoords()
                 self.pathfind(endCoords, map)
                 self.setChasing(True)
+                self.setSprinting(True)
             elif hiding == True and self.path == None:
+                self.setSprinting(False)
                 self.setChasing(False)
                 self.randomPath(map) 
         else:
+            self.setSprinting(False)
             self.setChasing(False)
             self.randomPath(map)
         self.followPath(map) 
