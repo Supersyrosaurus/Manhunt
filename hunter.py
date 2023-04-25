@@ -368,11 +368,6 @@ class Hunter(sprite.Sprite):
     #This method checks the hunter's positition relative to a node
     #and based on that moves in a specific direction
     def traverse(self, node, map):
-        '''if self.firstMove == False:
-            loop = 4
-            self.firstMove = True
-        else:
-            loop = 8'''
         hCoords = self.getHitbox().center
         gCoords = node.getRect().center
         xH, yH = hCoords
@@ -409,12 +404,9 @@ class Hunter(sprite.Sprite):
         print(endCoords)
         endNode = self.aStar(endCoords, map)
         self.path = self.findPath(endNode)
+        self.pathIndex = 0
         #print('path:')
         #print(self.path)
-        '''for node in self.path:
-            print('doing')
-            self.traverse(node, map)
-        self.setSprinting(False)'''
 
     #This method checks whether the hunter has a path to follow or not 
     #and based on this it either makes the hunter follow that path or 
@@ -429,7 +421,6 @@ class Hunter(sprite.Sprite):
             #print(self.pathIndex)
         else:
             self.path = None
-            self.pathIndex = 0
 
     #This method checks whether the hunter needs to create a new path or not and
     #it also checks if the hunter has either seen or heard the player.
@@ -440,13 +431,7 @@ class Hunter(sprite.Sprite):
                 endCoords = player.getMapCoords()
                 self.pathfind(endCoords, map)
                 self.setChasing(True)
-                self.setSprinting(True)
-            elif hiding == True and self.path == None:
-                self.setSprinting(False)
-                self.setChasing(False)
-                self.randomPath(map) 
         else:
-            self.setSprinting(False)
             self.setChasing(False)
             self.randomPath(map)
         self.followPath(map) 
@@ -454,7 +439,7 @@ class Hunter(sprite.Sprite):
     #This method generates a random path for the hunter to follow
     def randomPath(self, map):
         floors = map.getFloors()
-        index = random.randint(0, len(floors))
+        index = random.randint(0, (len(floors) - 1))
         floor = floors[index]
         endCoords = floor.getCoords() 
         self.pathfind(endCoords, map)
@@ -487,8 +472,6 @@ class Hunter(sprite.Sprite):
         #self.randomMove()
         #self.checkCollision(map)
         
-        '''walls = self.checkWalls(player, screen, map)
-        print(str(walls))'''
 
 
 

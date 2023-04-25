@@ -169,7 +169,7 @@ def gameScreen(clock):
         running = True
         done = 0
         while running:
-            #clock.tick(120)
+            clock.tick(120)
             game.displayGameScreen(map.getMap())
             playerWin = playerOne.ready(map, game, hunterOne)
             #print(playerOne.getMapCoords())
