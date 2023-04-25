@@ -459,8 +459,8 @@ class Hunter(sprite.Sprite):
 
     def ready(self, screen, map, player):
         self.setCoords()
-        #if self.visible == True:
-        self.displayHunter(screen)
+        if self.visible == True:
+            self.displayHunter(screen)
         self.sound(player, screen, map)
         self.fov(screen, map, player)
         self.checkPath(map, player)

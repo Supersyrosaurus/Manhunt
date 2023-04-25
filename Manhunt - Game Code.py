@@ -158,7 +158,7 @@ mapList = map.getMap()
 
 playerX = 3
 playerY = 6
-playerOne = player.Player(playerX * 32, playerY * 32, 'BlueCircle.png', 1, 2, 3, map)
+playerOne = player.Player(playerX * 32, playerY * 32, 'BlueCircle.png', 1, 2, 2, map)
 playerOne.setMaxLevers(map)
 
 hunterX = 15
@@ -175,12 +175,6 @@ def gameScreen(clock):
             #print(playerOne.getMapCoords())
             hunterWin = hunterOne.ready(game.getScreen(), map, playerOne)
             print(hunterWin)
-            '''if done == 0:
-                hunterOne.pathfind((3, 6), map)
-            if done == 100:
-                hunterOne.pathfind((26, 15), map)  
-            done += 1
-'''
             if playerWin:
                 return False
                 running = winScreen(clock)
