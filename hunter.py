@@ -190,11 +190,13 @@ class Hunter(sprite.Sprite):
             #print(self.sightProj)
 
         self.setProjDirection(projSpeed)
+        collided = False
         for proj in self.sightProj:
             if proj.getCollided() == True or proj.getLaunched() == False:
                 proj.setCollided(False)
-                collided = proj.launchSightProjectile(screen, self.getHitbox().center, allWalls)
-                #print(proj.getPlayerCollision())
+                check = proj.launchSightProjectile(screen, self.getHitbox().center, allWalls)
+                if check == True:
+                    collided = True
         self.setSeen(collided)
 
     def setProjDirection(self, projSpeed):
@@ -400,8 +402,6 @@ class Hunter(sprite.Sprite):
 
     #This is the overarching method for the pathfinding algorithm which includes the movement and the calculations
     def pathfind(self, endCoords, map):
-        print(map.getObject(endCoords))
-        print(endCoords)
         endNode = self.aStar(endCoords, map)
         self.path = self.findPath(endNode)
         self.pathIndex = 0
@@ -463,6 +463,7 @@ class Hunter(sprite.Sprite):
             self.displayHunter(screen)
         self.sound(player, screen, map)
         self.fov(screen, map, player)
+        print(self.seen)
         self.checkPath(map, player)
         win = self.checkWin(player)
         if win == True:

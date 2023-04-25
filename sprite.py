@@ -29,6 +29,7 @@ class Sprite():
 
     #This method moves the player up by a specific number of pixels in the negative Y direction
     def moveForward(self):
+        self.resetMovement()
         self.forward = True
         if self.sprinting == True:
             self.y -= self.speed * self.sprintMultiplier
@@ -37,6 +38,7 @@ class Sprite():
     
     #This method moves the player up by a specific number of pixels in the positive Y direction
     def moveBackward(self):
+        self.resetMovement()
         self.backward = True
         if self.sprinting == True:
             self.y += self.speed * self.sprintMultiplier
@@ -45,6 +47,7 @@ class Sprite():
 
     #This method moves the player up by a specific number of pixels in the negative X direction
     def moveLeft(self):
+        self.resetMovement()
         self.left = True
         if self.sprinting == True:
             self.x -= self.speed * self.sprintMultiplier
@@ -53,6 +56,7 @@ class Sprite():
 
     #This method moves the player up by a specific number of pixels in the positive X direction
     def moveRight(self):
+        self.resetMovement()
         self.right = True
         if self.sprinting == True:
             self.x += self.speed * self.sprintMultiplier
@@ -132,3 +136,8 @@ class Sprite():
     def displaySprite(self, screen):
         screen.blit(self.transformedImg, self.hitbox.topleft)
     
+    def resetMovement(self):
+        self.forward = False
+        self.left = False
+        self.right = False
+        self.backward = False

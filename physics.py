@@ -164,7 +164,7 @@ class HunterSightProjectile(Projectile):
         self.playerCollision = False
         while self.collided == False:
             self.moveProjectile(screen)
-            #self.displayProjectile(screen)
+            self.displayProjectile(screen)
             self.checkCollisions(allWalls)
         return self.playerCollision
 

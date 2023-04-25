@@ -174,7 +174,6 @@ def gameScreen(clock):
             playerWin = playerOne.ready(map, game, hunterOne)
             #print(playerOne.getMapCoords())
             hunterWin = hunterOne.ready(game.getScreen(), map, playerOne)
-            print(hunterWin)
             if playerWin:
                 return False
                 running = winScreen(clock)
