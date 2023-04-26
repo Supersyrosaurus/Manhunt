@@ -172,14 +172,13 @@ def gameScreen(clock):
             clock.tick(120)
             game.displayGameScreen(map.getMap())
             playerWin = playerOne.ready(map, game, hunterOne)
-            #print(playerOne.getMapCoords())
             hunterWin = hunterOne.ready(game.getScreen(), map, playerOne)
             if playerWin:
                 return False
                 running = winScreen(clock)
             if hunterWin:
                 return False
-                running = loseScreen(clock)
+                running = winScreen(clock)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     return False
@@ -212,8 +211,3 @@ print(str(round(time.time() - startTime)))
 
 #####################          STUFF THAT MAY BE NEEDED LATER OR HAS BEEN USED FOR TESTING          ###################
 
-'''if canPress == True:
-                    playerOne.checkKeys(map)
-                    canPress = False'''
-                
-'print(playerOne.forward, playerOne.backward, playerOne.left, playerOne.right)'

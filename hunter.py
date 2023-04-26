@@ -29,6 +29,8 @@ class Hunter(sprite.Sprite):
 
         self.chasing = False
 
+        self.nodeWait = 0
+
     def displayHunter(self, screen):
         self.displaySprite(screen)
 
@@ -147,6 +149,12 @@ class Hunter(sprite.Sprite):
                     self.setHeard(True)
                 else:
                     self.setHeard(False)
+            elif maxSound <= 85:
+                chance = random.randint(76, 85)
+                if chance == maxSound:
+                    self.setHeard(True)
+                else:
+                    self.setHeard(False)
             else:
                 self.setHeard(True)
         else:
@@ -187,7 +195,7 @@ class Hunter(sprite.Sprite):
         projSpeed = 20
         if len(self.sightProj) == 0:
             self.createSightProjectile()
-            #print(self.sightProj)
+
 
         self.setProjDirection(projSpeed)
         collided = False
@@ -265,6 +273,7 @@ class Hunter(sprite.Sprite):
 
     #This is the code for the A* algorithm for the hunter to use
     def aStar(self, endCoords, map):
+        print('calculating')
         #This variable is for whether the point has been found
         found = False
         #These are the open and closed lists for the nodes
@@ -279,18 +288,15 @@ class Hunter(sprite.Sprite):
         startNode.setGFCost(0)
         #The start node is added to the open list as its the first one to be considered
         open.append(startNode)
-        #print(open)
 
         #This loop runs while the endpoint has not been found
         while found == False:
-            #print('doingB')
             #Current is the lowest f cost in the open list,
             #This must be a high number so that it does not interfere with actual f costs
             lowestF = 10000000
             current = None            
             #This loops through each element in the open list
             for x in range(len(open)):
-                #print('doingO')
                 #Checks if the f cost of the current node is greater than any other nodes in the open
                 #list and if it is then the node with the lower f cost is set as the current
                 if open[x].getFCost() < lowestF:
@@ -299,22 +305,17 @@ class Hunter(sprite.Sprite):
                     index = x
             #After the node with the lowest fCost is found then the node is added to the closed list
             closed.append(current)
-            #print(current)
             #and deleted from the open list
             del open[index]
-            #print(open)
-            #print(closed)
 
             #This checks if the current node is the node which we are looking for
             #If it is then the loop will be broken
             if current.getCoords() == endCoords:
-                #print(current.getCoords())
                 found = True
             
             
             #This goes through each of the neighbours of the current node
             for node in self.getNeighbours(current, map):
-                #print('doingN')
                 #This checks if the node is an object of type floor and that it is not already in closed
                 if isinstance(node, objects.Floor) and self.checkClosed(closed, node):
                     #This sets the last node for the neighbour node as the current
@@ -323,6 +324,7 @@ class Hunter(sprite.Sprite):
                     node.setGFCost()
                     #This checks if the node 
                     open.append(node)
+        print('calculated')
         return current
             
     #This method is a recursive algorithm which goes which goes through
@@ -358,14 +360,6 @@ class Hunter(sprite.Sprite):
                 return False
         return True
 
-    #This method takes the list created from the A* algorithm and then
-    #rearranges it it so that the start node is first in the list
-    def rearrangePathList(self, list):
-        newList = []
-        for x in range(len(list)):
-            index = len(list) - x
-            newList.append(list[index])
-        return newList
 
     #This method checks the hunter's positition relative to a node
     #and based on that moves in a specific direction
@@ -376,51 +370,53 @@ class Hunter(sprite.Sprite):
         xG, yG = gCoords
         xDir = xH - xG
         yDir = yH - yG
-        #print(hCoords)
-        #print(gCoords)
         if xDir > 0:
-            #for x in range(loop):
             self.moveLeft()
             self.setCoords()
             self.checkCollision(map)
         if xDir < 0:
-            #for x in range(loop):
             self.moveRight()
             self.setCoords()
             self.checkCollision(map)
         if yDir > 0:
-            #for x in range(loop):
             self.moveForward()
             self.setCoords()
             self.checkCollision(map)
         if yDir < 0:
-            #for x in range(loop):
             self.moveBackward()
             self.setCoords()
             self.checkCollision(map)
-        #print(self.getCoords())
 
     #This is the overarching method for the pathfinding algorithm which includes the movement and the calculations
     def pathfind(self, endCoords, map):
         endNode = self.aStar(endCoords, map)
         self.path = self.findPath(endNode)
         self.pathIndex = 0
-        #print('path:')
-        #print(self.path)
 
     #This method checks whether the hunter has a path to follow or not 
     #and based on this it either makes the hunter follow that path or 
     #reset the variables for another path
-    def followPath(self, map):
-        if self.pathIndex < len(self.path):
+    def followPath(self, map):       
+        if self.nodeWait < 30 and self.pathIndex < len(self.path):
             node = self.path[self.pathIndex]
             self.traverse(node, map)
             nodeCoords = node.getRect().center
             if nodeCoords == self.getCoords():
                 self.pathIndex += 1
-            #print(self.pathIndex)
+                self.nodeWait = 0
+            else:
+                self.nodeWait += 1
+                print(self.nodeWait)
+        elif self.pathIndex < len(self.path):
+            self.nodeWait = 0
+            self.pathIndex += 1
+            nextNode = self.path[self.pathIndex]
+            self.getHitbox().center = nextNode.getRect().center
         else:
             self.path = None
+            self.nodeWait = 0
+
+            
 
     #This method checks whether the hunter needs to create a new path or not and
     #it also checks if the hunter has either seen or heard the player.
@@ -457,21 +453,17 @@ class Hunter(sprite.Sprite):
     def setChasing(self, value):
         self.chasing = value
 
+
     def ready(self, screen, map, player):
         self.setCoords()
-        if self.visible == True:
-            self.displayHunter(screen)
+        #if self.visible == True:
+        self.displayHunter(screen)
         self.sound(player, screen, map)
         self.fov(screen, map, player)
-        print(self.seen)
         self.checkPath(map, player)
         win = self.checkWin(player)
         if win == True:
             return True
-        
-        #print(self.getSeen())
-        #self.randomMove()
-        #self.checkCollision(map)
         
 
 

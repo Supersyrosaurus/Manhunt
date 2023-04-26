@@ -139,7 +139,6 @@ class Button():
         self.draw(screen)
         hasClicked = False
         pos = pygame.mouse.get_pos()
-        #print(pos)
         #Is mouse cursor colliding with the rectangle of image
         if self.rect.collidepoint(pos):
             #Checks if the mouse has been pressed and has already been pressed before
@@ -159,8 +158,6 @@ class GameScreen(Screen):
         super().__init__(colour)
         self.colour = colour
         self.timer = 0
-        #self.player = player.player()
-        #self.hunter = hunter.hunter()
 
 
     def displayLeverCounter(self, player):
@@ -198,10 +195,6 @@ class GameScreen(Screen):
                     else:
                         return colours.red
             elif isinstance(object, objects.Floor):
-                #GET RID OF THIS DOWN
-                #if object.path == True:
-                    #return colours.red
-                #GET RID OF THIS UP
                 type = object.getType()
                 if type == 'carpet':
                     return colours.navy
