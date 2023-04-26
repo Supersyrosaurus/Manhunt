@@ -29,8 +29,6 @@ class Hunter(sprite.Sprite):
 
         self.chasing = False
 
-        self.nodeWait = 0
-
     def displayHunter(self, screen):
         self.displaySprite(screen)
 
@@ -397,24 +395,15 @@ class Hunter(sprite.Sprite):
     #and based on this it either makes the hunter follow that path or 
     #reset the variables for another path
     def followPath(self, map):       
-        if self.nodeWait < 30 and self.pathIndex < len(self.path):
+        if self.pathIndex < len(self.path):
             node = self.path[self.pathIndex]
             self.traverse(node, map)
             nodeCoords = node.getRect().center
             if nodeCoords == self.getCoords():
                 self.pathIndex += 1
-                self.nodeWait = 0
-            else:
-                self.nodeWait += 1
-                print(self.nodeWait)
-        elif self.pathIndex < len(self.path):
-            self.nodeWait = 0
-            self.pathIndex += 1
-            nextNode = self.path[self.pathIndex]
-            self.getHitbox().center = nextNode.getRect().center
+
         else:
             self.path = None
-            self.nodeWait = 0
 
             
 

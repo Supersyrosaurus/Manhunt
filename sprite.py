@@ -1,4 +1,5 @@
 import pygame
+import math
 
 pygame.init()
 
@@ -90,8 +91,8 @@ class Sprite():
 
     #This returns the coordinates of the player divided by 32 as the size of the map is a factor of 32 compared to the size of the screen
     def getMapCoords(self):
-        x = round(self.hitbox.center[0]/32)
-        y = round(self.hitbox.center[1]/32)
+        x = math.floor(self.hitbox.center[0]/32)
+        y = math.floor(self.hitbox.center[1]/32)
         return (x, y)
 
     #This returns the center of the hitbox which is in the same place as the player
