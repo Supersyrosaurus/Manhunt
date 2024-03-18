@@ -84,7 +84,6 @@ class Player(sprite.Sprite):
         #Checks if the item is a hidingspace
         if isinstance(item, objects.HidingSpace):
             self.setHiding(True)
-            print('Hiding Space')
 
     def interactCheck(self, event, map):
         if event.type == pygame.KEYDOWN:
@@ -198,8 +197,6 @@ class Player(sprite.Sprite):
     def checkWin(self, map):
         #function returns the door objects in a list
         doors = map.getDoors()
-        #print(self.getActivatedLevers())
-       # print(self.getMaxLevers())
         #checks if the player has activated all of the levers
         if self.getActivatedLevers() == self.getMaxLevers():
             #As there are multiple doors, this loop goes through each door 
@@ -285,5 +282,3 @@ class Player(sprite.Sprite):
             return True
         else:
             return False
-
-###########################     UNUSED CODE     ####################################

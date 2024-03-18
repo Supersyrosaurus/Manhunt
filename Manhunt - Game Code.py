@@ -4,7 +4,6 @@ import maps
 import player
 import colours
 import mapObjects
-import time
 import hunter
 
 #Initialising the pygame module
@@ -55,22 +54,6 @@ settings_imageScales = []
 settings.renderMTexts(settings_texts, settings_textSizes, settings_textColours, settings_textFonts, settings_textCoords)
 settings.createButton('return','return.png', 10, 10, 0.1)
 settings.addImages(settings_images, settings_imagesCoords, settings_imageScales)
-#settings.setColour((200, 200, 200))
-
-#Variables for mode class
-mode_texts = ['Mode']
-mode_textSizes = [160]
-mode_textColours = [colours.black]
-mode_textFonts = [None]
-mode_textCoords = [(320, 80)]
-mode_images = []
-mode_imagesCoords = []
-mode_imageScales = []
-mode.renderMTexts(mode_texts, mode_textSizes, mode_textColours, mode_textFonts, mode_textCoords)
-mode.createButton('return','return.png', 10, 10, 0.1)
-mode.createButton('normal', 'normal.png', 340, 175, 1)
-mode.createButton('nightmare', 'nightmare.png', 283, 375, 1)
-mode.addImages(mode_images, mode_imagesCoords, mode_imageScales)
 
 #Variables for GameScreen class
 game_texts = []
@@ -84,25 +67,14 @@ game_imageScales = []
 game.renderMTexts(game_texts, game_textSizes, game_textColours, game_textFonts, game_textCoords)
 game.addImages(game_images, game_imageCoords, game_imageScales)
 
-#Variables for win screen
-win_texts = []
-win_textSizes = [100]
-win_textColours = [colours.black]
-win_textFonts = [None]
-win_textCoords = [(320, 80)]
-win_images = []
-win_imageCoords = [] 
-win_imageScales = []
-win.addImages(win_images, win_imageCoords, win_imageScales)
 
-
-def mainMenuScreen(mainMenu, settings, mode, clock):
+def mainMenuScreen(mainMenu, settings, clock):
     running = True
     while running:
         clock.tick(60)
         mainMenu.displayScreen()
         if mainMenu.searchButton('start').clickCheck(mainMenu.screen) == True:
-            running = modeScreen(mode, clock)
+            running = gameScreen(clock)
             print('Start')
         if mainMenu.searchButton('options').clickCheck(mainMenu.screen) == True:
             running = settingsScreen(settings, clock)
@@ -110,24 +82,6 @@ def mainMenuScreen(mainMenu, settings, mode, clock):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-        pygame.display.update()
-
-def modeScreen(mode, clock):
-    running = True
-    while running:
-        clock.tick(60)
-        mode.displayScreen()
-        if mode.searchButton('return').clickCheck(mode.screen) == True:
-            return True
-        if mode.searchButton('normal').clickCheck(mode.screen) == True:
-            print('normal')
-            running = gameScreen(clock)
-        if mode.searchButton('nightmare').clickCheck(mode.screen) == True:
-            print('NIGHTMARE')
-            running = gameScreen(clock)
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                return False
         pygame.display.update()
 
 def settingsScreen(settings, clock):
@@ -145,9 +99,6 @@ def settingsScreen(settings, clock):
 
 
 
-
-########## TESTING DA MAP STOOF ##########
-
 #Creating the map for the game
 walls = {'empty':mapObjects.empty, 'hidingSpace':mapObjects.hidingSpace, 'lever':mapObjects.lever}
 floors = {'wood':mapObjects.wood, 'concrete':mapObjects.concrete, 'carpet':mapObjects.carpet}
@@ -158,12 +109,12 @@ mapList = map.getMap()
 
 playerX = 3
 playerY = 6
-playerOne = player.Player(playerX * 32, playerY * 32, 'BlueCircle.png', 1, 2, 3, map)
+playerOne = player.Player(playerX * 32, playerY * 32, 'BlueCircle.png', 1, 2, 2, map)
 playerOne.setMaxLevers(map)
 
 hunterX = 15
 hunterY = 10
-hunterOne = hunter.Hunter(hunterX * 32, hunterY * 32, 'RedCircle.png', 1, 1, 4)
+hunterOne = hunter.Hunter(hunterX * 32, hunterY * 32, 'RedCircle.png', 1, 2, 2)
 
 def gameScreen(clock):
         running = True
@@ -172,18 +123,13 @@ def gameScreen(clock):
             clock.tick(120)
             game.displayGameScreen(map.getMap())
             playerWin = playerOne.ready(map, game, hunterOne)
-            #print(playerOne.getMapCoords())
             hunterWin = hunterOne.ready(game.getScreen(), map, playerOne)
-            if done == 0:
-                hunterOne.pathfind((3, 6), map)
-            if done == 100:
-                hunterOne.pathfind((26, 15), map)  
-            done += 1
-
             if playerWin:
                 return False
                 running = winScreen(clock)
-            canPress = True 
+            if hunterWin:
+                return False
+                running = winScreen(clock)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     return False
@@ -191,33 +137,8 @@ def gameScreen(clock):
 
             pygame.display.update()
 
-def winScreen(clock):
-    startTime = time.time()
-    win_texts.append(game.getTimer)
-    print(game.getTimer())
-    win.renderMTexts(win_texts, win_textSizes, win_textColours, win_textFonts, win_textCoords)
-    timer = 0
-    while timer != 10:
-        clock.tick(120)
-        win.displayScreen()
-        timer = round(time.time() - startTime)
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                return False
-        pygame.display.update()
-    return False
 
 
 
-startTime = time.time()
-mainMenuScreen(mainMenu, settings, mode, clock)
-print(str(round(time.time() - startTime)))
+mainMenuScreen(mainMenu, settings, clock)
 
-
-#####################          STUFF THAT MAY BE NEEDED LATER OR HAS BEEN USED FOR TESTING          ###################
-
-'''if canPress == True:
-                    playerOne.checkKeys(map)
-                    canPress = False'''
-                
-'print(playerOne.forward, playerOne.backward, playerOne.left, playerOne.right)'

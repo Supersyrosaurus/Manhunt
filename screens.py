@@ -139,7 +139,6 @@ class Button():
         self.draw(screen)
         hasClicked = False
         pos = pygame.mouse.get_pos()
-        #print(pos)
         #Is mouse cursor colliding with the rectangle of image
         if self.rect.collidepoint(pos):
             #Checks if the mouse has been pressed and has already been pressed before
@@ -159,16 +158,6 @@ class GameScreen(Screen):
         super().__init__(colour)
         self.colour = colour
         self.timer = 0
-        #self.player = player.player()
-        #self.hunter = hunter.hunter()
-
-
-    def displayLeverCounter(self, player):
-        maxLevers = player.getMaxLevers()
-        activatedLevers = player.getActivatedLevers()
-        renderText = self.renderText((str(activatedLevers) + '/' + str(maxLevers)), 100, (0,0,0), None)
-        self.screen.blit(renderText, (self.getWidth/2, self.getHeight/2))
-
 
     def displayRect(self, rect, colour):
         #Draws a rect on the screen
@@ -185,7 +174,7 @@ class GameScreen(Screen):
                     self.displayRect(object.getRect(), self.checkObjectColour(object))
 
     def checkObjectColour(self, object):
-        #if object.getVisible() == True:
+        if object.getVisible() == True:
             if isinstance(object, objects.Wall):
                 item = object.getItem()
                 if item == None:
@@ -198,10 +187,6 @@ class GameScreen(Screen):
                     else:
                         return colours.red
             elif isinstance(object, objects.Floor):
-                #GET RID OF THIS DOWN
-                if object.path == True:
-                    return colours.red
-                #GET RID OF THIS UP
                 type = object.getType()
                 if type == 'carpet':
                     return colours.navy
@@ -214,10 +199,8 @@ class GameScreen(Screen):
                     return colours.white
                 else:
                     return colours.darkBrown
-        #else:
-            #return colours.black
+        else:
+            return colours.black
 
-    def getTimer(self):
-        endTime = time.time() - self.timer
-        playTime = 'Time:' + str(round(endTime))
-        return playTime
+
+ 

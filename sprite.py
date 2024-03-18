@@ -1,4 +1,5 @@
 import pygame
+import math
 
 pygame.init()
 
@@ -29,6 +30,7 @@ class Sprite():
 
     #This method moves the player up by a specific number of pixels in the negative Y direction
     def moveForward(self):
+        self.resetMovement()
         self.forward = True
         if self.sprinting == True:
             self.y -= self.speed * self.sprintMultiplier
@@ -37,6 +39,7 @@ class Sprite():
     
     #This method moves the player up by a specific number of pixels in the positive Y direction
     def moveBackward(self):
+        self.resetMovement()
         self.backward = True
         if self.sprinting == True:
             self.y += self.speed * self.sprintMultiplier
@@ -45,6 +48,7 @@ class Sprite():
 
     #This method moves the player up by a specific number of pixels in the negative X direction
     def moveLeft(self):
+        self.resetMovement()
         self.left = True
         if self.sprinting == True:
             self.x -= self.speed * self.sprintMultiplier
@@ -53,6 +57,7 @@ class Sprite():
 
     #This method moves the player up by a specific number of pixels in the positive X direction
     def moveRight(self):
+        self.resetMovement()
         self.right = True
         if self.sprinting == True:
             self.x += self.speed * self.sprintMultiplier
@@ -86,8 +91,8 @@ class Sprite():
 
     #This returns the coordinates of the player divided by 32 as the size of the map is a factor of 32 compared to the size of the screen
     def getMapCoords(self):
-        x = round(self.hitbox.center[0]/32)
-        y = round(self.hitbox.center[1]/32)
+        x = math.floor(self.hitbox.center[0]/32)
+        y = math.floor(self.hitbox.center[1]/32)
         return (x, y)
 
     #This returns the center of the hitbox which is in the same place as the player
@@ -100,30 +105,27 @@ class Sprite():
         walls = map.getWalls()
         #This is how many pixels the player will bounce off the wall when collision occurs
         collisionBounce = 5
+        collisionTolerance = 3
         #This loop goes through each wall in the list above
         for wall in walls:
             #Gets the rectangle of the wall
-            rect = wall.getRect()
+            wallRect = wall.getRect()
+            spriteRect = self.hitbox
             #Checks if the rectangle of the player has collided with that rectangle (for the wall)
-            if self.hitbox.colliderect(rect):
-                #print('COLLIDING')
+            if spriteRect.colliderect(wallRect):
                 #Each of these if statements check which direction the player is currently moving
                 #and based on this decision, the direction the player bounces back is determined
-                if self.backward == True:
-                    #print('BOTTOM')
+                if self.backward == True or abs(spriteRect.bottom - wallRect.top) <= collisionTolerance:
                     self.y -= collisionBounce
 
-                if self.forward == True:
-                    #print('TOP')
+                if self.forward == True or abs(spriteRect.top - wallRect.bottom) <= collisionTolerance:
                     self.y += collisionBounce
 
 
-                if self.right == True:
-                   # print('RIGHT')
+                if self.right == True or abs(spriteRect.right - wallRect.left) <= collisionTolerance:
                     self.x -= collisionBounce
 
-                if self.left == True:
-                    #print('LEFT')
+                if self.left == True or abs(spriteRect.left - wallRect.right) <= collisionTolerance:
                     self.x += collisionBounce
 
     def getHitbox(self):
@@ -132,3 +134,8 @@ class Sprite():
     def displaySprite(self, screen):
         screen.blit(self.transformedImg, self.hitbox.topleft)
     
+    def resetMovement(self):
+        self.forward = False
+        self.left = False
+        self.right = False
+        self.backward = False

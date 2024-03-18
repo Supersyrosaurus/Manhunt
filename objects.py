@@ -64,7 +64,6 @@ class Object():
         yDist = endCoords[1] - startCoords[1]
         dist = self.pythagoras(xDist, yDist)
         self.hCost = dist
-        print(self.hCost)
         
     def setFCost(self):
         self.fCost = self.gCost + self.hCost
@@ -194,7 +193,5 @@ class Door(Object):
     def getColour(self):
         return self.colour
 
-
-#########################       UNUSED CODE         ###################
 
 
