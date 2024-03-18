@@ -194,6 +194,4 @@ class Door(Object):
         return self.colour
 
 
-#########################       UNUSED CODE         ###################
-
 

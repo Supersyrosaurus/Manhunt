@@ -172,20 +172,3 @@ class Map():
         for door in doors:
             all.append(door)
         return all
-
-
-                
-
-'''class Node():
-    def __init__(self):'''
-
-'''    def getObject(self, type, category = None):
-        objects = []
-        if type == 'floor':
-            coords = self.getWallCoords(category)
-        else:
-            coords = self.getFloorCoords(category)
-        for coord in coords:
-            object = self.map[coord[1]][coord[0]]
-            objects.append(object)
-        return objects'''

@@ -159,14 +159,6 @@ class GameScreen(Screen):
         self.colour = colour
         self.timer = 0
 
-
-    def displayLeverCounter(self, player):
-        maxLevers = player.getMaxLevers()
-        activatedLevers = player.getActivatedLevers()
-        renderText = self.renderText((str(activatedLevers) + '/' + str(maxLevers)), 100, (0,0,0), None)
-        self.screen.blit(renderText, (self.getWidth/2, self.getHeight/2))
-
-
     def displayRect(self, rect, colour):
         #Draws a rect on the screen
         pygame.draw.rect(self.screen, colour, rect)
@@ -210,7 +202,5 @@ class GameScreen(Screen):
         else:
             return colours.black
 
-    def getTimer(self):
-        endTime = time.time() - self.timer
-        playTime = 'Time:' + str(round(endTime))
-        return playTime
+
+ 

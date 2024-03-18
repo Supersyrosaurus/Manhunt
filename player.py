@@ -282,5 +282,3 @@ class Player(sprite.Sprite):
             return True
         else:
             return False
-
-###########################     UNUSED CODE     ####################################

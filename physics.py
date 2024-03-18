@@ -217,3 +217,4 @@ class SoundProjectile(Projectile):
             if check == wall:
                 return True
         return False
+    
